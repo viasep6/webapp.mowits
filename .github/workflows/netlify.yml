@@ -3,8 +3,7 @@ name: Deploy to Netlify
 
 # When workflow is triggered
 on:
-  pull_request:
-    types: [ closed ]
+  push:
     branches:
       - website-build
 
