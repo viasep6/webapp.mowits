@@ -22,10 +22,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v1
       # Install NodeJS
-      - name: Use Node.js 12.x
+      - name: Use Node.js 14.x
         uses: actions/setup-node@v1
         with:
-          node-version: 12.x
+          node-version: 14.x
       # Run npm install and build on our code
       - run: npm install
       - run: npm run build --if-present
@@ -35,9 +35,8 @@ jobs:
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-          CUSTOM_TEST: test
+          CUSTOM_TEST: echo test
         with:
-          args: deploy --dir=build --prod
           secrets: '["NETLIFY_AUTH_TOKEN", "NETLIFY_SITE_ID"]'
       - run: |
           echo PR #${{ github.event.number }} has been merged and pushed to netlify
