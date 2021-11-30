@@ -1,13 +1,23 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* menu */
+.navbar .nav-link {
+    font-size: 14px;
+    color: black !important; /* note need override */
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+
+input {
+    font-size: 13px !important;
+}
+
+/* Overriding styles */
+
+::-webkit-input-placeholder {
+    font-size: 13px!important;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+    font-size: 13px!important;
+}
+::-moz-placeholder {  /* Firefox 19+ */
+    font-size: 13px!important;
 }
