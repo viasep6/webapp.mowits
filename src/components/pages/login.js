@@ -101,7 +101,7 @@ class login extends Component {
 			            if (error.response.status === 403) {
 			                this.props.history.push('/login');
 			            }
-			            console.log(error);
+			            console.log(URL_GET_USER, error);
 			            this.setState({ errorMsg: 'Error retrieving the data' });
 			        });
 			} else {

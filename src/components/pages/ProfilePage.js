@@ -18,6 +18,7 @@ function ProfilePage(props) {
         });
         return ref.current;
     }
+
     useEffect( () => {
         if (prevProps !== props) {
             if ((props.match.params.displayName && !prevProps) || (props.match.params.displayName !== prevProps?.match.params.displayName)) {
