@@ -28,7 +28,6 @@ const theme = createTheme({
 
 
 function App() {
-
     const [user, setUser] = useState({
         displayName: '',
         email: '',
