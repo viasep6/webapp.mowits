@@ -6,7 +6,6 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>- IT-SEP-6-A21-</p>
         <p> {process.env.REACT_APP_NOT_SECRET_CODE} </p>
         <pre> {JSON.stringify(process.env, undefined, 2)} </pre> 
         <a
