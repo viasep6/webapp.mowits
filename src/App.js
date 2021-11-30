@@ -6,12 +6,8 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
         <p>- IT-SEP-6-A21-</p>
         <p> {process.env.REACT_APP_NOT_SECRET_CODE} </p>
-        <p> { process.env.CUSTOM_TEST } </p>
         <pre> {JSON.stringify(process.env, undefined, 2)} </pre> 
         <a
           className="App-link"
