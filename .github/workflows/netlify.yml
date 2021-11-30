@@ -1,5 +1,5 @@
 # Name of workflow
-name: Deploy to Netlify
+name: Deploy to Netlify website
 
 # When workflow is triggered
 on:
