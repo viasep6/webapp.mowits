@@ -28,9 +28,9 @@ jobs:
 
       - name: Build Client
         run: npm run build
+        # Set base url for remote endpoint
         env:
-          REACT_APP_NOT_SECRET_CODE: 'first'
-
+          REACT_APP_BASE_URL: 'https://mowitsapp.azure-api.net'
       - name: Netlify Actions for Deploying App
         uses: nwtgck/actions-netlify@v1.2
         with:
