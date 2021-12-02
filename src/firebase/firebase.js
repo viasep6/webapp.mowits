@@ -17,7 +17,6 @@ export const db = getFirestore(app);
 export const auth = getAuth(app);
 
 
-
 const loginWithEmailAndPassword = async (email, password) => {
     return await signInWithEmailAndPassword(auth, email, password);
 };

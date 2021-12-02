@@ -4,9 +4,14 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
+// strict mode is automatically turned off in production mode
+// https://stackoverflow.com/a/66304817/3861983
+// will make useEffect and state run twice
+
+
 ReactDOM.render(
     <React.StrictMode>
-            <App/>
+            <App/>,
     </React.StrictMode>,
     document.getElementById('root'),
 );

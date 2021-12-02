@@ -1,20 +1,17 @@
 // import React, {useEffect, useState} from 'react';
 
-import {Component} from 'react';
+import {withRouter} from 'react-router-dom';
 
-class TestPage extends Component {
+function TestPage(props) {
 
+    console.log(props);
 
+    return (
+        <div>
+            <h2>Test</h2>
 
-    render() {
-
-        return (
-            <div>
-                <h2>Test</h2>
-
-            </div>
-        );
-    }
+        </div>
+    );
 }
 
-export default TestPage;
+export default withRouter(TestPage);
