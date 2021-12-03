@@ -14,6 +14,8 @@ export class UserStore extends EventEmitter {
             authUser: null,
         };
 
+        this.defaultProfileImage = require('../../assets/img/defaultprofile.jpg').default;
+
         dispatcher.register(action => {
             switch (action.type) {
                 case GET_USER_BY_USERNAME:
@@ -50,6 +52,11 @@ export class UserStore extends EventEmitter {
                     ...this.state,
                     loggedInUser: response.data.userCredentials,
                 };
+
+                if (!this.state.loggedInUser.profileImage) {
+                    this.state.loggedInUser.profileImage = this.defaultProfileImage
+                }
+
                 this.emit(LOGIN_SUCCESS, response.data.userCredentials);
             })
             .catch((error) => {
@@ -61,6 +68,9 @@ export class UserStore extends EventEmitter {
 
         axios.get(URL_GET_USER + `?user=${displayName}`)
             .then((response) => {
+                if (!response.data.profileImage){
+                    response.data.profileImage = this.defaultProfileImage
+                }
                 this.emit(GET_USER_BY_USERNAME, response.data);
             })
             .catch((error) => {

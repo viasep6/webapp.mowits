@@ -1,18 +1,12 @@
 import {Route, withRouter} from 'react-router-dom';
 import {auth} from '../firebase/firebase';
 
-
 function ProtectedRoute({ component: Component, ...rest }) {
-
-    // rest.history.push('/login')
-
     return (
         // this route takes other route assigned to it from the App.js and return the same route if condition is met
-
         <Route
             {...rest}
             render={(props) => {
-
                 if (auth.currentUser) {
                     return <Component {...props} />;
                 } else {

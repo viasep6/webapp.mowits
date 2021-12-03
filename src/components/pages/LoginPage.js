@@ -1,19 +1,21 @@
 import React, {useEffect, useState} from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import withStyles from '@material-ui/core/styles/withStyles';
-import Container from '@material-ui/core/Container';
-import CircularProgress from '@material-ui/core/CircularProgress';
 
 import {withRouter} from 'react-router-dom';
 import {LOGIN_FAILURE, LOGIN_SUCCESS} from '../../util/constants';
 import * as actions from '../../flux/actions/actions';
+import {withStyles} from '@mui/styles';
+import {
+    Avatar,
+    Button,
+    CircularProgress,
+    Container,
+    CssBaseline,
+    Grid,
+    Link,
+    TextField,
+    Typography
+} from '@mui/material';
+import LoginIcon from '@mui/icons-material/Login';
 
 const styles = (theme) => ({
     paper: {
@@ -46,7 +48,7 @@ const styles = (theme) => ({
 function LoginPage(props) {
 
     const {classes} = props;
-    const {authStore, userStore} = props.stores
+    const {authStore, userStore} = props.stores;
 
     const [state, setState] = useState({
         errors: {},
@@ -96,13 +98,12 @@ function LoginPage(props) {
         // eslint-disable-next-line
     }, []);
 
-
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline/>
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon/>
+                    <LoginIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
                     Login

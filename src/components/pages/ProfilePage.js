@@ -1,10 +1,10 @@
 import React, {useEffect, useRef, useState} from 'react';
 
 import ErrorPage from './ErrorPage';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import {withRouter} from 'react-router-dom';
 import * as actions from '../../flux/actions/actions';
 import {GET_USER_BY_USERNAME} from '../../util/constants';
+import {CircularProgress} from '@mui/material';
 
 function ProfilePage(props) {
 
@@ -26,7 +26,6 @@ function ProfilePage(props) {
 
     function handleResponse(response) {
         setUser({
-            profileImage: require('../../assets/img/defaultprofile.jpg').default,
             ...response,
         });
         setIsLoading(false);
@@ -39,6 +38,7 @@ function ProfilePage(props) {
             setUser({});
             UserStore.userRemoveChangeListener(GET_USER_BY_USERNAME, handleResponse);
         };
+
         // eslint-disable-next-line
     }, []);
 
@@ -59,7 +59,7 @@ function ProfilePage(props) {
                     <p className="ml-4 my-auto">loading data...</p>
                 </div>
             ) : (
-                user ? (
+                user.displayName ? (
                     <div className="m-5">
                         <div className="padding">
                             <div className="offset-md-2 col-md-8">
