@@ -4,11 +4,14 @@ import ErrorPage from './ErrorPage';
 import {withRouter} from 'react-router-dom';
 import * as actions from '../../flux/actions/actions';
 import {GET_USER_BY_USERNAME} from '../../util/constants';
-import {CircularProgress} from '@mui/material';
+import {CircularProgress, Grid, Paper} from '@mui/material';
+import WriteWitComponent from '../components/wits/WriteWitComponent';
+import ListWitComponent from '../components/wits/ListWitComponent';
 
 function ProfilePage(props) {
 
     const UserStore = props.stores.userStore;
+    const WitStore = props.stores.witStore;
     const defaultProfileImage = require('../../assets/img/defaultprofile.jpg').default;
     const [user, setUser] = useState(
         {witCount: 0, favCount: 0, roarCount: 0, profileImage: defaultProfileImage});
@@ -60,36 +63,49 @@ function ProfilePage(props) {
                 </div>
             ) : (
                 user.displayName ? (
-                    <div className="m-5">
-                        <div className="padding">
-                            <div className="offset-md-2 col-md-8">
-                                <div className="card">
-                                    <div className="card-body little-profile text-center">
-                                        <div>
-                                            <img src={user.profileImage}
-                                                 className="rounded-circle" alt="user"/>
-                                        </div>
-                                        <h3 className="m-b-0">{user.displayName}</h3>
-                                        <p>Joined MoWits {new Date(user.createdAt).toLocaleDateString()}</p>
-                                        <div className="row text-center m-t-20">
-                                            <div className="col-lg-4 col-md-4 m-t-20">
-                                                <h3 className="m-b-0 font-light">{user.witCount}</h3>
-                                                <small>Wits</small>
-                                            </div>
-                                            <div className="col-lg-4 col-md-4 m-t-20">
-                                                <h3 className="m-b-0 font-light">{user.favCount}</h3>
-                                                <small>Favorites</small>
-                                            </div>
-                                            <div className="col-lg-4 col-md-4 m-t-20">
-                                                <h3 className="m-b-0 font-light">{user.roarCount}</h3>
-                                                <small>Roars</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
+                    <Grid>
+                        <Grid container sx={{mt: 5, mb: 2}} spacing={0} justifyContent={'center'}>
+                            <Grid item xs md={6} sx={{textAlign: 'center'}}>
+                                <Paper elevation={2} sx={{pt: 2}}>
+                                    <img src={user.profileImage}
+                                         className="rounded-circle" alt="user"/>
+                                    <h3 className="m-b-0">{user.displayName}</h3>
+                                    <p>Joined MoWits {new Date(user.createdAt).toLocaleDateString()}</p>
+                                    <Grid
+                                        container
+                                        direction="row"
+                                        justifyContent="space-evenly"
+                                        alignItems="baseline"
+                                    >
+                                        <Grid>
+                                            <small>Wits</small>
+                                            <h3 className="m-b-0 font-light">0</h3>
+                                        </Grid>
+                                        <Grid>
+                                            <small>Favorites</small>
+                                            <h3 className="m-b-0 font-light">0</h3>
+                                        </Grid>
+                                        <Grid>
+                                            <small>Roars</small>
+                                            <h3 className="m-b-0 font-light">0</h3>
+                                        </Grid>
+                                    </Grid>
+                                </Paper>
+                            </Grid>
+
+                        </Grid>
+                        <Grid
+                            container
+                            direction="column"
+                            justifyContent="center"
+                            alignItems="center"
+                        >
+                            <WriteWitComponent witStore={WitStore} userStore={UserStore}/>
+                            <ListWitComponent/>
+                        </Grid>
+                    </Grid>
+
                 ) : (
                     <ErrorPage/>
                 )

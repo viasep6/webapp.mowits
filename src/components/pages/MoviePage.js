@@ -1,5 +1,5 @@
 import React from 'react';
-import WitComponent from '../components/WitComponent';
+import WitComponent from '../components/wits/WitComponent';
 import {withRouter} from 'react-router-dom';
 
 function MoviePage(props) {

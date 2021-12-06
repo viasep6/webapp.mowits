@@ -19,12 +19,11 @@ import SearchIcon from '@mui/icons-material/Search';
 
 const sxMenuButton = {
     color: 'primary.text.primary',
-    fontSize: '0.70rem',
+    fontSize: '0.75rem',
     fontWeight: 'medium',
-    ml: 0,
-    mr: 0,
-    pl: 0,
-    pr: 0,
+    padding:1,
+    minHeight: 0,
+    minWidth: 0,
     ':focus': {
         outline: 'none',
         boxshadow: 'none',
@@ -96,18 +95,18 @@ function MenuBar(props) {
 
     const handleCloseNavMenu = (event) => {
         setAnchorElNav(null);
-        goToPath("/" + event.currentTarget.id);
+        goToPath('/' + event.currentTarget.id);
     };
 
     return (
-        <AppBar position="static" sx={{color: 'primary.text.primary', backgroundColor: 'primary.background.primary'}}>
+        <AppBar position="static" sx={{color: 'primary.text.primary', backgroundColor: 'primary.background.primary', position: 'fixed', top:0}}>
             <Container maxWidth="lg">
                 <Toolbar disableGutters>
                     <Typography
                         variant="h6"
                         noWrap
                         component="div"
-                        sx={{mr: 2, display: {xs: 'none', md: 'flex'}, my: 'auto'}}
+                        sx={{mr: 2, display: {xs: 'none', md: 'flex'}}}
                     >
                         <Avatar src={logoImage.default} variant="square" sx={{mr: 0}}/>
                         MoWits
@@ -176,47 +175,42 @@ function MenuBar(props) {
                     </Typography>
 
                     {/*Menu items*/}
-                    <Box sx={{flexGrow: 1, display: {xs: 'none', md: 'flex'}}}>
-
-                        <Button
-
-                            id="favorites"
-                            onClick={handleCloseNavMenu}
-                            size="small"
-                            sx={sxMenuButton}
-                        >
-                            Favorites
-                        </Button>
-                        <Button
-                            id="test"
-                            onClick={handleCloseNavMenu}
-                            size="small"
-                            sx={sxMenuButton}
-                        >
-                            Test
-                        </Button>
-                        <Button
-                            id="feed"
-                            onClick={handleCloseNavMenu}
-                            sx={sxMenuButton}
-                        >
-                            Feed
-                        </Button>
-                        <Button
-                            id="picks"
-                            onClick={handleCloseNavMenu}
-                            sx={sxMenuButton}
-                        >
-                            Picks
-                        </Button>
-                        <Button
-                            id="statistics"
-                            onClick={handleCloseNavMenu}
-                            sx={sxMenuButton}
-                        >
-                            Statistics
-                        </Button>
-
+                    <Box sx={{flexGrow: 2, display: {xs: 'none', md: 'flex'}}}>
+                            <Button
+                                id="favorites"
+                                onClick={handleCloseNavMenu}
+                                sx={sxMenuButton}
+                            >
+                                Favorites
+                            </Button>
+                            <Button
+                                id="test"
+                                onClick={handleCloseNavMenu}
+                                sx={sxMenuButton}
+                            >
+                                Test
+                            </Button>
+                            <Button
+                                id="feed"
+                                onClick={handleCloseNavMenu}
+                                sx={sxMenuButton}
+                            >
+                                Feed
+                            </Button>
+                            <Button
+                                id="picks"
+                                onClick={handleCloseNavMenu}
+                                sx={sxMenuButton}
+                            >
+                                Picks
+                            </Button>
+                            <Button
+                                id="statistics"
+                                onClick={handleCloseNavMenu}
+                                sx={sxMenuButton}
+                            >
+                                Statistics
+                            </Button>
 
                     </Box>
                     {/*Search field*/}
@@ -237,7 +231,8 @@ function MenuBar(props) {
                     {
                         isAuthenticated ? (
                             <Box sx={{flexGrow: 0, display: {xs: 'none', md: 'flex'}}}>
-                                <IconButton onClick={() => goToPath('/profile/' + loggedInUser?.displayName)} sx={sxMenuButton}>
+                                <IconButton onClick={() => goToPath('/profile/' + loggedInUser?.displayName)}
+                                            sx={sxMenuButton}>
                                     <Avatar alt="profile image" src={loggedInUser?.profileImage}
                                             sx={{width: 34, height: 34, m: 1}}
                                     />

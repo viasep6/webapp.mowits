@@ -1,8 +1,9 @@
 import dispatcher from '../dispatcher';
-import {GET_USER_BY_USERNAME, LOGIN, LOGOUT, SIGNUP} from '../../util/constants';
+import {GET_USER_BY_USERNAME, GET_WITS_BY_USER, LOGIN, LOGOUT, POST_WIT, SIGNUP} from '../../util/constants';
 
-
-// log user out and clear details
+/*
+    Auth actions
+*/
 export const logout = () => {
     dispatcher.dispatch({
         type: LOGOUT
@@ -23,6 +24,9 @@ export const signup = (username, email, password) => {
     })
 }
 
+/*
+    User actions
+*/
 export const getUserByUsername = (username) => {
     dispatcher.dispatch({
         type: GET_USER_BY_USERNAME,
@@ -30,9 +34,19 @@ export const getUserByUsername = (username) => {
     })
 }
 
+/*
+    Wits actions
+ */
+export const postWit = (wit) => {
+    dispatcher.dispatch({
+        type: POST_WIT,
+        payload: wit
+    })
+}
 
-
-// // eslint-disable-next-line import/no-anonymous-default-export
-// export default {
-//
-// }
+export const getWitsByUser = (user) => {
+    dispatcher.dispatch({
+        type: GET_WITS_BY_USER,
+        payload: user
+    })
+}

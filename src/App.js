@@ -13,6 +13,8 @@ import ProfilePage from './components/pages/ProfilePage';
 
 import {UserStore} from './flux/stores/UserStore';
 import {AuthStore} from './flux/stores/AuthStore';
+import {WitStore} from './flux/stores/WitStore';
+import {Container} from '@mui/material';
 
 
 
@@ -21,6 +23,7 @@ const theme = createTheme({
         primary: {
             light: '#4caf50',
             main: '#2e7d32',
+            mainOpacity: 'rgba(46,125,50,0.1)',
             dark: '#1b5e20',
             contrastText: '#232323',
 
@@ -39,14 +42,15 @@ const theme = createTheme({
 
 const authStore = new AuthStore();
 const userStore = new UserStore(authStore);
-const stores = {authStore, userStore};
+const witStore = new WitStore(authStore)
+const stores = {authStore, userStore, witStore};
 
 function App() {
     return (
         <ThemeProvider theme={theme}>
             <BrowserRouter>
                 <Menu stores={stores}/>
-                <div className="container">
+                <Container fixed maxWidth={'lg'} sx={{pt:6, pb: 6}} disableGutters>
                     <Switch>
                         <ProtectedRoute exact path="/favorites" component={() => <TestPage stores={stores}/>}/>
                         <Route exact path="/login" component={() => <LoginPage stores={stores}/>}/>
@@ -57,7 +61,7 @@ function App() {
                         <Route path={'/movie/:id'} component={() => <MoviePage stores={stores}/>}/>
                         <Route component={() => <ErrorPage/>}/>
                     </Switch>
-                </div>
+                </Container>
             </BrowserRouter>
         </ThemeProvider>
     );

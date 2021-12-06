@@ -3,26 +3,3 @@ body {
     font-family: Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* menu */
-.navbar .nav-link {
-    font-size: 14px;
-    color: black !important; /* note need override */
-}
-
-
-input {
-    font-size: 13px !important;
-}
-
-/* Overriding styles */
-
-::-webkit-input-placeholder {
-    font-size: 13px!important;
-}
-
-:-moz-placeholder { /* Firefox 18- */
-    font-size: 13px!important;
-}
-::-moz-placeholder {  /* Firefox 19+ */
-    font-size: 13px!important;
-}

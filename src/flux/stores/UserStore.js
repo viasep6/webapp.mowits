@@ -54,7 +54,7 @@ export class UserStore extends EventEmitter {
                 };
 
                 if (!this.state.loggedInUser.profileImage) {
-                    this.state.loggedInUser.profileImage = this.defaultProfileImage
+                    this.state.loggedInUser.profileImage = this.defaultProfileImage;
                 }
 
                 this.emit(LOGIN_SUCCESS, response.data.userCredentials);
@@ -65,17 +65,17 @@ export class UserStore extends EventEmitter {
     };
 
     getUserByDisplayName = (displayName) => {
-
         axios.get(URL_GET_USER + `?user=${displayName}`)
             .then((response) => {
-                if (!response.data.profileImage){
-                    response.data.profileImage = this.defaultProfileImage
+                if (!response.data.profileImage) {
+                    response.data.profileImage = this.defaultProfileImage;
                 }
                 this.emit(GET_USER_BY_USERNAME, response.data);
             })
-            .catch((error) => {
+            .catch(error => {
                 this.emit(GET_USER_BY_USERNAME, null);
             });
+
     };
 
     userAddChangeListener = (event, callback) => {
