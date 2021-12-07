@@ -70,7 +70,7 @@ function WriteWitComponent(props) {
             maxWidth={600}
         >
             <Grid sx={{m: 1, my: 'auto'}}>
-                <Avatar src={userStore?.loggedInUser?.profileImage} alt="profile" height={40} width={40}/>
+                <Avatar src={userStore.state.loggedInUser?.profileImage} alt="profile" height={46} width={46} sx={{border:1, borderColor:'lightgray'}}/>
             </Grid>
             <Grid item xs sx={{m: 1}}>
                 <TextField

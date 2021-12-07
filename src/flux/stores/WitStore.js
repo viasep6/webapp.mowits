@@ -1,12 +1,12 @@
 import {EventEmitter} from 'events';
 import dispatcher from '../dispatcher';
-import {POST_WIT} from '../../util/constants';
+import {GET_WITS_BY_USER, POST_WIT, ROAR_WIT} from '../../util/constants';
 import axios from 'axios';
 
 export class WitStore extends EventEmitter {
 
     constructor(authStore) {
-        super();
+        super(authStore);
         this.state = {};
         this.authStore = authStore;
         dispatcher.register(action => {
@@ -14,11 +14,46 @@ export class WitStore extends EventEmitter {
                 case POST_WIT:
                     this.handlePostWit(action.payload);
                     break;
+                case GET_WITS_BY_USER:
+                    this.handleWitsByUser(action.payload);
+                    break;
+                case ROAR_WIT:
+                    this.handleRoarWit(action.payload);
+                    break;
                 default:
                     break;
             }
         });
+    }
 
+    handleWitsByUser(payload) {
+        if (payload === undefined)
+            return
+
+        const userid = payload.userId;
+        const startAfter = payload.startAfter ? payload.startAfter : new Date().toISOString(); // created (as date)
+        // axios.get(GET_WITS_BY_USER, {
+        axios.get('http://localhost:7072/wits/get_by_userid?userId=' + userid + '&startAfter=' + startAfter)
+            .then((response) => {
+                // returns
+                this.emit(GET_WITS_BY_USER, response.data);
+            })
+            .catch((error) => {
+                this.emit(GET_WITS_BY_USER, {errorMsg: error});
+            });
+
+    }
+
+    handleRoarWit(witId) {
+        axios.defaults.headers.common = {Authorization: `Bearer ${this.authStore.state.authUser.accessToken}`};
+        // axios.post(URL_POST_WIT, {
+        axios.get('http://localhost:7072/wits/create?roarWit=' + witId)
+            .then((response) => {
+                // no response
+            })
+            .catch((error) => {
+
+            });
     }
 
     handlePostWit(wit) {
@@ -28,11 +63,13 @@ export class WitStore extends EventEmitter {
             text: wit.text,
             movieTags: wit.movieTags,
             userTags: wit.userTags,
+            roars: [],
         }).then((response) => {
             // returns posted wit
             this.emit(POST_WIT, response.data);
         })
             .catch((error) => {
+                console.log("error", error);
                 this.emit(POST_WIT, {errorMsg: error});
             });
     }
@@ -44,5 +81,4 @@ export class WitStore extends EventEmitter {
     removeChangeListener(event, callback) {
         this.off(event, callback);
     }
-
 }

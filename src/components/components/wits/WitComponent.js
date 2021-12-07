@@ -5,31 +5,29 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import {withRouter} from 'react-router-dom';
 import Badge from '@mui/material/Badge';
 import likeIcon from '../../../assets/img/like-icon.png';
+import * as action from '../../../flux/actions/actions';
 
 function WitComponent(props) {
 
+    const authStore = props.authStore;
 
-    let witText = `Lorem ipsum dolor sit amet
-                   This is a new line
-                   and a new line again
-                   and another
-                   and the last one
-                   so this is a long lined text`;
-    let profileImage = require('../../../assets/img/menu_logo.png');
-    let witUser = 'User1';
-    const [likeCount, setLikeCount] = useState(0)
-    const date = new Date();
-    let movieArray = ['movie1', 'movie2', 'movie3'];
+    let wit = props.wit;
 
-
+    let witText = wit.text;
+    let profileImage = wit.created_by.profileImage ? wit.created_by.profileImage : require(
+        '../../../assets/img/menu_logo.png');
+    let witUser = wit.created_by.displayName;
+    const [likeCount, setLikeCount] = useState(wit.roars.length);
+    const date = wit.created;
+    let movieArray = wit.movieTags ? wit.movieTags : [];
 
     const witStyle = {
         color: '#414141',
     };
     const dateFormat = 'YYYY-MM-DD HH:mm';
     const dateTime = moment(date).format(dateFormat);
-    const [witLikedByUser, setWitLikedByUser] = useState(false);
-
+    const [witLikedByUser, setWitLikedByUser] =
+        useState(wit.roars.map(x => x.idtoken).includes(authStore.state.authUser.uid));
 
     const getDisplayTime = (date) => {
         return moment(date).fromNow();
@@ -41,12 +39,13 @@ function WitComponent(props) {
 
     const handleLikeWitClick = () => {
         if (!witLikedByUser) {
-            setLikeCount( likeCount + 1)
-            setWitLikedByUser(true)
+            setLikeCount(likeCount + 1);
+            setWitLikedByUser(true);
         } else {
-            setLikeCount(likeCount - 1)
-            setWitLikedByUser(false)
+            setLikeCount(likeCount - 1);
+            setWitLikedByUser(false);
         }
+        action.roarWit(wit.id);
     };
 
     return (
@@ -59,7 +58,7 @@ function WitComponent(props) {
                 <Divider/>
             </Grid>
             <Grid sx={[
-                {p:2, pt: 2, pb:1},
+                {p: 2, pt: 2, pb: 1},
                 (theme) => ({
                     '&:hover': {
                         bgcolor: 'primary.mainOpacity',
@@ -73,7 +72,7 @@ function WitComponent(props) {
                     alignItems="start"
                 >
                     <Grid item sx={{pr: 1}}>
-                        <Avatar src={profileImage?.default} sx={{width: 40, height: 40, border: 1, borderColor: 'lightgray'}}/>
+                        <Avatar src={profileImage} sx={{width: 40, height: 40, border: 1, borderColor: 'lightgray'}}/>
                     </Grid>
                     <Grid
                         item
@@ -99,7 +98,8 @@ function WitComponent(props) {
                                         <Typography sx={{...witStyle, mr: 1, fontSize: 10}}>{getDisplayTime(
                                             dateTime)}</Typography>
                                         {movieArray.map(e => {
-                                            return <Chip key={e} sx={witStyle} label={e} size="small" variant="outlined"/>;
+                                            return <Chip key={e.movieId} sx={witStyle} label={e.movieName} size="small"
+                                                         variant="outlined"/>;
                                         })}
 
                                     </Grid>
@@ -130,24 +130,29 @@ function WitComponent(props) {
                                 <Grid
                                     container
                                     direction="row"
-                                    justifyContent="space-between"
                                     alignItems="center"
+                                    justifyContent="flex-start"
                                 >
-                                    <Icon fontSize="small" sx={witStyle}>chat_bubble_outline</Icon>
-                                    <Icon fontSize="small" sx={witStyle}>share</Icon>
-
-                                    <Badge color="success" badgeContent={likeCount} max={999}
-                                           sx={[{mr:2, pr:1}, () => ({
-                                               cursor: 'pointer'
-                                           }),
-                                           ]}
-                                           onClick={handleLikeWitClick}
-                                           >
-                                        <img style={{filter: `grayscale(${witLikedByUser ? 30 : 100}%)`}} src={likeIcon} alt="" width="24"
-                                             height="24"
-
-                                             title="Add roar to wit"/>
-                                    </Badge>
+                                    <Grid item xs container>
+                                        <Icon fontSize="small" sx={{...witStyle, mr: 2}}>chat_bubble_outline</Icon>
+                                        <Icon fontSize="small" sx={{...witStyle, mr: 2}}>share</Icon>
+                                    </Grid>
+                                    <Grid item>
+                                        <Badge color="success" badgeContent={likeCount} max={999}
+                                               sx={[
+                                                   {mr: 2, pr: 1}, () => ({
+                                                       cursor: 'pointer',
+                                                   }),
+                                               ]}
+                                               onClick={handleLikeWitClick}
+                                        >
+                                            <img style={{filter: `grayscale(${witLikedByUser ? 30 : 100}%)`}}
+                                                 src={likeIcon}
+                                                 alt="" width="24"
+                                                 height="24"
+                                                 title="Add roar to wit"/>
+                                        </Badge>
+                                    </Grid>
 
 
                                 </Grid>

@@ -1,5 +1,5 @@
 import dispatcher from '../dispatcher';
-import {GET_USER_BY_USERNAME, GET_WITS_BY_USER, LOGIN, LOGOUT, POST_WIT, SIGNUP} from '../../util/constants';
+import {GET_USER_BY_USERNAME, GET_WITS_BY_USER, LOGIN, LOGOUT, POST_WIT, ROAR_WIT, SIGNUP} from '../../util/constants';
 
 /*
     Auth actions
@@ -44,9 +44,16 @@ export const postWit = (wit) => {
     })
 }
 
-export const getWitsByUser = (user) => {
+export const getWitsByUser = (data) => {
     dispatcher.dispatch({
         type: GET_WITS_BY_USER,
-        payload: user
+        payload: data
+    })
+}
+
+export const roarWit = (witId) => {
+    dispatcher.dispatch( {
+        type: ROAR_WIT,
+        payload: witId
     })
 }

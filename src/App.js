@@ -15,8 +15,7 @@ import {UserStore} from './flux/stores/UserStore';
 import {AuthStore} from './flux/stores/AuthStore';
 import {WitStore} from './flux/stores/WitStore';
 import {Container} from '@mui/material';
-
-
+import FeedPage from './components/pages/FeedPage';
 
 const theme = createTheme({
     palette: {
@@ -40,6 +39,7 @@ const theme = createTheme({
 
 });
 
+
 const authStore = new AuthStore();
 const userStore = new UserStore(authStore);
 const witStore = new WitStore(authStore)
@@ -52,7 +52,8 @@ function App() {
                 <Menu stores={stores}/>
                 <Container fixed maxWidth={'lg'} sx={{pt:6, pb: 6}} disableGutters>
                     <Switch>
-                        <ProtectedRoute exact path="/favorites" component={() => <TestPage stores={stores}/>}/>
+                        <ProtectedRoute exact authStore={authStore} path="/favorites" component={() => <TestPage stores={stores}/>}/>
+                        <ProtectedRoute exact authStore={authStore} path="/feed" component={() => <FeedPage stores={stores}/>}/>
                         <Route exact path="/login" component={() => <LoginPage stores={stores}/>}/>
                         <Route exact path="/signup" component={() => <SignupPage stores={stores}/>}/>
                         <Route exact path="/test" component={() => <TestPage stores={stores}/>}/>
