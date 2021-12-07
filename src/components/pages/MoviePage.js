@@ -1,9 +1,11 @@
 import React from 'react';
-import WitComponent from '../components/WitComponent';
+import WitComponent from '../components/wits/WitComponent';
+import {withRouter} from 'react-router-dom';
 
 function MoviePage(props) {
 
     const movieId = props.match.params.id;
+
 
     const notFound = require('../../assets/img/poster_not_found.jpg');
 
@@ -90,4 +92,4 @@ function MoviePage(props) {
     );
 }
 
-export default MoviePage;
+export default withRouter(MoviePage);
