@@ -1,6 +1,6 @@
 import {EventEmitter} from 'events';
 import dispatcher from '../dispatcher';
-import {GET_WITS_BY_USER, POST_WIT, ROAR_WIT} from '../../util/constants';
+import {GET_WITS_BY_USER, POST_WIT, ROAR_WIT, URL_GET_BY_USER_ID, URL_POST_WIT} from '../../util/constants';
 import axios from 'axios';
 
 export class WitStore extends EventEmitter {
@@ -32,8 +32,8 @@ export class WitStore extends EventEmitter {
 
         const userid = payload.userId;
         const startAfter = payload.startAfter ? payload.startAfter : new Date().toISOString(); // created (as date)
-        // axios.get(GET_WITS_BY_USER, {
-        axios.get('http://localhost:7072/wits/get_by_userid?userId=' + userid + '&startAfter=' + startAfter)
+        // axios.get('http://localhost:7072/wits/get_by_userid' + '?userId=' + userid + '&startAfter=' + startAfter)
+        axios.get(URL_GET_BY_USER_ID + '?userId=' + userid + '&startAfter=' + startAfter)
             .then((response) => {
                 // returns
                 this.emit(GET_WITS_BY_USER, response.data);
@@ -46,8 +46,8 @@ export class WitStore extends EventEmitter {
 
     handleRoarWit(witId) {
         axios.defaults.headers.common = {Authorization: `Bearer ${this.authStore.state.authUser.accessToken}`};
-        // axios.post(URL_POST_WIT, {
-        axios.get('http://localhost:7072/wits/create?roarWit=' + witId)
+        // axios.get('http://localhost:7072/wits/create' + '?roarWit=' + witId)
+        axios.get(URL_POST_WIT + '?roarWit=' + witId)
             .then((response) => {
                 // no response
             })
@@ -58,8 +58,8 @@ export class WitStore extends EventEmitter {
 
     handlePostWit(wit) {
         axios.defaults.headers.common = {Authorization: `Bearer ${this.authStore.state.authUser.accessToken}`};
-        // axios.post(URL_POST_WIT, {
-        axios.post('http://localhost:7072/wits/Create', {
+        axios.post(URL_POST_WIT, {
+        // axios.post('http://localhost:7072/wits/Create', {
             text: wit.text,
             movieTags: wit.movieTags,
             userTags: wit.userTags,
