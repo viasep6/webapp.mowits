@@ -26,6 +26,8 @@ export const POST_WIT = 'POST_WIT'
 export const GET_WITS_BY_USER = 'GET_WITS_BY_USER'
 
 /* movies */
-
+const MOVIES_BASE = 'https://mowitsapp.azure-api.net/movies/'
+export const MOVIES_URL_DETAILS = MOVIES_BASE + 'MovieDetails'
+export const MOVIES_PROFILE_DEFAULT_URL = 'https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-4-user-grey-d8fe957375e70239d6abdd549fd7568c89281b2179b5f4470e2e12895792dfa5.svg'
 
 /* lists */

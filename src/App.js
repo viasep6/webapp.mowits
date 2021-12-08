@@ -14,6 +14,7 @@ import ProfilePage from './components/pages/ProfilePage';
 import {UserStore} from './flux/stores/UserStore';
 import {AuthStore} from './flux/stores/AuthStore';
 import {WitStore} from './flux/stores/WitStore';
+import {MovieStore} from './flux/stores/MovieStore';
 import {Container} from '@mui/material';
 
 
@@ -42,7 +43,8 @@ const theme = createTheme({
 
 const authStore = new AuthStore();
 const userStore = new UserStore(authStore);
-const witStore = new WitStore(authStore)
+const witStore = new WitStore(authStore);
+const movieStore = new MovieStore();
 const stores = {authStore, userStore, witStore};
 
 function App() {
@@ -58,7 +60,7 @@ function App() {
                         <Route exact path="/test" component={() => <TestPage stores={stores}/>}/>
                         <Route exact path="/" component={() => <HomePage stores={stores}/>}/>
                         <Route path="/profile/:displayName" component={() => <ProfilePage stores={stores}/>}/>
-                        <Route path={'/movie/:id'} component={() => <MoviePage stores={stores}/>}/>
+                        <Route path={'/movie/:id'} component={() => <MoviePage movieStore={movieStore}/>}/>
                         <Route component={() => <ErrorPage/>}/>
                     </Switch>
                 </Container>

@@ -99,7 +99,7 @@ function MenuBar(props) {
     };
 
     return (
-        <AppBar position="static" sx={{color: 'primary.text.primary', backgroundColor: 'primary.background.primary', position: 'fixed', top:0}}>
+        <AppBar position="static" sx={{color: 'primary.text.primary', backgroundColor: 'primary.background.primary', position: 'fixed', top:0, zIndex: 1000}}>
             <Container maxWidth="lg">
                 <Toolbar disableGutters>
                     <Typography
