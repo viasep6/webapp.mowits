@@ -107,6 +107,7 @@ function MenuBar(props) {
                         noWrap
                         component="div"
                         sx={{mr: 2, display: {xs: 'none', md: 'flex'}}}
+                        onClick={handleCloseNavMenu}
                     >
                         <Avatar src={logoImage.default} variant="square" sx={{mr: 0}}/>
                         MoWits

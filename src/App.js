@@ -10,10 +10,12 @@ import ErrorPage from './components/pages/ErrorPage';
 import ProtectedRoute from './util/ProtectedRoute';
 import HomePage from './components/pages/HomePage';
 import ProfilePage from './components/pages/ProfilePage';
+import FavoritesPage from "./components/pages/FavoritesPage";
 
 import {UserStore} from './flux/stores/UserStore';
 import {AuthStore} from './flux/stores/AuthStore';
 import {WitStore} from './flux/stores/WitStore';
+import {FavoritesStore} from './flux/stores/FavoritesStore'
 import {Container} from '@mui/material';
 
 
@@ -43,7 +45,8 @@ const theme = createTheme({
 const authStore = new AuthStore();
 const userStore = new UserStore(authStore);
 const witStore = new WitStore(authStore)
-const stores = {authStore, userStore, witStore};
+const favoritesStore = new FavoritesStore()
+const stores = {authStore, userStore, witStore, favoritesStore};
 
 function App() {
     return (
@@ -52,7 +55,7 @@ function App() {
                 <Menu stores={stores}/>
                 <Container fixed maxWidth={'lg'} sx={{pt:6, pb: 6}} disableGutters>
                     <Switch>
-                        <ProtectedRoute exact path="/favorites" component={() => <TestPage stores={stores}/>}/>
+                        <ProtectedRoute exact path="/favorites" component={() => <FavoritesPage stores={stores}/>}/>
                         <Route exact path="/login" component={() => <LoginPage stores={stores}/>}/>
                         <Route exact path="/signup" component={() => <SignupPage stores={stores}/>}/>
                         <Route exact path="/test" component={() => <TestPage stores={stores}/>}/>

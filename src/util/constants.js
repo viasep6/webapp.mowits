@@ -1,5 +1,5 @@
 /* url */
-const BASE_URL = process.env['REACT_APP_BASE_URL']
+export const BASE_URL = process.env['REACT_APP_BASE_URL']
 export const URL_SIGNUP =  BASE_URL + '/users/create'
 export const URL_GET_USER = BASE_URL + '/users/get'
 export const URL_POST_WIT = BASE_URL + '/wits/create'
@@ -29,3 +29,5 @@ export const GET_WITS_BY_USER = 'GET_WITS_BY_USER'
 
 
 /* lists */
+export const GET_MOVIE_LISTS_BY_USER_ID = 'GET_MOVIE_LISTS_BY_USER_ID'
+export const NEW_USER_MOVIE_LISTS = 'NEW_USER_MOVIE_LISTS'

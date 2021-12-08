@@ -1,5 +1,13 @@
 import dispatcher from '../dispatcher';
-import {GET_USER_BY_USERNAME, GET_WITS_BY_USER, LOGIN, LOGOUT, POST_WIT, SIGNUP} from '../../util/constants';
+import {
+    GET_USER_BY_USERNAME,
+    GET_WITS_BY_USER, LOGIN,
+    LOGOUT,
+    POST_WIT,
+    SIGNUP,
+    GET_MOVIE_LISTS_BY_USER_ID,
+    NEW_USER_MOVIE_LISTS
+} from '../../util/constants';
 
 /*
     Auth actions
@@ -48,5 +56,22 @@ export const getWitsByUser = (user) => {
     dispatcher.dispatch({
         type: GET_WITS_BY_USER,
         payload: user
+    })
+}
+
+/*
+    Movie Lists.
+ */
+export const getMovieListsByUserID = (accessToken) => {
+    dispatcher.dispatch({
+        type: GET_MOVIE_LISTS_BY_USER_ID,
+        payload: accessToken
+    })
+}
+
+export const newUserMovieLists = (lists) => {
+    dispatcher.dispatch({
+        type: NEW_USER_MOVIE_LISTS,
+        payload: lists
     })
 }
