@@ -1,5 +1,14 @@
 import dispatcher from '../dispatcher';
-import {GET_USER_BY_USERNAME, GET_WITS_BY_USER, LOGIN, LOGOUT, POST_WIT, ROAR_WIT, SIGNUP} from '../../util/constants';
+import {
+    GET_USER_BY_USERNAME,
+    GET_WITS_BY_FEED,
+    NEW_WITS_RETURNED,
+    LOGIN,
+    LOGOUT,
+    POST_WIT,
+    ROAR_WIT,
+    SIGNUP, GET_WITS_BY_USER, SET_USER_PROFILE_IMAGE,
+} from '../../util/constants';
 
 /*
     Auth actions
@@ -33,6 +42,12 @@ export const getUserByUsername = (username) => {
         payload: username
     })
 }
+export const setUserProfileImage = (profileImageUrl) => {
+    dispatcher.dispatch({
+        type: SET_USER_PROFILE_IMAGE,
+        payload: profileImageUrl
+    })
+}
 
 /*
     Wits actions
@@ -47,6 +62,13 @@ export const postWit = (wit) => {
 export const getWitsByUser = (data) => {
     dispatcher.dispatch({
         type: GET_WITS_BY_USER,
+        payload: data
+    })
+}
+
+export const getWitsByFeed = (data) => {
+    dispatcher.dispatch({
+        type: GET_WITS_BY_FEED,
         payload: data
     })
 }
