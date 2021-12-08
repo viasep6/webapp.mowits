@@ -6,24 +6,30 @@ import {UserStore} from '../../../flux/stores/UserStore';
 import {Avatar, CircularProgress, Grid, TextField} from '@mui/material';
 import Button from '@mui/material/Button';
 import * as actions from '../../../flux/actions/actions';
-import {POST_WIT} from '../../../util/constants';
+import {LOGIN_SUCCESS, POST_WIT} from '../../../util/constants';
 import {withStyles} from '@mui/styles';
 
 function WriteWitComponent(props) {
 
     const witStore = props.witStore;
+
     const userStore = props.userStore;
     const [count, setCount] = React.useState(0);
     const maxCount = 200;
     const [text, setText] = React.useState('');
     const [isLoading, setIsLoading] = React.useState(false);
     const [errorText, setErrorText] = React.useState();
+    const [user, setUser] = React.useState(userStore.state.loggedInUser)
 
     useEffect(() => {
         witStore.addChangeListener(POST_WIT, handlePostResponse)
-
+        userStore.userAddChangeListener(LOGIN_SUCCESS, (user) => {
+            setUser(user)
+        })
+        setUser(userStore.state.loggedInUser)
         return function cleanup() {
             witStore.removeChangeListener(POST_WIT, handlePostResponse);
+            userStore.userRemoveChangeListener(LOGIN_SUCCESS, () => {})
         };
         // eslint-disable-next-line
     }, [])
@@ -70,7 +76,7 @@ function WriteWitComponent(props) {
             maxWidth={600}
         >
             <Grid sx={{m: 1, my: 'auto'}}>
-                <Avatar src={userStore.state.loggedInUser?.profileImage} alt="profile" height={46} width={46} sx={{border:1, borderColor:'lightgray'}}/>
+                <Avatar src={user?.profileImage} alt="profile" height={46} width={46} sx={{border:1, borderColor:'lightgray'}}/>
             </Grid>
             <Grid item xs sx={{m: 1}}>
                 <TextField

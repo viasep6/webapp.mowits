@@ -3,8 +3,9 @@ import {withRouter} from 'react-router-dom';
 import WitComponent from './WitComponent';
 import {CircularProgress, Grid} from '@mui/material';
 import * as actions from '../../../flux/actions/actions';
-import {GET_WITS_BY_USER, POST_WIT} from '../../../util/constants';
+import {NEW_WITS_RETURNED, POST_WIT} from '../../../util/constants';
 import Typography from '@mui/material/Typography';
+import {getUnique} from '../../../util/utils';
 
 function ListWitComponent(props) {
 
@@ -18,13 +19,13 @@ function ListWitComponent(props) {
     useEffect(() => {
 
         document.addEventListener('scroll', handleScroll);
-        witStore.addChangeListener(GET_WITS_BY_USER, handleNewWits);
+        witStore.addChangeListener(NEW_WITS_RETURNED, handleNewWits);
         witStore.addChangeListener(POST_WIT, handleNewWits);
         loadNextWits();
 
         return function cleanup() {
             document.removeEventListener('scroll', handleScroll);
-            witStore.removeChangeListener(GET_WITS_BY_USER, handleNewWits);
+            witStore.removeChangeListener(NEW_WITS_RETURNED, handleNewWits);
             witStore.removeChangeListener(POST_WIT, handleNewWits);
         };
         // eslint-disable-next-line
@@ -40,9 +41,11 @@ function ListWitComponent(props) {
     }, [wits]);
 
     const handleNewWits = (data) => {
+
         if (data.length > 0) {
             setWits(prevState => {
                 let arr = [...prevState, ...data];
+                arr = getUnique(arr, 'id');
                 return arr.sort(function(a, b) {
                     return new Date(b.created) - new Date(a.created);
                 });
@@ -57,10 +60,12 @@ function ListWitComponent(props) {
         if (!isLastItem) {
             if (user) {
                 actions.getWitsByUser({userId: user.idtoken, startAfter: wits[wits.length - 1]?.created});
-                setIsLoading(true);
             } else if (movie) {
-                setIsLoading(true);
+
+            } else if (props.getByFeed) {
+                actions.getWitsByFeed({startAfter: wits[wits.length - 1]?.created});
             }
+            setIsLoading(true);
         }
     };
 
@@ -83,12 +88,14 @@ function ListWitComponent(props) {
             direction={'column'}
             justifyContent={'center'}
             alignItems={'center'}
-            sx={{pt:2}}
+            sx={{pt: 2}}
             onScroll={handleScroll}
         >
+
             {wits.map(e => (
                 <WitComponent key={e.id} wit={e} authStore={props.authStore}/>
             ))}
+
             {isLastItem && <Typography>No more wits found</Typography>}
             {isLoading && <CircularProgress size={30}/>}
         </Grid>
