@@ -1,13 +1,6 @@
 import {EventEmitter} from 'events';
 import dispatcher from '../dispatcher';
-import {
-    GET_WITS_BY_FEED, GET_WITS_BY_USER,
-    NEW_WITS_RETURNED,
-    POST_WIT,
-    ROAR_WIT,
-    URL_GET_BY_USER_ID,
-    URL_POST_WIT,
-} from '../../util/constants';
+import {GET_WITS_BY_USER, POST_WIT, ROAR_WIT, URL_GET_BY_USER_ID, URL_POST_WIT} from '../../util/constants';
 import axios from 'axios';
 
 export class WitStore extends EventEmitter {
@@ -23,9 +16,6 @@ export class WitStore extends EventEmitter {
                     break;
                 case GET_WITS_BY_USER:
                     this.handleWitsByUser(action.payload);
-                    break;
-                case GET_WITS_BY_FEED:
-                    this.handleWitsByFeed(action.payload);
                     break;
                 case ROAR_WIT:
                     this.handleRoarWit(action.payload);
@@ -46,33 +36,11 @@ export class WitStore extends EventEmitter {
         axios.get(URL_GET_BY_USER_ID + '?userId=' + userid + '&startAfter=' + startAfter)
             .then((response) => {
                 // returns
-                this.emit(NEW_WITS_RETURNED, response.data);
+                this.emit(GET_WITS_BY_USER, response.data);
             })
             .catch((error) => {
-                this.emit(NEW_WITS_RETURNED, {errorMsg: error});
+                this.emit(GET_WITS_BY_USER, {errorMsg: error});
             });
-
-    }
-
-
-    handleWitsByFeed(payload) {
-        if (payload === undefined)
-            return
-
-        const startAfter = payload.startAfter ? payload.startAfter : new Date().toISOString(); // created (as date)
-        axios.defaults.headers.common = {Authorization: `Bearer ${this.authStore.state.authUser.accessToken}`};
-        // axios.get('http://localhost:7072/wits/get_by_feed' + '?startAfter=' + startAfter)
-            axios.get(URL_GET_BY_USER_ID + '?userId=' + userid + '&startAfter=' + startAfter)
-            .then((response) => {
-                // returns
-                this.emit(NEW_WITS_RETURNED, response.data);
-            })
-            .catch((error) => {
-                this.emit(NEW_WITS_RETURNED, {errorMsg: error});
-            });
-    }
-
-    handleWitsByMovie(payload) {
 
     }
 
@@ -91,9 +59,8 @@ export class WitStore extends EventEmitter {
     handlePostWit(wit) {
         axios.defaults.headers.common = {Authorization: `Bearer ${this.authStore.state.authUser.accessToken}`};
         axios.post(URL_POST_WIT, {
-        // axios.post('http://localhost:7072/wits/create', {
+        // axios.post('http://localhost:7072/wits/Create', {
             text: wit.text,
-            // movieTags: [ {movieId: <id>, title: <title>}, ]
             movieTags: wit.movieTags,
             userTags: wit.userTags,
             roars: [],

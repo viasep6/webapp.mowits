@@ -1,12 +1,6 @@
 import {EventEmitter} from 'events';
 import {
-    CHANGE_AUTH_TOKEN,
-    GET_USER_BY_USERNAME,
-    LOGIN_FAILURE,
-    LOGIN_SUCCESS,
-    SET_USER_PROFILE_IMAGE, SIGNUP_FAILURE, SIGNUP_SUCCESS, URL_CHANGE_PROFILE_IMAGE,
-    URL_GET_USER,
-    URL_SIGNUP,
+    CHANGE_AUTH_TOKEN, GET_USER_BY_USERNAME, LOGIN_FAILURE, LOGIN_SUCCESS, URL_GET_USER,
 } from '../../util/constants';
 import axios from 'axios';
 import dispatcher from '../dispatcher';
@@ -27,9 +21,7 @@ export class UserStore extends EventEmitter {
                 case GET_USER_BY_USERNAME:
                     this.getUserByDisplayName(action.payload);
                     break;
-                case SET_USER_PROFILE_IMAGE:
-                    this.changeProfileImage(action.payload);
-                    break;
+
                 default:
                     break;
             }
@@ -37,24 +29,6 @@ export class UserStore extends EventEmitter {
 
         authStore.authAddChangeListener(CHANGE_AUTH_TOKEN, this.authUserChanged);
 
-    }
-
-    changeProfileImage(profileImageUrl) {
-        axios.post(URL_CHANGE_PROFILE_IMAGE, {imageUrl: profileImageUrl})
-            .then((response) => {
-                if (response.data.success) {
-
-                } else {
-
-                }
-            })
-            .catch((error) => {
-                if (error.response !== undefined) {
-
-                } else {
-
-                }
-            });
     }
 
     authUserChanged = (user) => {

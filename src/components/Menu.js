@@ -21,7 +21,7 @@ const sxMenuButton = {
     color: 'primary.text.primary',
     fontSize: '0.75rem',
     fontWeight: 'medium',
-    padding: 1,
+    padding:1,
     minHeight: 0,
     minWidth: 0,
     ':focus': {
@@ -101,12 +101,7 @@ function MenuBar(props) {
     };
 
     return (
-        <AppBar position="static" sx={{
-            color: 'primary.text.primary',
-            backgroundColor: 'primary.background.primary',
-            position: 'fixed',
-            top: 0,
-        }} style={{zIndex: 999}}>
+        <AppBar position="static" sx={{color: 'primary.text.primary', backgroundColor: 'primary.background.primary', position: 'fixed', top:0}} style={{zIndex:999}}>
             <Container maxWidth="lg">
                 <Toolbar disableGutters>
                     <Typography
@@ -149,19 +144,19 @@ function MenuBar(props) {
                             }}
                         >
 
-                            <MenuItem id={'home'} key="home" onClick={handleCloseNavMenu}>
-                                <Typography textAlign="center">Home</Typography>
-                            </MenuItem>
-                            <MenuItem id={'favorites'} key="fav" onClick={handleCloseNavMenu}>
+                            <MenuItem id={"favorites"} key="fav" onClick={handleCloseNavMenu}>
                                 <Typography textAlign="center">Favorites</Typography>
                             </MenuItem>
-                            <MenuItem id={'test'} key="test" onClick={handleCloseNavMenu}>
+                            <MenuItem id={"test"} key="test" onClick={handleCloseNavMenu}>
                                 <Typography textAlign="center">Test</Typography>
                             </MenuItem>
-                            <MenuItem id={'feed'} key="feed" onClick={handleCloseNavMenu}>
+                            <MenuItem id={"feed"} key="feed" onClick={handleCloseNavMenu}>
                                 <Typography textAlign="center">My Feed</Typography>
                             </MenuItem>
-                            <MenuItem id={'statistics'} key="statistics" onClick={handleCloseNavMenu}>
+                            <MenuItem id={"picks"} key="picks" onClick={handleCloseNavMenu}>
+                                <Typography textAlign="center">Picks</Typography>
+                            </MenuItem>
+                            <MenuItem id={"statistics"} key="statistics" onClick={handleCloseNavMenu}>
                                 <Typography textAlign="center">Statistics</Typography>
                             </MenuItem>
                         </Menu>
@@ -177,41 +172,41 @@ function MenuBar(props) {
 
                     {/*Menu items*/}
                     <Box sx={{flexGrow: 2, display: {xs: 'none', md: 'flex'}}}>
-                        <Button
-                            id="home"
-                            onClick={handleCloseNavMenu}
-                            sx={sxMenuButton}
-                        >
-                            Home
-                        </Button>
-                        <Button
-                            id="favorites"
-                            onClick={handleCloseNavMenu}
-                            sx={sxMenuButton}
-                        >
-                            Favorites
-                        </Button>
-                        <Button
-                            id="test"
-                            onClick={handleCloseNavMenu}
-                            sx={sxMenuButton}
-                        >
-                            Test
-                        </Button>
-                        <Button
-                            id="feed"
-                            onClick={handleCloseNavMenu}
-                            sx={sxMenuButton}
-                        >
-                            My Feed
-                        </Button>
-                        <Button
-                            id="statistics"
-                            onClick={handleCloseNavMenu}
-                            sx={sxMenuButton}
-                        >
-                            Statistics
-                        </Button>
+                            <Button
+                                id="favorites"
+                                onClick={handleCloseNavMenu}
+                                sx={sxMenuButton}
+                            >
+                                Favorites
+                            </Button>
+                            <Button
+                                id="test"
+                                onClick={handleCloseNavMenu}
+                                sx={sxMenuButton}
+                            >
+                                Test
+                            </Button>
+                            <Button
+                                id="feed"
+                                onClick={handleCloseNavMenu}
+                                sx={sxMenuButton}
+                            >
+                                My Feed
+                            </Button>
+                            <Button
+                                id="picks"
+                                onClick={handleCloseNavMenu}
+                                sx={sxMenuButton}
+                            >
+                                Picks
+                            </Button>
+                            <Button
+                                id="statistics"
+                                onClick={handleCloseNavMenu}
+                                sx={sxMenuButton}
+                            >
+                                Statistics
+                            </Button>
 
                     </Box>
                     {/*Search field*/}

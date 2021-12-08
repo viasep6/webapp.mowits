@@ -12,9 +12,10 @@ function WitComponent(props) {
     const authStore = props.authStore;
 
     let wit = props.wit;
+
     let witText = wit.text;
     let profileImage = wit.created_by.profileImage ? wit.created_by.profileImage : require(
-        '../../../assets/img/menu_logo.png').default;
+        '../../../assets/img/menu_logo.png');
     let witUser = wit.created_by.displayName;
     const [likeCount, setLikeCount] = useState(wit.roars.length);
     const date = wit.created;
@@ -35,10 +36,6 @@ function WitComponent(props) {
     const handleUserProfileClick = () => {
         props.history.push('/profile/' + witUser);
     };
-
-    const handleChipClick = (movieid) => {
-        props.history.push('/movies/' + movieid)
-    }
 
     const handleLikeWitClick = () => {
         if (!witLikedByUser) {
@@ -101,8 +98,8 @@ function WitComponent(props) {
                                         <Typography sx={{...witStyle, mr: 1, fontSize: 10}}>{getDisplayTime(
                                             dateTime)}</Typography>
                                         {movieArray.map(e => {
-                                            return <Chip key={e.movieId} sx={witStyle} label={e.title} size="small"
-                                                         variant="outlined" onClick={() => handleChipClick(e.movieId)}/>;
+                                            return <Chip key={e.movieId} sx={witStyle} label={e.movieName} size="small"
+                                                         variant="outlined"/>;
                                         })}
 
                                     </Grid>
