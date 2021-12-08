@@ -3,13 +3,15 @@ import {
     SIGNUP,
     LOGIN,
     LOGOUT,
-    GET_USER_BY_USERNAME,
     GET_WITS_BY_USER,
+    GET_WITS_BY_FEED,
     POST_WIT,
     ROAR_WIT,
+    GET_USER_BY_USERNAME,
+    SET_USER_PROFILE_IMAGE,
+    GET_MOVIE_DETAILS,
     GET_MOVIE_LISTS_BY_USER_ID,
     NEW_USER_MOVIE_LISTS,
-    GET_MOVIE_DETAILS
 } from '../../util/constants';
 
 /*
@@ -44,6 +46,12 @@ export const getUserByUsername = (username) => {
         payload: username
     })
 }
+export const setUserProfileImage = (profileImageUrl) => {
+    dispatcher.dispatch({
+        type: SET_USER_PROFILE_IMAGE,
+        payload: profileImageUrl
+    })
+}
 
 /*
     Wits actions
@@ -58,6 +66,13 @@ export const postWit = (wit) => {
 export const getWitsByUser = (data) => {
     dispatcher.dispatch({
         type: GET_WITS_BY_USER,
+        payload: data
+    })
+}
+
+export const getWitsByFeed = (data) => {
+    dispatcher.dispatch({
+        type: GET_WITS_BY_FEED,
         payload: data
     })
 }

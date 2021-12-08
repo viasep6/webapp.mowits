@@ -64,6 +64,7 @@ function App() {
                         <Route exact path="/signup" component={() => <SignupPage stores={stores}/>}/>
                         <Route exact path="/test" component={() => <TestPage stores={stores}/>}/>
                         <Route exact path="/" component={() => <HomePage stores={stores}/>}/>
+                        <Route exact path="/home" component={() => <HomePage stores={stores}/>}/>
                         <Route path="/profile/:displayName" component={() => <ProfilePage stores={stores}/>}/>
                         <Route path={'/movie/:id'} component={() => <MoviePage movieStore={movieStore}/>}/>
                         <Route component={() => <ErrorPage/>}/>
