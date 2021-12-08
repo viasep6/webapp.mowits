@@ -4,10 +4,12 @@ import WriteWitComponent from '../components/wits/WriteWitComponent';
 import ListWitComponent from '../components/wits/ListWitComponent';
 import {withRouter} from 'react-router-dom';
 
+
 function FeedPage(props) {
 
     const UserStore = props.stores.userStore;
     const WitStore = props.stores.witStore;
+    const AuthStore = props.stores.authStore;
 
 
     return (
@@ -18,8 +20,8 @@ function FeedPage(props) {
                 alignItems="center"
                 sx={{mt:4}}
             >
-                <WriteWitComponent witStore={WitStore} userStore={UserStore}/>
-                <ListWitComponent witStore={WitStore} authStore={props.stores.authStore} getByFeed={undefined}/>
+                <WriteWitComponent witStore={WitStore} userStore={UserStore} />
+                <ListWitComponent witStore={WitStore} authStore={AuthStore} getByFeed={true}/>
             </Grid>
     );
 

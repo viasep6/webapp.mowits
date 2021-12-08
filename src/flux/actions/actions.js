@@ -1,13 +1,13 @@
 import dispatcher from '../dispatcher';
 import {
-    GET_MOVIE_DETAILS,
     GET_USER_BY_USERNAME,
-    GET_WITS_BY_USER,
+    GET_WITS_BY_FEED,
+    NEW_WITS_RETURNED,
     LOGIN,
     LOGOUT,
     POST_WIT,
     ROAR_WIT,
-    SIGNUP
+    SIGNUP, GET_WITS_BY_USER, SET_USER_PROFILE_IMAGE,
 } from '../../util/constants';
 
 /*
@@ -42,6 +42,12 @@ export const getUserByUsername = (username) => {
         payload: username
     })
 }
+export const setUserProfileImage = (profileImageUrl) => {
+    dispatcher.dispatch({
+        type: SET_USER_PROFILE_IMAGE,
+        payload: profileImageUrl
+    })
+}
 
 /*
     Wits actions
@@ -60,19 +66,16 @@ export const getWitsByUser = (data) => {
     })
 }
 
+export const getWitsByFeed = (data) => {
+    dispatcher.dispatch({
+        type: GET_WITS_BY_FEED,
+        payload: data
+    })
+}
+
 export const roarWit = (witId) => {
     dispatcher.dispatch( {
         type: ROAR_WIT,
         payload: witId
-    })
-}
-
-/*
- Movie actions
-*/
-export const getMovieDetails = (movieId) => {
-    dispatcher.dispatch( {
-        type: GET_MOVIE_DETAILS,
-        payload: movieId
     })
 }
