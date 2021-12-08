@@ -1,17 +1,28 @@
 import axios from 'axios';
 import {EventEmitter} from "events";
-import {MOVIES_URL_DETAILS} from "../../util/constants";
+import {GET_MOVIE_DETAILS, MOVIES_URL_DETAILS} from "../../util/constants";
+import dispatcher from "../dispatcher";
 
 export class MovieStore extends EventEmitter {
 
     constructor() {
         super();
-        this.state = {}
+        dispatcher.register(action => {
+            switch (action.type) {
+                case GET_MOVIE_DETAILS:
+                    this.fetchMovieDetails(action.payload);
+                    break;
+                default:
+                    break;
+            }
+        })
     }
 
-    fetchMovieDetails(movie_id) {
-        return axios.get(MOVIES_URL_DETAILS + `?movieid=${movie_id}`)
-            .then((response) => response.data)
+    fetchMovieDetails(movieId) {
+        axios.get(MOVIES_URL_DETAILS + `?movieid=${movieId}`)
+            .then((response) => {
+                this.emit(GET_MOVIE_DETAILS, response.data)
+            })
             .catch(error => {
                 if (error.response) {
                     // The request was made and the server responded with a status code
@@ -29,6 +40,15 @@ export class MovieStore extends EventEmitter {
                     console.log('Error', error.message);
                 }
                 console.log(error.config);
+                this.emit(GET_MOVIE_DETAILS, {errorMessage: error})
             });
     }
+
+    addMovieChangeListener = (event, callback) => {
+        this.on(event, callback);
+    };
+
+    removeMovieChangeListener = (event, callback) => {
+        this.off(event, callback);
+    };
 }

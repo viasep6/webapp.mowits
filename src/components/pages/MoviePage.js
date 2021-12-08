@@ -15,9 +15,8 @@ import {
     Typography
 } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import {MOVIES_PROFILE_DEFAULT_URL} from "../../util/constants";
-import WitComponent from "../components/wits/WitComponent";
-
+import {GET_MOVIE_DETAILS, MOVIES_PROFILE_DEFAULT_URL} from "../../util/constants";
+import * as actions from '../../flux/actions/actions';
 
 function MoviePage(props) {
 
@@ -27,11 +26,24 @@ function MoviePage(props) {
     const MovieStore = props.movieStore;
 
     useEffect(() => {
-        MovieStore.fetchMovieDetails(movieId).then(response => {
-            setMovie(response);
-            setLoading(false)
-        })
-    },[MovieStore, movieId])
+        MovieStore.addMovieChangeListener(GET_MOVIE_DETAILS, handleMovieResponse);
+
+        return function cleanup() {
+            MovieStore.removeMovieChangeListener(GET_MOVIE_DETAILS, handleMovieResponse);
+        };
+        // eslint-disable-next-line
+    },[])
+
+    useEffect(() => {
+        if (movieId !== null) {
+            actions.getMovieDetails(movieId)
+        }
+    },[movieId])
+
+    function handleMovieResponse(movie) {
+        setMovie(movie);
+        setLoading(false)
+    }
 
     function getProfileImage(cast) {
         if (cast.picture_path === null) {

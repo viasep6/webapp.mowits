@@ -1,5 +1,14 @@
 import dispatcher from '../dispatcher';
-import {GET_USER_BY_USERNAME, GET_WITS_BY_USER, LOGIN, LOGOUT, POST_WIT, ROAR_WIT, SIGNUP} from '../../util/constants';
+import {
+    GET_MOVIE_DETAILS,
+    GET_USER_BY_USERNAME,
+    GET_WITS_BY_USER,
+    LOGIN,
+    LOGOUT,
+    POST_WIT,
+    ROAR_WIT,
+    SIGNUP
+} from '../../util/constants';
 
 /*
     Auth actions
@@ -55,5 +64,15 @@ export const roarWit = (witId) => {
     dispatcher.dispatch( {
         type: ROAR_WIT,
         payload: witId
+    })
+}
+
+/*
+ Movie actions
+*/
+export const getMovieDetails = (movieId) => {
+    dispatcher.dispatch( {
+        type: GET_MOVIE_DETAILS,
+        payload: movieId
     })
 }
