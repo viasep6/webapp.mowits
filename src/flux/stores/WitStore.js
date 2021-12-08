@@ -42,8 +42,8 @@ export class WitStore extends EventEmitter {
 
         const userid = payload.userId;
         const startAfter = payload.startAfter ? payload.startAfter : new Date().toISOString(); // created (as date)
-        axios.get('http://localhost:7072/wits/get_by_userid' + '?userId=' + userid + '&startAfter=' + startAfter)
-        // axios.get(URL_GET_BY_USER_ID + '?userId=' + userid + '&startAfter=' + startAfter)
+        // axios.get('http://localhost:7072/wits/get_by_userid' + '?userId=' + userid + '&startAfter=' + startAfter)
+        axios.get(URL_GET_BY_USER_ID + '?userId=' + userid + '&startAfter=' + startAfter)
             .then((response) => {
                 // returns
                 this.emit(NEW_WITS_RETURNED, response.data);
@@ -61,8 +61,8 @@ export class WitStore extends EventEmitter {
 
         const startAfter = payload.startAfter ? payload.startAfter : new Date().toISOString(); // created (as date)
         axios.defaults.headers.common = {Authorization: `Bearer ${this.authStore.state.authUser.accessToken}`};
-        axios.get('http://localhost:7072/wits/get_by_feed' + '?startAfter=' + startAfter)
-            // axios.get(URL_GET_BY_USER_ID + '?userId=' + userid + '&startAfter=' + startAfter)
+        // axios.get('http://localhost:7072/wits/get_by_feed' + '?startAfter=' + startAfter)
+            axios.get(URL_GET_BY_USER_ID + '?userId=' + userid + '&startAfter=' + startAfter)
             .then((response) => {
                 // returns
                 this.emit(NEW_WITS_RETURNED, response.data);
@@ -78,8 +78,8 @@ export class WitStore extends EventEmitter {
 
     handleRoarWit(witId) {
         axios.defaults.headers.common = {Authorization: `Bearer ${this.authStore.state.authUser.accessToken}`};
-        axios.get('http://localhost:7072/wits/create' + '?roarWit=' + witId)
-        // axios.get(URL_POST_WIT + '?roarWit=' + witId)
+        // axios.get('http://localhost:7072/wits/create' + '?roarWit=' + witId)
+        axios.get(URL_POST_WIT + '?roarWit=' + witId)
             .then((response) => {
                 // no response
             })
@@ -90,8 +90,8 @@ export class WitStore extends EventEmitter {
 
     handlePostWit(wit) {
         axios.defaults.headers.common = {Authorization: `Bearer ${this.authStore.state.authUser.accessToken}`};
-        // axios.post(URL_POST_WIT, {
-        axios.post('http://localhost:7072/wits/create', {
+        axios.post(URL_POST_WIT, {
+        // axios.post('http://localhost:7072/wits/create', {
             text: wit.text,
             // movieTags: [ {movieId: <id>, title: <title>}, ]
             movieTags: wit.movieTags,
