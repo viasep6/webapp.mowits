@@ -38,8 +38,8 @@ function FavoritesPage(props) {
         setReady(true)
     }
 
-    const log = (txt) => console.log(txt)
-    const add = (listTitle) => log(listTitle)
+    const goToMovie = (movieId) => props.history.push('/movie/' + movieId )
+    const add = (listTitle) => console.log(listTitle)
 
     return (
         <Grid
@@ -75,7 +75,7 @@ function FavoritesPage(props) {
                             key={list.name}
                             title={list.name}
                             movieList={list.movies}
-                            onItem={log}
+                            onMovieClicked={goToMovie}
                             onAdd={add}
                             addButton={true}
                             enableDelete={true}

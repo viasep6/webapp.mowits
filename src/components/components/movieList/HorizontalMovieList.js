@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 export default function HorizontalMovieList(props) {
     const title = props.title
     const movies = props.movieList
-    const itemClicked = (movieId) => props.onItem(movieId)
+    const itemClicked = (movieId) => props.onMovieClicked(movieId)
     const deleteClicked = (movieId) => console.log(movieId)
     const roarClicked = (movieId) => console.log(movieId)
     const addMovie = () => props.onAdd(props.title)
