@@ -166,9 +166,7 @@ function MoviePage(props) {
             <Grid container direction={"column"} spacing={2} sx={{mt: 5}}>
                 <Paper elevation={7} sx={{borderRadius: '8px', mx: 'auto', width: '50%'}}>
                     <Stack spacing={4}>
-                        <WitComponent/>
-                        <WitComponent/>
-                        <WitComponent/>
+                        <Typography variant={"h5"}>Wits go here</Typography>
                     </Stack>
                 </Paper>
             </Grid>
