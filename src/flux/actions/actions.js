@@ -1,12 +1,15 @@
 import dispatcher from '../dispatcher';
 import {
+    SIGNUP,
+    LOGIN,
+    LOGOUT,
     GET_USER_BY_USERNAME,
     GET_WITS_BY_USER, LOGIN,
-    LOGOUT,
     POST_WIT,
-    SIGNUP,
+    ROAR_WIT,
     GET_MOVIE_LISTS_BY_USER_ID,
-    NEW_USER_MOVIE_LISTS
+    NEW_USER_MOVIE_LISTS,
+    GET_MOVIE_DETAILS
 } from '../../util/constants';
 
 /*
@@ -52,10 +55,27 @@ export const postWit = (wit) => {
     })
 }
 
-export const getWitsByUser = (user) => {
+export const getWitsByUser = (data) => {
     dispatcher.dispatch({
         type: GET_WITS_BY_USER,
-        payload: user
+        payload: data
+    })
+}
+
+export const roarWit = (witId) => {
+    dispatcher.dispatch( {
+        type: ROAR_WIT,
+        payload: witId
+    })
+}
+
+/*
+ Movie actions
+*/
+export const getMovieDetails = (movieId) => {
+    dispatcher.dispatch( {
+        type: GET_MOVIE_DETAILS,
+        payload: movieId
     })
 }
 

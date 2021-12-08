@@ -1,5 +1,5 @@
 /* global */
 body {
     font-family: Roboto, Helvetica, Arial, sans-serif;
+    overflow-y: scroll;
 }
-

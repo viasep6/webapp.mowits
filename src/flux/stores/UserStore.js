@@ -27,7 +27,7 @@ export class UserStore extends EventEmitter {
             }
         });
 
-        authStore.on(CHANGE_AUTH_TOKEN, this.authUserChanged);
+        authStore.authAddChangeListener(CHANGE_AUTH_TOKEN, this.authUserChanged);
 
     }
 
@@ -44,7 +44,6 @@ export class UserStore extends EventEmitter {
     };
 
     getLoggedInUser = () => {
-
         axios.defaults.headers.common = {Authorization: `Bearer ${this.state.authUser.accessToken}`};
         axios.get(URL_GET_USER)
             .then((response) => {

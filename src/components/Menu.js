@@ -95,11 +95,13 @@ function MenuBar(props) {
 
     const handleCloseNavMenu = (event) => {
         setAnchorElNav(null);
-        goToPath('/' + event.currentTarget.id);
+        if (event.currentTarget.id) {
+            goToPath('/' + event.currentTarget.id);
+        }
     };
 
     return (
-        <AppBar position="static" sx={{color: 'primary.text.primary', backgroundColor: 'primary.background.primary', position: 'fixed', top:0}}>
+        <AppBar position="static" sx={{color: 'primary.text.primary', backgroundColor: 'primary.background.primary', position: 'fixed', top:0}} style={{zIndex:999}}>
             <Container maxWidth="lg">
                 <Toolbar disableGutters>
                     <Typography
@@ -143,26 +145,20 @@ function MenuBar(props) {
                             }}
                         >
 
-                            <MenuItem key="fav" onClick={handleCloseNavMenu}>
+                            <MenuItem id={"favorites"} key="fav" onClick={handleCloseNavMenu}>
                                 <Typography textAlign="center">Favorites</Typography>
                             </MenuItem>
-                            <MenuItem key="test" onClick={handleCloseNavMenu}>
+                            <MenuItem id={"test"} key="test" onClick={handleCloseNavMenu}>
                                 <Typography textAlign="center">Test</Typography>
                             </MenuItem>
-                            <MenuItem key="feed" onClick={handleCloseNavMenu}>
-                                <Typography textAlign="center">Feed</Typography>
+                            <MenuItem id={"feed"} key="feed" onClick={handleCloseNavMenu}>
+                                <Typography textAlign="center">My Feed</Typography>
                             </MenuItem>
-                            <MenuItem key="picks" onClick={handleCloseNavMenu}>
+                            <MenuItem id={"picks"} key="picks" onClick={handleCloseNavMenu}>
                                 <Typography textAlign="center">Picks</Typography>
                             </MenuItem>
-                            <MenuItem key="statistics" onClick={handleCloseNavMenu}>
+                            <MenuItem id={"statistics"} key="statistics" onClick={handleCloseNavMenu}>
                                 <Typography textAlign="center">Statistics</Typography>
-                            </MenuItem>
-                            <MenuItem key="profile" onClick={handleCloseNavMenu}>
-                                <Typography textAlign="center">Profile</Typography>
-                            </MenuItem>
-                            <MenuItem key="logout" onClick={handleCloseNavMenu}>
-                                <Typography textAlign="center">Logout</Typography>
                             </MenuItem>
                         </Menu>
                     </Box>
@@ -196,7 +192,7 @@ function MenuBar(props) {
                                 onClick={handleCloseNavMenu}
                                 sx={sxMenuButton}
                             >
-                                Feed
+                                My Feed
                             </Button>
                             <Button
                                 id="picks"

@@ -16,9 +16,9 @@ import {UserStore} from './flux/stores/UserStore';
 import {AuthStore} from './flux/stores/AuthStore';
 import {WitStore} from './flux/stores/WitStore';
 import {FavoritesStore} from './flux/stores/FavoritesStore'
+import {MovieStore} from './flux/stores/MovieStore';
 import {Container} from '@mui/material';
-
-
+import FeedPage from './components/pages/FeedPage';
 
 const theme = createTheme({
     palette: {
@@ -42,11 +42,14 @@ const theme = createTheme({
 
 });
 
+
 const authStore = new AuthStore();
 const userStore = new UserStore(authStore);
 const witStore = new WitStore(authStore)
 const favoritesStore = new FavoritesStore()
+const movieStore = new MovieStore();
 const stores = {authStore, userStore, witStore, favoritesStore};
+
 
 function App() {
     return (
@@ -55,13 +58,14 @@ function App() {
                 <Menu stores={stores}/>
                 <Container fixed maxWidth={'lg'} sx={{pt:6, pb: 6}} disableGutters>
                     <Switch>
-                        <ProtectedRoute exact path="/favorites" component={() => <FavoritesPage stores={stores}/>}/>
+                        <ProtectedRoute exact authStore={authStore} path="/favorites" component={() => <FavoritesPage stores={stores}/>}/>
+                        <ProtectedRoute exact authStore={authStore} path="/feed" component={() => <FeedPage stores={stores}/>}/>
                         <Route exact path="/login" component={() => <LoginPage stores={stores}/>}/>
                         <Route exact path="/signup" component={() => <SignupPage stores={stores}/>}/>
                         <Route exact path="/test" component={() => <TestPage stores={stores}/>}/>
                         <Route exact path="/" component={() => <HomePage stores={stores}/>}/>
                         <Route path="/profile/:displayName" component={() => <ProfilePage stores={stores}/>}/>
-                        <Route path={'/movie/:id'} component={() => <MoviePage stores={stores}/>}/>
+                        <Route path={'/movie/:id'} component={() => <MoviePage movieStore={movieStore}/>}/>
                         <Route component={() => <ErrorPage/>}/>
                     </Switch>
                 </Container>

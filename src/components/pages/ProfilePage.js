@@ -5,13 +5,16 @@ import {withRouter} from 'react-router-dom';
 import * as actions from '../../flux/actions/actions';
 import {GET_USER_BY_USERNAME} from '../../util/constants';
 import {CircularProgress, Grid, Paper} from '@mui/material';
-import WriteWitComponent from '../components/wits/WriteWitComponent';
 import ListWitComponent from '../components/wits/ListWitComponent';
+import Typography from '@mui/material/Typography';
+
 
 function ProfilePage(props) {
 
     const UserStore = props.stores.userStore;
     const WitStore = props.stores.witStore;
+
+
     const defaultProfileImage = require('../../assets/img/defaultprofile.jpg').default;
     const [user, setUser] = useState(
         {witCount: 0, favCount: 0, roarCount: 0, profileImage: defaultProfileImage});
@@ -101,8 +104,8 @@ function ProfilePage(props) {
                             justifyContent="center"
                             alignItems="center"
                         >
-                            <WriteWitComponent witStore={WitStore} userStore={UserStore}/>
-                            <ListWitComponent/>
+                            <Typography variant={'h5'}>Wits by user</Typography>
+                            <ListWitComponent witStore={WitStore} authStore={props.stores.authStore} getByUser={user}/>
                         </Grid>
                     </Grid>
 
