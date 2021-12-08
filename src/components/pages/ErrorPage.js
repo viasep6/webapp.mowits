@@ -5,7 +5,7 @@ function ErrorPage() {
 
     const image = require('../../assets/img/404image.png').default;
     return (
-        <Grid container spacing={2} sx={{justifyContent: 'center', mx: 'auto', m: 5}}>
+        <Grid container sx={{justifyContent: 'center', mx: 0, m: 0, pt:5, pb:5}}>
             <Grid item xs={6} sx={{textAlign: 'center'}}>
                 <Paper elevation={3} sx={{p:2}}>
                     <img alt="404 not found" src={image} height={100} width={100}/>
