@@ -22,9 +22,7 @@ import {auth} from '../../firebase/firebase';
 import Box from '@mui/material/Box';
 import {ArrowDownwardOutlined} from '@mui/icons-material';
 import Image from 'mui-image';
-import likeIcon from '../../assets/img/like-icon.png';
 import Badge from '@mui/material/Badge';
-import {default as roarImage} from '../../assets/img/menu_logo.png';
 import Button from '@mui/material/Button';
 
 function MoviePage(props) {
@@ -177,7 +175,7 @@ function MoviePage(props) {
                         <Paper sx={{borderRadius: 1, p: 1}}>
                             <Button variant={'outlined'} onClick={handleFollowClick}>follow</Button>
                             <Badge color="success" badgeContent={10} max={9999} className={'shake'}>
-                                <Image src={roarImage} fit={'scale-down'} height={40} width={40} title={'test'}/>
+                                <Image src={roarImage} fit={'scale-down'} height={40} width={40} title={'Rawr the movie to get wits on your feed'}/>
                             </Badge>
                         </Paper>
                     </Grid>
