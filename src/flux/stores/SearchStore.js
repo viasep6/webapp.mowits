@@ -25,7 +25,9 @@ export class SearchStore extends EventEmitter {
             .then((response) => {
 
                 let searchOptions = response.data.map(movie => {
-                    return {label: movie.title, id: movie.id}
+                    let release = (movie.release_date !== undefined) ? ` (${movie.release_date.split('-')[0]})` : ' (N/A)';
+
+                    return {label: movie.title + release, id: movie.id}
                 })
 
                 this.emit(GET_SEARCH_RESULTS, searchOptions)
