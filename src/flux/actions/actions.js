@@ -1,5 +1,18 @@
 import dispatcher from '../dispatcher';
-import {GET_USER_BY_USERNAME, GET_WITS_BY_USER, LOGIN, LOGOUT, POST_WIT, ROAR_WIT, SIGNUP} from '../../util/constants';
+import {
+    SIGNUP,
+    LOGIN,
+    LOGOUT,
+    GET_WITS_BY_USER,
+    GET_WITS_BY_FEED,
+    POST_WIT,
+    ROAR_WIT,
+    GET_USER_BY_USERNAME,
+    SET_USER_PROFILE_IMAGE,
+    GET_MOVIE_DETAILS,
+    GET_MOVIE_LISTS_BY_USER_ID,
+    NEW_USER_MOVIE_LISTS, GET_WITS_BY_MOVIE,
+} from '../../util/constants';
 
 /*
     Auth actions
@@ -33,6 +46,12 @@ export const getUserByUsername = (username) => {
         payload: username
     })
 }
+export const setUserProfileImage = (profileImageUrl) => {
+    dispatcher.dispatch({
+        type: SET_USER_PROFILE_IMAGE,
+        payload: profileImageUrl
+    })
+}
 
 /*
     Wits actions
@@ -51,9 +70,50 @@ export const getWitsByUser = (data) => {
     })
 }
 
+export const getWitsByFeed = (data) => {
+    dispatcher.dispatch({
+        type: GET_WITS_BY_FEED,
+        payload: data
+    })
+}
+
+export const getWitsByMovie = (movieId) => {
+    dispatcher.dispatch({
+        type: GET_WITS_BY_MOVIE,
+        payload: movieId
+    })
+}
+
 export const roarWit = (witId) => {
     dispatcher.dispatch( {
         type: ROAR_WIT,
         payload: witId
+    })
+}
+
+/*
+ Movie actions
+*/
+export const getMovieDetails = (movieId) => {
+    dispatcher.dispatch( {
+        type: GET_MOVIE_DETAILS,
+        payload: movieId
+    })
+}
+
+/*
+    Movie Lists.
+ */
+export const getMovieListsByUserID = (accessToken) => {
+    dispatcher.dispatch({
+        type: GET_MOVIE_LISTS_BY_USER_ID,
+        payload: accessToken
+    })
+}
+
+export const newUserMovieLists = (lists) => {
+    dispatcher.dispatch({
+        type: NEW_USER_MOVIE_LISTS,
+        payload: lists
     })
 }
