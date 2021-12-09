@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {EventEmitter} from 'events';
-import {GET_MOVIE_DETAILS, MOVIES_URL_DETAILS, POST_WIT, SUBSCRIBE_TO_MOVIE, URL_POST_WIT} from '../../util/constants';
+import {GET_MOVIE_DETAILS, MOVIES_URL_DETAILS, SUBSCRIBE_TO_MOVIE} from '../../util/constants';
 import dispatcher from '../dispatcher';
 
 export class MovieStore extends EventEmitter {
