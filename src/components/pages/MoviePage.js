@@ -9,7 +9,7 @@ import {
     CardMedia,
     CircularProgress,
     Container,
-    Grid,
+    Grid, Modal,
     Paper,
     Typography,
 } from '@mui/material';
@@ -22,6 +22,10 @@ import {auth} from '../../firebase/firebase';
 import Box from '@mui/material/Box';
 import {ArrowDownwardOutlined} from '@mui/icons-material';
 import Image from 'mui-image';
+import likeIcon from '../../assets/img/like-icon.png';
+import Badge from '@mui/material/Badge';
+import {default as roarImage} from '../../assets/img/menu_logo.png';
+import Button from '@mui/material/Button';
 
 function MoviePage(props) {
 
@@ -35,6 +39,8 @@ function MoviePage(props) {
     const [movie, setMovie] = useState();
     const [isLoading, setLoading] = useState(true);
     const [isUserLoggedIn, setIsUserLoggedIn] = useState(auth.currentUser !== null);
+    const [openModal, setOpenModalModal] = useState(false);
+    const roarImage = require('../../assets/img/like-icon.png').default;
 
     useEffect(() => {
         if (!isNaN(parseInt(movieId))) {
@@ -67,6 +73,16 @@ function MoviePage(props) {
         return cast.picture_path;
     }
 
+    const handleOpenModal = () => setOpenModalModal(true);
+
+    const handleCloseModal = () => setOpenModalModal(false);
+
+    const handleFollowClick = () => {
+        actions.followMovie(movie);
+    }
+
+
+
     return isLoading ? (
         <Container>
             <Grid container direction={'column'}>
@@ -79,7 +95,7 @@ function MoviePage(props) {
             </Grid>
         </Container>
     ) : (
-        <Container sx={{mt: 5}}>
+        <Container sx={{mt: 0, mb:0}} disableGutters>
             {/*backdrop*/}
             <Grid sx={{height: '100vh'}}>
                 <Box sx={{position: 'absolute', top: 0, left: 0, width: '100%', zIndex: -1}}>
@@ -97,7 +113,6 @@ function MoviePage(props) {
                                   left: 0,
                                   width: '100%',
                                   height: '100vh',
-                                  // background: 'linear-gradient(0deg, rgba(255,255,255,1) 3%, rgba(255,255,255,0.4962185557816877) 24%, rgba(255,255,255,0) 100%)',
                               }}
                         >
                             <Grid container direction={'row'} spacing={0}
@@ -136,67 +151,99 @@ function MoviePage(props) {
                 </Box>
             </Grid>
             {/*content*/}
-            <Grid container direction={'row'} spacing={4}>
-                <Grid item xs={6} >
-                    <Paper elevation={4} >
-                        <Image src={movie.poster_path} alt="movie poster" />
+
+            <Grid
+                container
+                direction="row"
+                spacing={2}
+            >
+                {/*poster grid*/}
+                <Grid item md>
+                    <Paper elevation={2} sx={{borderRadius: 1}}>
+                        <Image src={movie.poster_path} alt="movie poster" onClick={handleOpenModal}
+                               sx={[{}, () => ({cursor: 'pointer'})]}/>
                     </Paper>
                 </Grid>
-                <Grid item xs >
-                    <Paper sx={{borderRadius: '2px', p: 1}}>
-                        <Typography variant={'h6'}>Movie Information:</Typography>
-                        <Typography>Genre(s): {movie.genres}</Typography>
-                        <Typography>Languages: {movie.spoken_languages}</Typography>
-                        <Typography>Website: <a href={movie.homepage}>Link</a></Typography>
-                    </Paper>
-                    <Paper  sx={{mt: 4, borderRadius: '2px', p: 1}}>
-                        <Typography variant={'h6'}>Statistics:</Typography>
-                        <Typography>TMDB Score: {movie.vote_average} ({movie.vote_count} votes)</Typography>
-                        <Typography>Wits: <b>TO BE IMPLEMENTED</b></Typography>
-                        <Typography>Budget: ${movie.budget}</Typography>
-                        <Typography>Revenue: ${movie.revenue}</Typography>
-                        <Typography>Run time: {movie.runtime} minutes</Typography>
-                    </Paper>
-                    <Paper sx={{mt: 4, borderRadius: '2px', p: 1}}>
-                        <Typography variant={'h6'}>Director(s):</Typography>
-                        <Grid container>
-                            {movie.crew.map((cast, key) => (
-                                <Grid item key={key} xs={5}>
-                                    <Card>
-                                        <CardMedia
-                                            component="img"
-                                            image={getProfileImage(cast)}
-                                            height="300"
-                                            width="auto"
-                                        />
-                                        <CardContent>
-                                            <Typography>{cast.name}</Typography>
-                                        </CardContent>
-                                    </Card>
-                                </Grid>
-                            ))}
-                        </Grid>
-                    </Paper>
+                {/*right column grid*/}
+                <Grid
+                    item
+                    xs
+                    container
+                    direction="column"
+                    justifyContent={'space-between'}
+                    spacing={2}
+                >
+                    <Grid item >
+                        <Paper sx={{borderRadius: 1, p: 1}}>
+                            <Button variant={'outlined'} onClick={handleFollowClick}>follow</Button>
+                            <Badge color="success" badgeContent={10} max={9999} className={'shake'}>
+                                <Image src={roarImage} fit={'scale-down'} height={40} width={40} title={'test'}/>
+                            </Badge>
+                        </Paper>
+                    </Grid>
+                    <Grid item>
+                        <Paper sx={{borderRadius: 1, p: 1}}>
+                            <Typography variant={'h6'}>Movie Information:</Typography>
+                            <Typography>Genre(s): {movie.genres}</Typography>
+                            <Typography>Languages: {movie.spoken_languages}</Typography>
+                            <Typography>Website: <a href={movie.homepage}>Link</a></Typography>
+                        </Paper>
+                    </Grid>
+                    <Grid item>
+                        <Paper sx={{borderRadius: 1, p: 1}}>
+                            <Typography variant={'h6'}>Statistics:</Typography>
+                            <Typography>TMDB Score: {movie.vote_average} ({movie.vote_count} votes)</Typography>
+                            <Typography>Wits: <b>TO BE IMPLEMENTED</b></Typography>
+                            <Typography>Budget: ${movie.budget}</Typography>
+                            <Typography>Revenue: ${movie.revenue}</Typography>
+                            <Typography>Run time: {movie.runtime} minutes</Typography>
+                        </Paper>
+                    </Grid>
+                    <Grid item>
+                        <Paper sx={{borderRadius: 1, p: 1}}>
+                            <Typography variant={'h6'}>Director(s):</Typography>
+                            <Grid container>
+                                {movie.crew.map((cast, key) => (
+                                    <Grid item key={key}>
+                                        <Card>
+                                            <CardMedia
+                                                component="img"
+                                                image={getProfileImage(cast)}
+                                                height="300"
+                                                width="auto"
+                                            />
+                                            <CardContent>
+                                                <Typography>{cast.name}</Typography>
+                                            </CardContent>
+                                        </Card>
+                                    </Grid>
+                                ))}
+                            </Grid>
+                        </Paper>
+                    </Grid>
                 </Grid>
             </Grid>
-            <Grid container direction={'column'} spacing={2} style={{width: '100%'}}>
+
+
+            {/*casts*/}
+            <Grid container direction={'column'} spacing={2}>
                 <Grid item>
                     <Accordion>
                         <AccordionSummary
-                            expandIcon={<ExpandMoreIcon/>} sx={{mt: 2, borderRadius: '8px'}}
+                            expandIcon={<ExpandMoreIcon/>} sx={{mt: 2, borderRadius: 1}}
                         >
                             <Typography mx={'auto'} variant={'h5'}>Cast</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
-                            <Grid container>
+                            <Grid container justifyContent={'center'}>
                                 {movie.cast.map((cast, key) => (
-                                    <Grid item key={key} xs={2}>
+                                    <Grid item key={key} xs={2} sx={{m: 2}}>
                                         <Card sx={{height: 350}}>
                                             <CardMedia
                                                 component="img"
                                                 image={getProfileImage(cast)}
                                                 height="225"
-                                                sx={{borderRadius: '8px'}}
+                                                sx={{borderRadius: 1}}
                                             />
                                             <CardContent>
                                                 <Typography>{cast.name}</Typography>
@@ -210,6 +257,7 @@ function MoviePage(props) {
                     </Accordion>
                 </Grid>
             </Grid>
+            {/*wits */}
             <Grid container direction={'column'} alignItems={'center'} spacing={2} sx={{mt: 5}}>
                 <Typography variant={'h4'}>Movie wits</Typography>
                 { // is user logged in
@@ -217,6 +265,30 @@ function MoviePage(props) {
                 }
                 <ListWitComponent witStore={WitStore} authStore={AuthStore} movie={movie}/>
             </Grid>
+
+            {/*poster large modal*/}
+            <div>
+                <Modal
+                    open={openModal}
+                    onClose={handleCloseModal}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                    sx={{bgcolor: 'rgba(0,0,0,0.85)'}}
+                >
+                    <Box sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        height: '95%',
+                        bgcolor: 'black',
+                        border: 0,
+                        borderRadius: 0,
+                    }}>
+                        <Image src={movie.poster_path} alt="movie poster" onClick={handleCloseModal}/>
+                    </Box>
+                </Modal>
+            </div>
         </Container>
     );
 

@@ -11,7 +11,7 @@ import {
     SET_USER_PROFILE_IMAGE,
     GET_MOVIE_DETAILS,
     GET_MOVIE_LISTS_BY_USER_ID,
-    NEW_USER_MOVIE_LISTS, GET_WITS_BY_MOVIE, GET_SEARCH_RESULTS,
+    NEW_USER_MOVIE_LISTS, GET_WITS_BY_MOVIE, GET_SEARCH_RESULTS, SUBSCRIBE_TO_MOVIE,
 } from '../../util/constants';
 
 /*
@@ -107,6 +107,14 @@ export const getSearchResults = (query) => {
         payload: query
     })
 }
+
+export const followMovie = (movie) => {
+    dispatcher.dispatch({
+        type: SUBSCRIBE_TO_MOVIE,
+        payload: {movieId: movie.id, movieTitle: movie.title}
+    })
+}
+
 /*
     Movie Lists.
  */
