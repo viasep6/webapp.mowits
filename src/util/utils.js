@@ -15,3 +15,13 @@ export function getUnique(arr, comp) {
         .filter((e) => arr[e]).map(e => arr[e]);
     return unique;
 }
+
+/*
+    truncate string and replace last letters with dots.
+ */
+export function truncate(input, length) {
+    if (input.length > length) {
+        return input.substring(0, length) + '...';
+    }
+    return input;
+};

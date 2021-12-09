@@ -14,6 +14,8 @@ function WriteWitComponent(props) {
     const witStore = props.witStore;
 
     const userStore = props.userStore;
+    const movie = props.movie;
+
     const [count, setCount] = React.useState(0);
     const maxCount = 200;
     const [text, setText] = React.useState('');
@@ -42,7 +44,7 @@ function WriteWitComponent(props) {
     const onPostWit = () => {
         actions.postWit({
             text: text,
-            movieTags: [],
+            movieTags: [{movieId: movie.id, title:movie.title}],
             userTags: [],
         });
         setText('');

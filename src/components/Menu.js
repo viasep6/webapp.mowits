@@ -37,6 +37,7 @@ function MenuBar(props) {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loggedInUser, setLoggedInUser] = useState(null);
 
+
     const handleLogout = () => {
         actions.logout();
     };

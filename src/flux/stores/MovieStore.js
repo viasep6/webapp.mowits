@@ -44,11 +44,11 @@ export class MovieStore extends EventEmitter {
             });
     }
 
-    addMovieChangeListener = (event, callback) => {
+    addChangeListener = (event, callback) => {
         this.on(event, callback);
     };
 
-    removeMovieChangeListener = (event, callback) => {
+    removeChangeListener = (event, callback) => {
         this.off(event, callback);
     };
 }

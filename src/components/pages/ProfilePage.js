@@ -83,10 +83,14 @@ function ProfilePage(props) {
             if ((props.match.params.displayName && !prevProps) ||
                 (props.match.params.displayName !== prevProps?.match.params.displayName)) {
                 actions.getUserByUsername(props.match.params.displayName);
-                checkIfOwnProfile();
+                if (UserStore.state.loggedInUser?.displayName === props.match.params.displayName) {
+                    if (!isOwnProfile) {
+                        setIsOwnProfile(true);
+                    }
+                }
             }
         }
-    }, [props, prevProps, profileUser]);
+    }, [props, prevProps, isOwnProfile, UserStore.state.loggedInUser]);
 
     const [profileImage, setProfileImage] = useState(profileUser.profileImage);
     const [open, setOpen] = useState(false);
@@ -188,7 +192,7 @@ function ProfilePage(props) {
                             alignItems="center"
                         >
                             <Typography variant={'h5'}>Wits by user</Typography>
-                            <ListWitComponent witStore={WitStore} authStore={props.stores.authStore} getByUser={profileUser}/>
+                            <ListWitComponent witStore={WitStore} authStore={props.stores.authStore} user={profileUser}/>
                         </Grid>
                         <Modal
                             open={open}

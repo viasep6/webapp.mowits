@@ -3,3 +3,45 @@ body {
     font-family: Roboto, Helvetica, Arial, sans-serif;
     overflow-y: scroll;
 }
+
+
+
+
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background: rgba(27, 94, 32, 0.55);
+}
+::-webkit-scrollbar-corner {
+    background: #0c0c0c;
+}
+
+
+.arrow {
+    animation: bounce 1s infinite alternate;
+    -webkit-animation: bounce 1s infinite alternate;
+}
+@keyframes bounce {
+    from {
+        transform: translateY(0px);
+    }
+    to {
+        transform: translateY(-15px);
+    }
+}
+@-webkit-keyframes bounce {
+    from {
+        transform: translateY(0px);
+    }
+    to {
+        transform: translateY(-15px);
+    }
+}

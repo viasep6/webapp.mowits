@@ -17,7 +17,7 @@ import {AuthStore} from './flux/stores/AuthStore';
 import {WitStore} from './flux/stores/WitStore';
 import {FavoritesStore} from './flux/stores/FavoritesStore'
 import {MovieStore} from './flux/stores/MovieStore';
-import {Container} from '@mui/material';
+import {Container, CssBaseline} from '@mui/material';
 import FeedPage from './components/pages/FeedPage';
 
 const theme = createTheme({
@@ -48,25 +48,28 @@ const userStore = new UserStore(authStore);
 const witStore = new WitStore(authStore)
 const favoritesStore = new FavoritesStore()
 const movieStore = new MovieStore();
-const stores = {authStore, userStore, witStore, favoritesStore};
+const stores = {authStore, userStore, witStore, favoritesStore, movieStore};
+
 
 
 function App() {
+
     return (
         <ThemeProvider theme={theme}>
+            <CssBaseline/>
             <BrowserRouter>
                 <Menu stores={stores}/>
                 <Container fixed maxWidth={'lg'} sx={{pt:6, pb: 6}} disableGutters>
                     <Switch>
+                        <Route exact path="/" component={() => <HomePage stores={stores}/>}/>
+                        <Route exact path="/home" component={() => <HomePage stores={stores}/>}/>
                         <ProtectedRoute exact authStore={authStore} path="/favorites" component={() => <FavoritesPage stores={stores}/>}/>
                         <ProtectedRoute exact authStore={authStore} path="/feed" component={() => <FeedPage stores={stores}/>}/>
                         <Route exact path="/login" component={() => <LoginPage stores={stores}/>}/>
                         <Route exact path="/signup" component={() => <SignupPage stores={stores}/>}/>
-                        <Route exact path="/test" component={() => <TestPage stores={stores}/>}/>
-                        <Route exact path="/" component={() => <HomePage stores={stores}/>}/>
-                        <Route exact path="/home" component={() => <HomePage stores={stores}/>}/>
                         <Route path="/profile/:displayName" component={() => <ProfilePage stores={stores}/>}/>
-                        <Route path={'/movie/:id'} component={() => <MoviePage movieStore={movieStore}/>}/>
+                        <Route path={'/movie/:id'} component={() => <MoviePage stores={stores}/>}/>
+                        <Route exact path="/test" component={() => <TestPage stores={stores}/>}/>
                         <Route component={() => <ErrorPage/>}/>
                     </Switch>
                 </Container>

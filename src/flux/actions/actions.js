@@ -11,7 +11,7 @@ import {
     SET_USER_PROFILE_IMAGE,
     GET_MOVIE_DETAILS,
     GET_MOVIE_LISTS_BY_USER_ID,
-    NEW_USER_MOVIE_LISTS,
+    NEW_USER_MOVIE_LISTS, GET_WITS_BY_MOVIE,
 } from '../../util/constants';
 
 /*
@@ -74,6 +74,13 @@ export const getWitsByFeed = (data) => {
     dispatcher.dispatch({
         type: GET_WITS_BY_FEED,
         payload: data
+    })
+}
+
+export const getWitsByMovie = (movieId) => {
+    dispatcher.dispatch({
+        type: GET_WITS_BY_MOVIE,
+        payload: movieId
     })
 }
 
