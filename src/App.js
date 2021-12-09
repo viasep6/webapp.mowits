@@ -11,7 +11,6 @@ import ProtectedRoute from './util/ProtectedRoute';
 import HomePage from './components/pages/HomePage';
 import ProfilePage from './components/pages/ProfilePage';
 import FavoritesPage from "./components/pages/FavoritesPage";
-
 import {UserStore} from './flux/stores/UserStore';
 import {AuthStore} from './flux/stores/AuthStore';
 import {WitStore} from './flux/stores/WitStore';
@@ -19,6 +18,7 @@ import {FavoritesStore} from './flux/stores/FavoritesStore'
 import {MovieStore} from './flux/stores/MovieStore';
 import {Container, CssBaseline} from '@mui/material';
 import FeedPage from './components/pages/FeedPage';
+import {SearchStore} from "./flux/stores/SearchStore";
 
 const theme = createTheme({
     palette: {
@@ -48,9 +48,8 @@ const userStore = new UserStore(authStore);
 const witStore = new WitStore(authStore)
 const favoritesStore = new FavoritesStore()
 const movieStore = new MovieStore();
-const stores = {authStore, userStore, witStore, favoritesStore, movieStore};
-
-
+const searchStore = new SearchStore();
+const stores = {authStore, userStore, witStore, favoritesStore, searchStore, movieStore};
 
 function App() {
 

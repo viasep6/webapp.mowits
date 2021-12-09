@@ -49,7 +49,7 @@ function MoviePage(props) {
             AuthStore.authRemoveChangeListener(CHANGE_AUTH_TOKEN, handleAuthChanged);
         };
         // eslint-disable-next-line
-    }, []);
+    }, [movieId]);
 
     function handleAuthChanged(user) {
         setIsUserLoggedIn(user !== null);
