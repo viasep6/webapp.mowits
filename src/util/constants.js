@@ -2,10 +2,10 @@
 export const BASE_URL = process.env['REACT_APP_BASE_URL']
 export const URL_SIGNUP =  BASE_URL + '/users/create'
 export const URL_GET_USER = BASE_URL + '/users/get'
-export const URL_GET_BY_USER_ID = 'http://localhost:7072' + '/wits/get_by_userid'
-export const URL_GET_BY_FEED = 'http://localhost:7072' + '/wits/get_by_feed'
-export const URL_GET_BY_MOVIE = 'http://localhost:7072' + '/wits/get_by_movie'
-export const URL_POST_WIT = 'http://localhost:7072' + '/wits/create'
+export const URL_GET_BY_USER_ID = BASE_URL + '/wits/get_by_userid'
+export const URL_GET_BY_FEED = BASE_URL + '/wits/get_by_feed'
+export const URL_GET_BY_MOVIE = BASE_URL + '/wits/get_by_movie'
+export const URL_POST_WIT = BASE_URL + '/wits/create'
 export const URL_CHANGE_PROFILE_IMAGE = BASE_URL + '/users/create'
 
 /* auth */
