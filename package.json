@@ -16,6 +16,7 @@
     "firebase": "^9.4.1",
     "flux": "^4.0.2",
     "history": "^5.1.0",
+    "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "mui-image": "^1.0.0",
     "npm-check": "^5.9.2",

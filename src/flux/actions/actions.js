@@ -11,7 +11,7 @@ import {
     SET_USER_PROFILE_IMAGE,
     GET_MOVIE_DETAILS,
     GET_MOVIE_LISTS_BY_USER_ID,
-    NEW_USER_MOVIE_LISTS, GET_WITS_BY_MOVIE,
+    NEW_USER_MOVIE_LISTS, GET_WITS_BY_MOVIE, GET_SEARCH_RESULTS,
 } from '../../util/constants';
 
 /*
@@ -101,6 +101,12 @@ export const getMovieDetails = (movieId) => {
     })
 }
 
+export const getSearchResults = (query) => {
+    dispatcher.dispatch( {
+        type: GET_SEARCH_RESULTS,
+        payload: query
+    })
+}
 /*
     Movie Lists.
  */
