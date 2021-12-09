@@ -44,5 +44,3 @@ export const DEBOUNCE_TIME = 600
 /* lists */
 export const GET_MOVIE_LISTS_BY_USER_ID = 'GET_MOVIE_LISTS_BY_USER_ID'
 export const NEW_USER_MOVIE_LISTS = 'NEW_USER_MOVIE_LISTS'
-
-
