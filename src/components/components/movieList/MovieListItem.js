@@ -17,7 +17,9 @@ export default function MovieListItem(props) {
     const roarClicked = () => props.onRoar(movie.id)
 
     return (
-        <Card sx={{p: 2, maxWidth:355, margin:props.margin}}>
+        <Card sx={{p: 2, maxWidth:355, margin:props.margin}}
+              onClick={itemClicked}
+        >
             <Grid
                 container
                 direction="row"
@@ -93,14 +95,6 @@ export default function MovieListItem(props) {
                                      title="Movie roars!"/>
                             </IconButton>
                         </Badge>
-                        <IconButton
-                            color="primary"
-                            aria-label="Go to movie."
-                            component="span"
-                            onClick={itemClicked}
-                        >
-                            <ArrowForwardIosIcon />
-                        </IconButton>
                     </Grid>
                 </Grid>
             </Grid>

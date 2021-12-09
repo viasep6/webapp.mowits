@@ -57,11 +57,6 @@ export class FavoritesStore extends EventEmitter {
     }
 
     listReceived(list) {
-        // for (let i = 0; i < this.state.movieLists; i++) {
-        //     if (this.state.movieLists[i].name === list.name) {
-        //         this.state.movieLists[i] = list
-        //     }
-        // }
         this.emit(USER_MOVIE_LIST, list)
     }
 

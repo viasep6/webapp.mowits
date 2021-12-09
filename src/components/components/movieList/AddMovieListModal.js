@@ -52,17 +52,17 @@ export default function AddMovieListModal(props) {
 
     const handleOpen = () => setOpen(true);
     const handleClose = (lists) => {
-        props.onNewLists(lists)
         setTxtFieldValue('')
         setHelperTxt('')
+        if (typeof props.onNewLists !== 'undefined'){
+            props.onNewLists(lists)
+        }
         setOpen(false);
     }
 
-
-
     const addList = () => {
         if (txtFieldValue === '') {
-            updateError('A name must be entered!')
+            updateError(true, 'A name must be entered!')
         }
         else {
             setInProgress(true)
