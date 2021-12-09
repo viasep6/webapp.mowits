@@ -21,7 +21,7 @@ function FeedPage(props) {
                 sx={{mt:4}}
             >
                 <WriteWitComponent witStore={WitStore} userStore={UserStore} />
-                <ListWitComponent witStore={WitStore} authStore={AuthStore} getByFeed={true}/>
+                <ListWitComponent witStore={WitStore} authStore={AuthStore} feed={true}/>
             </Grid>
     );
 

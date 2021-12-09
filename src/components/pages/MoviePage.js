@@ -9,159 +9,239 @@ import {
     CardMedia,
     CircularProgress,
     Container,
-    Grid,
+    Grid, Modal,
     Paper,
-    Stack,
-    Typography
-} from "@mui/material";
+    Typography,
+} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import {GET_MOVIE_DETAILS, MOVIES_PROFILE_DEFAULT_URL} from "../../util/constants";
+import {CHANGE_AUTH_TOKEN, GET_MOVIE_DETAILS, MOVIES_PROFILE_DEFAULT_URL} from '../../util/constants';
 import * as actions from '../../flux/actions/actions';
+import ListWitComponent from '../components/wits/ListWitComponent';
+import WriteWitComponent from '../components/wits/WriteWitComponent';
+import {auth} from '../../firebase/firebase';
+import Box from '@mui/material/Box';
+import {ArrowDownwardOutlined} from '@mui/icons-material';
+import Image from 'mui-image';
+import Badge from '@mui/material/Badge';
+import Button from '@mui/material/Button';
 
 function MoviePage(props) {
 
+    const WitStore = props.stores.witStore;
+    const AuthStore = props.stores.authStore;
+    const MovieStore = props.stores.movieStore;
+    const UserStore = props.stores.userStore;
+
+    const movieId = props.match.params.id;
+
     const [movie, setMovie] = useState();
     const [isLoading, setLoading] = useState(true);
-    const movieId = props.match.params.id;
-    const MovieStore = props.movieStore;
+    const [isUserLoggedIn, setIsUserLoggedIn] = useState(auth.currentUser !== null);
+    const [openModal, setOpenModalModal] = useState(false);
+    const roarImage = require('../../assets/img/like-icon.png').default;
 
     useEffect(() => {
-        MovieStore.addMovieChangeListener(GET_MOVIE_DETAILS, handleMovieResponse);
+        if (!isNaN(parseInt(movieId))) {
+            actions.getMovieDetails(movieId);
+        }
+
+        MovieStore.addChangeListener(GET_MOVIE_DETAILS, handleMovieResponse);
+        AuthStore.authAddChangeListener(CHANGE_AUTH_TOKEN, handleAuthChanged);
 
         return function cleanup() {
-            MovieStore.removeMovieChangeListener(GET_MOVIE_DETAILS, handleMovieResponse);
+            MovieStore.removeChangeListener(GET_MOVIE_DETAILS, handleMovieResponse);
+            AuthStore.authRemoveChangeListener(CHANGE_AUTH_TOKEN, handleAuthChanged);
         };
         // eslint-disable-next-line
-    },[])
+    }, [movieId]);
 
-    useEffect(() => {
-        if (movieId !== null) {
-            actions.getMovieDetails(movieId)
-        }
-    },[movieId])
+    function handleAuthChanged(user) {
+        setIsUserLoggedIn(user !== null);
+    }
 
     function handleMovieResponse(movie) {
         setMovie(movie);
-        setLoading(false)
+        setLoading(false);
     }
 
     function getProfileImage(cast) {
         if (cast.picture_path === null) {
             cast.picture_path = MOVIES_PROFILE_DEFAULT_URL;
         }
-        return cast.picture_path
+        return cast.picture_path;
+    }
+
+    const handleOpenModal = () => setOpenModalModal(true);
+
+    const handleCloseModal = () => setOpenModalModal(false);
+
+    const handleFollowClick = () => {
+        actions.followMovie(movie);
     }
 
 
-    const imgStyle = {
-        borderRadius: 25,
-        maxWidth: '100%',
-        maxHeight: '100%',
-        width: '90%'
-    }
-
-
-
-    const style = {
-        backgroundColor: "rgba(255,255,255,0.80)"
-    };
 
     return isLoading ? (
         <Container>
-            <Grid container direction={"column"}>
-                <Grid item mx={"auto"} mt={5}>
+            <Grid container direction={'column'}>
+                <Grid item mx={'auto'} mt={5}>
                     <CircularProgress size={100}/>
                 </Grid>
-                <Grid item mx={"auto"}>
-                    <Typography variant={"h5"}>Loading data...</Typography>
+                <Grid item mx={'auto'}>
+                    <Typography variant={'h5'}>Loading data...</Typography>
                 </Grid>
             </Grid>
         </Container>
     ) : (
-        <Container sx={{mt: 5}}>
-            <img src={movie.backdrop_path} style={{
-                overflow: "visible",
-                maxWidth: '100%',
-                position: "absolute",
-                top: 0,
-                left: 0,
-                zIndex: -1,
-                height: '500px',
-                width: '100%',
-                objectFit: 'cover',
-                opacity: 0.6
-            }} alt="Transparent movie backdrop"/>
-            <Grid container direction={"column"} spacing={2} style={style}>
-                <Grid item>
-                    <Typography variant={"h3"}>{movie.title}</Typography>
-                </Grid>
-                <Grid item>
-                    <Typography variant={"h5"}>{movie.tagline}</Typography>
-                </Grid>
-                <Grid item>
-                    <Typography variant={"h6"} sx={{mb: 0.5, mt: 0.5}}>Summary</Typography>
-                    <Typography paragraph>{movie.overview}</Typography>
-                </Grid>
-            </Grid>
-            <Grid container sx={{mt: 4}} style={{maxHeight: '50%'}} spacing={3}>
-                <Grid item xs={6}>
-                    <img src={movie.poster_path} style={imgStyle} alt="movie poster"/>
-                </Grid>
-                <Grid item xs>
-                    <Paper elevation={7} sx={{borderRadius: '8px', p: 1}}>
-                        <Typography variant={"h6"}>Movie Information:</Typography>
-                        <Typography>Genre(s): {movie.genres}</Typography>
-                        <Typography>Languages: {movie.spoken_languages}</Typography>
-                        <Typography>Website: <a href={movie.homepage}>Link</a></Typography>
-                    </Paper>
-                    <Paper elevation={7} sx={{mt: 4, borderRadius: '8px', p: 1}}>
-                        <Typography variant={"h6"}>Statistics:</Typography>
-                        <Typography>TMDB Score: {movie.vote_average} ({movie.vote_count} votes)</Typography>
-                        <Typography>Wits: <b>TO BE IMPLEMENTED</b></Typography>
-                        <Typography>Budget: ${movie.budget}</Typography>
-                        <Typography>Revenue: ${movie.revenue}</Typography>
-                        <Typography>Run time: {movie.runtime} minutes</Typography>
-                    </Paper>
-                    <Paper elevation={7} sx={{mt: 4, borderRadius: '8px', p: 1}}>
-                        <Typography variant={"h6"}>Director(s):</Typography>
-                        <Grid container>
-                            {movie.crew.map((cast, key) => (
-                                <Grid item key={key} xs={5}>
-                                    <Card>
-                                        <CardMedia
-                                            component="img"
-                                            image={getProfileImage(cast)}
-                                            height="300"
-                                            width="auto"
-                                        />
-                                        <CardContent>
-                                            <Typography>{cast.name}</Typography>
-                                        </CardContent>
-                                    </Card>
+        <Container sx={{mt: 0, mb:0}} disableGutters>
+            {/*backdrop*/}
+            <Grid sx={{height: '100vh'}}>
+                <Box sx={{position: 'absolute', top: 0, left: 0, width: '100%', zIndex: -1}}>
+                    <Grid sx={{position: 'relative'}}>
+                        <img src={movie.backdrop_path}
+                             style={{
+                                 height: '100vh',
+                                 width: '100%',
+                                 objectFit: 'cover',
+                             }} alt="Transparent movie backdrop"/>
+                        <Grid container alignItems={'flex-end'}
+                              sx={{
+                                  position: 'absolute',
+                                  top: 0,
+                                  left: 0,
+                                  width: '100%',
+                                  height: '100vh',
+                              }}
+                        >
+                            <Grid container direction={'row'} spacing={0}
+                                  style={{backgroundColor: 'rgba(0,0,0,0.7)'}}
+                                  sx={{
+                                      width: '100%', position: 'relative', color: 'whitesmoke',
+                                  }}
+                            >
+                                <Grid item md={2}></Grid>
+                                <Grid item offset={2} xs={5} sx={{pt: 2}}>
+                                    <Grid item>
+                                        <Typography variant={'h4'}>{movie.title}</Typography>
+                                    </Grid>
+                                    <Grid item>
+                                        <Typography variant={'h6'}>{movie.tagline}</Typography>
+                                    </Grid>
+                                    <Grid item>
+                                        <Typography paragraph>{movie.overview}</Typography>
+                                    </Grid>
                                 </Grid>
-                            ))}
+
+                            </Grid>
+                            <ArrowDownwardOutlined sx={{
+                                position: 'absolute',
+                                bottom: 0,
+                                right: 0,
+                                height: 72,
+                                width: 72,
+                                color: 'whitesmoke',
+                            }} className={'arrow'}/>
                         </Grid>
+
+
+                    </Grid>
+
+                </Box>
+            </Grid>
+            {/*content*/}
+
+            <Grid
+                container
+                direction="row"
+                spacing={2}
+            >
+                {/*poster grid*/}
+                <Grid item md>
+                    <Paper elevation={2} sx={{borderRadius: 1}}>
+                        <Image src={movie.poster_path} alt="movie poster" onClick={handleOpenModal}
+                               sx={[{}, () => ({cursor: 'pointer'})]}/>
                     </Paper>
                 </Grid>
+                {/*right column grid*/}
+                <Grid
+                    item
+                    xs
+                    container
+                    direction="column"
+                    justifyContent={'space-between'}
+                    spacing={2}
+                >
+                    <Grid item >
+                        <Paper sx={{borderRadius: 1, p: 1}}>
+                            <Button variant={'outlined'} onClick={handleFollowClick}>follow</Button>
+                            <Badge color="success" badgeContent={10} max={9999} className={'shake'}>
+                                <Image src={roarImage} fit={'scale-down'} height={40} width={40} title={'Rawr the movie to get wits on your feed'}/>
+                            </Badge>
+                        </Paper>
+                    </Grid>
+                    <Grid item>
+                        <Paper sx={{borderRadius: 1, p: 1}}>
+                            <Typography variant={'h6'}>Movie Information:</Typography>
+                            <Typography>Genre(s): {movie.genres}</Typography>
+                            <Typography>Languages: {movie.spoken_languages}</Typography>
+                            <Typography>Website: <a href={movie.homepage}>Link</a></Typography>
+                        </Paper>
+                    </Grid>
+                    <Grid item>
+                        <Paper sx={{borderRadius: 1, p: 1}}>
+                            <Typography variant={'h6'}>Statistics:</Typography>
+                            <Typography>TMDB Score: {movie.vote_average} ({movie.vote_count} votes)</Typography>
+                            <Typography>Wits: <b>TO BE IMPLEMENTED</b></Typography>
+                            <Typography>Budget: ${movie.budget}</Typography>
+                            <Typography>Revenue: ${movie.revenue}</Typography>
+                            <Typography>Run time: {movie.runtime} minutes</Typography>
+                        </Paper>
+                    </Grid>
+                    <Grid item>
+                        <Paper sx={{borderRadius: 1, p: 1}}>
+                            <Typography variant={'h6'}>Director(s):</Typography>
+                            <Grid container>
+                                {movie.crew.map((cast, key) => (
+                                    <Grid item key={key}>
+                                        <Card>
+                                            <CardMedia
+                                                component="img"
+                                                image={getProfileImage(cast)}
+                                                height="300"
+                                                width="auto"
+                                            />
+                                            <CardContent>
+                                                <Typography>{cast.name}</Typography>
+                                            </CardContent>
+                                        </Card>
+                                    </Grid>
+                                ))}
+                            </Grid>
+                        </Paper>
+                    </Grid>
+                </Grid>
             </Grid>
-            <Grid container direction={"column"} spacing={2} style={{width: '100%'}}>
+
+
+            {/*casts*/}
+            <Grid container direction={'column'} spacing={2}>
                 <Grid item>
                     <Accordion>
                         <AccordionSummary
-                            expandIcon={<ExpandMoreIcon/>} sx={{mt: 2, borderRadius: '8px'}}
+                            expandIcon={<ExpandMoreIcon/>} sx={{mt: 2, borderRadius: 1}}
                         >
-                            <Typography mx={"auto"} variant={"h5"}>Cast</Typography>
+                            <Typography mx={'auto'} variant={'h5'}>Cast</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
-                            <Grid container>
+                            <Grid container justifyContent={'center'}>
                                 {movie.cast.map((cast, key) => (
-                                    <Grid item key={key} xs={2}>
+                                    <Grid item key={key} xs={2} sx={{m: 2}}>
                                         <Card sx={{height: 350}}>
                                             <CardMedia
                                                 component="img"
                                                 image={getProfileImage(cast)}
                                                 height="225"
-                                                sx={{borderRadius: '8px'}}
+                                                sx={{borderRadius: 1}}
                                             />
                                             <CardContent>
                                                 <Typography>{cast.name}</Typography>
@@ -175,13 +255,38 @@ function MoviePage(props) {
                     </Accordion>
                 </Grid>
             </Grid>
-            <Grid container direction={"column"} spacing={2} sx={{mt: 5}}>
-                <Paper elevation={7} sx={{borderRadius: '8px', mx: 'auto', width: '50%'}}>
-                    <Stack spacing={4}>
-                        <Typography variant={"h5"}>Wits go here</Typography>
-                    </Stack>
-                </Paper>
+            {/*wits */}
+            <Grid container direction={'column'} alignItems={'center'} spacing={2} sx={{mt: 5}}>
+                <Typography variant={'h4'}>Movie wits</Typography>
+                { // is user logged in
+                    isUserLoggedIn && <WriteWitComponent witStore={WitStore} userStore={UserStore} movie={movie}/>
+                }
+                <ListWitComponent witStore={WitStore} authStore={AuthStore} movie={movie}/>
             </Grid>
+
+            {/*poster large modal*/}
+            <div>
+                <Modal
+                    open={openModal}
+                    onClose={handleCloseModal}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                    sx={{bgcolor: 'rgba(0,0,0,0.85)'}}
+                >
+                    <Box sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        height: '95%',
+                        bgcolor: 'black',
+                        border: 0,
+                        borderRadius: 0,
+                    }}>
+                        <Image src={movie.poster_path} alt="movie poster" onClick={handleCloseModal}/>
+                    </Box>
+                </Modal>
+            </div>
         </Container>
     );
 

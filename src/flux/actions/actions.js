@@ -5,15 +5,20 @@ import {
     LOGOUT,
     GET_WITS_BY_USER,
     GET_WITS_BY_FEED,
+    GET_WITS_BY_MOVIE,
     POST_WIT,
     ROAR_WIT,
     GET_USER_BY_USERNAME,
     SET_USER_PROFILE_IMAGE,
     GET_MOVIE_DETAILS,
     GET_MOVIE_LISTS_BY_USER_ID,
+    GET_SEARCH_RESULTS,
+    SUBSCRIBE_TO_MOVIE,
     NEW_USER_MOVIE_LISTS,
     USER_MOVIE_LIST,
-    LIST_NOT_FOUND, NO_LISTS_FOUND, CREATE_MOVIE_LIST
+    LIST_NOT_FOUND, 
+    NO_LISTS_FOUND, 
+    CREATE_MOVIE_LIST
 } from '../../util/constants';
 
 /*
@@ -79,6 +84,13 @@ export const getWitsByFeed = (data) => {
     })
 }
 
+export const getWitsByMovie = (movieId) => {
+    dispatcher.dispatch({
+        type: GET_WITS_BY_MOVIE,
+        payload: movieId
+    })
+}
+
 export const roarWit = (witId) => {
     dispatcher.dispatch( {
         type: ROAR_WIT,
@@ -93,6 +105,20 @@ export const getMovieDetails = (movieId) => {
     dispatcher.dispatch( {
         type: GET_MOVIE_DETAILS,
         payload: movieId
+    })
+}
+
+export const getSearchResults = (query) => {
+    dispatcher.dispatch( {
+        type: GET_SEARCH_RESULTS,
+        payload: query
+    })
+}
+
+export const followMovie = (movie) => {
+    dispatcher.dispatch({
+        type: SUBSCRIBE_TO_MOVIE,
+        payload: {movieId: movie.id, movieTitle: movie.title}
     })
 }
 

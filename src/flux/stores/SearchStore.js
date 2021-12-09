@@ -1,30 +1,36 @@
-import axios from 'axios';
-import {EventEmitter} from 'events';
-import {GET_MOVIE_DETAILS, MOVIES_URL_DETAILS, SUBSCRIBE_TO_MOVIE} from '../../util/constants';
-import dispatcher from '../dispatcher';
+import {EventEmitter} from "events";
+import dispatcher from "../dispatcher";
+import {GET_MOVIE_DETAILS, GET_SEARCH_RESULTS, MOVIES_URL_SEARCH} from "../../util/constants";
+import axios from "axios";
 
-export class MovieStore extends EventEmitter {
+export class SearchStore extends EventEmitter {
 
     constructor() {
         super();
         dispatcher.register(action => {
             switch (action.type) {
-                case GET_MOVIE_DETAILS:
-                    this.fetchMovieDetails(action.payload);
-                    break;
-                case SUBSCRIBE_TO_MOVIE:
-                    this.subscribeToMovie(action.payload);
+                case GET_SEARCH_RESULTS:
+                    this.fetchSearchResults(action.payload);
                     break;
                 default:
                     break;
             }
-        });
+        })
     }
 
-    fetchMovieDetails(movieId) {
-        axios.get(MOVIES_URL_DETAILS + `?movieid=${movieId}`)
+    fetchSearchResults(query) {
+        if (query !== "")
+
+            axios.get(MOVIES_URL_SEARCH + `?query=${query}`)
             .then((response) => {
-                this.emit(GET_MOVIE_DETAILS, response.data);
+
+                let searchOptions = response.data.map(movie => {
+                    let release = (movie.release_date !== undefined) ? ` (${movie.release_date.split('-')[0]})` : ' (N/A)';
+
+                    return {label: movie.title + release, id: movie.id}
+                })
+
+                this.emit(GET_SEARCH_RESULTS, searchOptions)
             })
             .catch(error => {
                 if (error.response) {
@@ -43,28 +49,18 @@ export class MovieStore extends EventEmitter {
                     console.log('Error', error.message);
                 }
                 console.log(error.config);
-                this.emit(GET_MOVIE_DETAILS, {errorMessage: error});
+                this.emit(GET_MOVIE_DETAILS, {errorMessage: error})
             });
+
     }
 
-    subscribeToMovie(data) {
-        axios.defaults.headers.common = {Authorization: `Bearer ${this.authStore.state.authUser.accessToken}`};
-        axios.post('url', {
-            movieId: data.movieId,
-            title: data.title,
-        }).then((response) => {
 
-        })
-            .catch((error) => {
-
-            });
-    }
-
-    addChangeListener = (event, callback) => {
+    addSearchChangeListener = (event, callback) => {
         this.on(event, callback);
     };
 
-    removeChangeListener = (event, callback) => {
+    removeSearchChangeListener = (event, callback) => {
         this.off(event, callback);
     };
+
 }

@@ -61,3 +61,6 @@ yarn-error.log*
 # .idea/misc.xml
 # *.ipr
 .idea/vcs.xml
+.idea/inspectionProfiles/Project_Default.xml
+.idea/modules.xml
+.idea/webapp.mowits.iml
