@@ -48,22 +48,27 @@ function ListWitComponent(props) {
     }, [wits]);
 
     const handleAuthChanged = (user) => {
-        setWits(null)
+        setWits([])
         setIsUserLoggedIn(user !== null);
     };
 
     const handleNewWits = (data) => {
-
         if (data.length > 0) {
             setWits(prevState => {
                 if (prevState !== null) {
                     let arr = [...prevState, ...data];
                     arr = getUnique(arr, 'id');
-                    return arr.sort(function(a, b) {
+                    let a = arr.sort(function(a, b) {
                         return new Date(b.created) - new Date(a.created);
                     });
+                    if (JSON.stringify(a) === JSON.stringify(prevState)) {
+                        document.removeEventListener('scroll', handleScroll);
+                        return prevState
+                    }
+
+                    return a;
                 } else {
-                    return null
+                    return prevState
                 }
             });
         } else {

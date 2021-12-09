@@ -5,8 +5,6 @@ body {
 }
 
 
-
-
 ::-webkit-scrollbar {
     width: 12px;
     height: 12px;
@@ -29,6 +27,8 @@ body {
     animation: bounce 1s infinite alternate;
     -webkit-animation: bounce 1s infinite alternate;
 }
+
+
 @keyframes bounce {
     from {
         transform: translateY(0px);
@@ -43,5 +43,27 @@ body {
     }
     to {
         transform: translateY(-15px);
+    }
+}
+
+.shake {
+    animation: shake 0.5s infinite alternate;
+    -webkit-animation: shake 0.5s infinite alternate;
+}
+
+@keyframes shake {
+    from {
+        transform: translateX(0px);
+    }
+    to {
+        transform: translateX(-15px);
+    }
+}
+@-webkit-keyframes shake {
+    from {
+        transform: translateX(0px);
+    }
+    to {
+        transform: translateX(-15px);
     }
 }

@@ -40,6 +40,7 @@ export const MOVIES_PROFILE_DEFAULT_URL = 'https://www.themoviedb.org/assets/2/v
 export const GET_MOVIE_DETAILS = 'GET_MOVIE_DETAILS'
 export const GET_SEARCH_RESULTS = 'GET_SEARCH_RESULTS'
 export const DEBOUNCE_TIME = 600
+export const SUBSCRIBE_TO_MOVIE = 'SUBSCRIBE_TO_MOVIE'
 
 /* lists */
 export const GET_MOVIE_LISTS_BY_USER_ID = 'GET_MOVIE_LISTS_BY_USER_ID'
