@@ -1,7 +1,9 @@
 import {EventEmitter} from 'events';
 import dispatcher from '../dispatcher';
 import {
-    NEW_USER_MOVIE_LISTS
+    LIST_NOT_FOUND,
+    NEW_USER_MOVIE_LISTS, NO_LISTS_FOUND,
+    USER_MOVIE_LIST
 } from '../../util/constants';
 
 
@@ -18,17 +20,20 @@ export class FavoritesStore extends EventEmitter {
                 case NEW_USER_MOVIE_LISTS:
                     this.setNewLists(action.payload);
                     break;
+                case USER_MOVIE_LIST:
+                    this.listReceived(action.payload);
+                    break;
+                case NO_LISTS_FOUND:
+                    this.emitNoListsFound();
+                    break;
+                case LIST_NOT_FOUND:
+                    this.emitListNotFound();
+                    break;
                 default:
                     break;
             }
         });
     }
-
-    setNewLists(lists) {
-        this.state.movieLists = lists
-        this.emit(NEW_USER_MOVIE_LISTS, this.state.movieLists);
-    }
-
 
     addChangeListener(event, callback) {
         this.on(event, callback);
@@ -36,6 +41,28 @@ export class FavoritesStore extends EventEmitter {
 
     removeChangeListener(event, callback) {
         this.off(event, callback);
+    }
+
+    emitListNotFound() {
+        this.emit(LIST_NOT_FOUND, undefined);
+    }
+
+    emitNoListsFound() {
+        this.emit(NO_LISTS_FOUND, undefined);
+    }
+
+    setNewLists(lists) {
+        this.state.movieLists = lists
+        this.emit(NEW_USER_MOVIE_LISTS, this.state.movieLists);
+    }
+
+    listReceived(list) {
+        // for (let i = 0; i < this.state.movieLists; i++) {
+        //     if (this.state.movieLists[i].name === list.name) {
+        //         this.state.movieLists[i] = list
+        //     }
+        // }
+        this.emit(USER_MOVIE_LIST, list)
     }
 
 }

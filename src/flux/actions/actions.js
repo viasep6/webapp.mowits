@@ -12,6 +12,8 @@ import {
     GET_MOVIE_DETAILS,
     GET_MOVIE_LISTS_BY_USER_ID,
     NEW_USER_MOVIE_LISTS,
+    USER_MOVIE_LIST,
+    LIST_NOT_FOUND, NO_LISTS_FOUND, CREATE_MOVIE_LIST
 } from '../../util/constants';
 
 /*
@@ -97,10 +99,13 @@ export const getMovieDetails = (movieId) => {
 /*
     Movie Lists.
  */
-export const getMovieListsByUserID = (accessToken) => {
+export const getMovieListsByUserID = (accessToken, listName='') => {
     dispatcher.dispatch({
         type: GET_MOVIE_LISTS_BY_USER_ID,
-        payload: accessToken
+        payload: {
+            accessToken: accessToken,
+            listName: listName
+        }
     })
 }
 
@@ -108,5 +113,36 @@ export const newUserMovieLists = (lists) => {
     dispatcher.dispatch({
         type: NEW_USER_MOVIE_LISTS,
         payload: lists
+    })
+}
+
+export const listNotFound = () => {
+    dispatcher.dispatch({
+        type: LIST_NOT_FOUND,
+        payload: undefined
+    })
+}
+
+export const noListsFound = () => {
+    dispatcher.dispatch({
+        type: NO_LISTS_FOUND,
+        payload: undefined
+    })
+}
+
+export const requestedMovieList = (list) => {
+    dispatcher.dispatch({
+        type: USER_MOVIE_LIST,
+        payload: list
+    })
+}
+
+export const createMovieList= (accessToken, listName) => {
+    dispatcher.dispatch({
+        type: CREATE_MOVIE_LIST,
+        payload: {
+            accessToken: accessToken,
+            listName: listName
+        }
     })
 }

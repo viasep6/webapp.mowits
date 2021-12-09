@@ -11,12 +11,8 @@ import Typography from '@mui/material/Typography';
 export default function HorizontalMovieList(props) {
     const title = props.title
     const movies = props.movieList
-    const itemClicked = (movieId) => props.onMovieClicked(movieId)
-    const deleteClicked = (movieId) => console.log(movieId)
-    const roarClicked = (movieId) => console.log(movieId)
-    const addMovie = () => props.onAdd(props.title)
 
-    let  [currentList, setCurrent] = useState(
+    const [currentList, setCurrent] = useState(
         typeof props.movieList === 'undefined'
             ? []
             : () => {
@@ -28,8 +24,10 @@ export default function HorizontalMovieList(props) {
                 return initialList
             }
     )
-    let [currentTailIndex, setTailIndex] = useState(2)
-    let hasMoreItems = useState(
+
+    const [currentTailIndex, setTailIndex] = useState(2)
+
+    const hasMoreItems = useState(
         typeof movies === 'undefined'
             ? false
             : movies.length > 3)
@@ -96,6 +94,11 @@ export default function HorizontalMovieList(props) {
                 break
         }
     }
+
+    const itemClicked = (movieId) => props.onMovieClicked(movieId)
+    const deleteClicked = (movieId) => console.log(movieId)
+    const roarClicked = (movieId) => console.log(movieId)
+    const addMovie = () => props.onAdd(props.title)
 
     return (
         <Grid

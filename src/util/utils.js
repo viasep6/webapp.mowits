@@ -15,3 +15,10 @@ export function getUnique(arr, comp) {
         .filter((e) => arr[e]).map(e => arr[e]);
     return unique;
 }
+
+/*
+ * Substitutes all whitespaces of a string the given chars
+ */
+export function SubstituteSpaces(str,chars) {
+    return str.replace(/\s/g, chars)
+}

@@ -8,17 +8,19 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
+import AddMovieListModal from "../components/movieList/AddMovieListModal";
 
 
 
 
 function FavoritesPage(props) {
     const [accessToken, setAccessToken] = useState(props.stores.authStore.state.authUser.accessToken)
+
     const [movieLists, setMovieLists] = useState(() => {
         actions.getMovieListsByUserID(accessToken)
         return []
     })
+
     const [dataReady, setReady] = useState(false)
 
     useEffect(() => {
@@ -39,6 +41,7 @@ function FavoritesPage(props) {
     }
 
     const goToMovie = (movieId) => props.history.push('/movie/' + movieId )
+
     const add = (listTitle) => console.log(listTitle)
 
     return (
@@ -54,11 +57,11 @@ function FavoritesPage(props) {
             <Card sx={{ minWidth: '100%' }}>
                 <CardContent>
                     <Typography variant="h5" component="div" textAlign={'center'}>
-                        My Mowits Lists
+                        My Amazing Mowits
                     </Typography>
                 </CardContent>
                 <CardActions>
-                    <Button size="small">Add List</Button>
+                    <AddMovieListModal stores={props.stores} token={accessToken} onNewLists={updateFavorites} />
                 </CardActions>
             </Card>
             <Grid

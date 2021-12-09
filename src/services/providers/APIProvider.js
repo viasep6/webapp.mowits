@@ -1,11 +1,10 @@
 import axios from 'axios';
 
 function APIProvider (baseUrl) {
-    const get = async (path, headers={}, params={}) => await axios
+    const get = async (path, headers={}) => await axios
         .get(
             baseUrl + path,
             {
-                params: params,
                 headers: headers
             }
         )
@@ -35,9 +34,18 @@ function APIProvider (baseUrl) {
                 // Something happened in setting up the request that triggered an Error
             }
         });
+
+    const post = async (path, body, headers={}) => await axios({
+        method: 'post',
+        url: baseUrl + path,
+        headers: headers,
+        data: body
+    })
+        .catch(err => console.log('API POST Error', err))
+
     
     return {
-        get
+        get, post
     }
 }
 
