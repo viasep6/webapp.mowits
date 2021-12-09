@@ -61,7 +61,7 @@ function FavoritesPage(props) {
                     </Typography>
                 </CardContent>
                 <CardActions>
-                    <AddMovieListModal stores={props.stores} token={accessToken} onNewLists={updateFavorites} />
+                    <AddMovieListModal stores={props.stores} token={accessToken} />
                 </CardActions>
             </Card>
             <Grid

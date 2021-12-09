@@ -54,9 +54,6 @@ export default function AddMovieListModal(props) {
     const handleClose = (lists) => {
         setTxtFieldValue('')
         setHelperTxt('')
-        if (typeof props.onNewLists !== 'undefined'){
-            props.onNewLists(lists)
-        }
         setOpen(false);
     }
 

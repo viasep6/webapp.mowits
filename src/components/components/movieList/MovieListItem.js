@@ -5,7 +5,6 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Badge from "@mui/material/Badge";
 import Typography from '@mui/material/Typography';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import IconButton from "@mui/material/IconButton";
 import likeIcon from '../../../assets/img/like-icon.png';
 import DeleteIcon from '@mui/icons-material/Delete';
