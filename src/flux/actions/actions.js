@@ -11,15 +11,18 @@ import {
     GET_USER_BY_USERNAME,
     SET_USER_PROFILE_IMAGE,
     GET_MOVIE_DETAILS,
-    GET_MOVIE_COLLECTIONS_BY_USER_ID,
     GET_SEARCH_RESULTS,
     SUBSCRIBE_TO_MOVIE,
     NEW_USER_MOVIE_COLLECTIONS,
-    USER_MOVIE_COLLECTION,
-    COLLECTION_NOT_FOUND,
-    NO_COLLECTIONS_FOUND,
-    CREATE_MOVIE_COLLECTION
+    BASE_URL,
 } from '../../util/constants';
+import APIProvider from '../../services/providers/APIProvider';
+import MovieService from '../../services/MovieService';
+import MovieCollectionService from '../../services/MovieCollectionService';
+
+const apiProvider = APIProvider(BASE_URL)
+const moviesService = MovieService(apiProvider)
+const movieCollectionService = MovieCollectionService(apiProvider, moviesService)
 
 /*
     Auth actions
@@ -125,50 +128,30 @@ export const followMovie = (movie) => {
 /*
     Movie Lists.
  */
-export const getMovieCollectionsByUserID = (accessToken, collectionName='') => {
-    dispatcher.dispatch({
-        type: GET_MOVIE_COLLECTIONS_BY_USER_ID,
-        payload: {
-            accessToken: accessToken,
-            collectionName: collectionName
-        }
-    })
-}
-
-export const newUserMovieCollections = (collections) => {
+export const getMovieCollectionsByUserID = async (accessToken, collectionName='') => {
+    const collections = await movieCollectionService.getCollectionsByUserID(accessToken, collectionName)
     dispatcher.dispatch({
         type: NEW_USER_MOVIE_COLLECTIONS,
         payload: collections
     })
 }
 
-export const collectionNotFound = () => {
+
+export const createMovieCollection = async (accessToken, collectionName) => {
+    const updatedCollections = await movieCollectionService.createMovieCollectionByUserID(accessToken, collectionName)
     dispatcher.dispatch({
-        type: COLLECTION_NOT_FOUND,
-        payload: undefined
+        type: NEW_USER_MOVIE_COLLECTIONS,
+        payload: updatedCollections
     })
 }
 
-export const noCollectionsFound = () => {
+export const addMovieToCollection = async (accessToken, collectionName, movies) => {
+    const updatedCollections = await movieCollectionService.createMovieCollectionByUserID(
+        accessToken,
+        collectionName,
+        movies)
     dispatcher.dispatch({
-        type: NO_COLLECTIONS_FOUND,
-        payload: undefined
-    })
-}
-
-export const requestedMovieCollection = (collection) => {
-    dispatcher.dispatch({
-        type: USER_MOVIE_COLLECTION,
-        payload: collection
-    })
-}
-
-export const createMovieCollection= (accessToken, collectionName) => {
-    dispatcher.dispatch({
-        type: CREATE_MOVIE_COLLECTION,
-        payload: {
-            accessToken: accessToken,
-            collectionName: collectionName
-        }
+        type: NEW_USER_MOVIE_COLLECTIONS,
+        payload: updatedCollections
     })
 }

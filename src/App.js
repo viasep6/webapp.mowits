@@ -20,6 +20,7 @@ import {Container, CssBaseline} from '@mui/material';
 import FeedPage from './components/pages/FeedPage';
 import {SearchStore} from "./flux/stores/SearchStore";
 
+
 const theme = createTheme({
     palette: {
         primary: {

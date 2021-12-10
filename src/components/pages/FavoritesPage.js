@@ -1,7 +1,7 @@
 import {withRouter} from 'react-router-dom';
 import React, {useEffect, useState} from 'react';
 import HorizontalMovieCollection from "../components/movieCollection/HorizontalMovieCollection";
-import {CHANGE_AUTH_TOKEN, NEW_USER_MOVIE_COLLECTIONS, NO_COLLECTIONS_FOUND} from '../../util/constants';
+import {CHANGE_AUTH_TOKEN, NEW_USER_MOVIE_COLLECTIONS} from '../../util/constants';
 import * as actions from '../../flux/actions/actions';
 import {CircularProgress, Grid} from '@mui/material';
 import Box from '@mui/material/Box';
@@ -14,8 +14,8 @@ import AddMovieCollection from "../components/movieCollection/AddMovieCollection
 function FavoritesPage(props) {
     const [accessToken, setAccessToken] = useState(props.stores.authStore.state.authUser.accessToken)
 
-    const [movieCollections, setMovieCollections] = useState(() => {
-        actions.getMovieCollectionsByUserID(accessToken)
+    const [movieCollections, setMovieCollections] = useState(async () => {
+        await actions.getMovieCollectionsByUserID(accessToken)
         return []
     })
 
@@ -25,19 +25,18 @@ function FavoritesPage(props) {
     useEffect(() => {
         props.stores.authStore.authAddChangeListener(CHANGE_AUTH_TOKEN, updateToken)
         props.stores.favoritesStore.addChangeListener(NEW_USER_MOVIE_COLLECTIONS, updateCollections)
-        props.stores.favoritesStore.addChangeListener(NO_COLLECTIONS_FOUND, updateCollections)
+
 
         return function cleanup() {
             props.stores.authStore.authRemoveChangeListener(CHANGE_AUTH_TOKEN, updateToken);
             props.stores.favoritesStore.removeChangeListener(NEW_USER_MOVIE_COLLECTIONS, updateCollections)
-            props.stores.favoritesStore.removeChangeListener(NO_COLLECTIONS_FOUND, updateCollections)
         };
     });
 
     const updateToken = (decodedToken) => setAccessToken(decodedToken.accessToken)
 
     const updateCollections = (collections) => {
-        if (typeof collections === 'undefined') {
+        if (typeof collections === 'undefined' || collections.length === 0) {
             setMovieCollections([{name: 'You don´t have any collections yet...'}])
         }
         else {

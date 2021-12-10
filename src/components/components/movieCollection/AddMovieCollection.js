@@ -45,7 +45,7 @@ export default function AddMovieCollection(props) {
         }
     }
 
-    const addCollection = () => {
+    const addCollection =async  () => {
         if (txtFieldValue === '') {
             updateError(true, 'A name must be entered!')
         }
@@ -56,7 +56,7 @@ export default function AddMovieCollection(props) {
             }
             else {
                 setInProgress(true)
-                actions.createMovieCollection(props.token, txtFieldValue)
+                await actions.createMovieCollection(props.token, txtFieldValue)
             }
         }
     }
