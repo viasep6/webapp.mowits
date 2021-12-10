@@ -37,6 +37,11 @@ function ListWitComponent(props) {
         // eslint-disable-next-line
     }, []);
 
+    useEffect( () => {
+        // movieId has been changed (new movie)
+        setWits([])
+    }, [movie])
+
     useEffect(() => {
         document.addEventListener('scroll', handleScroll);
 
