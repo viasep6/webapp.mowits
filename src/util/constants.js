@@ -8,9 +8,9 @@ export const URL_GET_BY_MOVIE = BASE_URL + '/wits/get_by_movie'
 export const URL_POST_WIT = BASE_URL + '/wits/create'
 export const URL_CHANGE_PROFILE_IMAGE = BASE_URL + '/users/create'
 export const URL_SUBSCRIBE_TO_MOVIE = BASE_URL + '/movies/Follow'
-export const MOVIES_URL_DETAILS = BASE_URL + '/movies/MovieDetails'
-export const MOVIES_URL_SEARCH = BASE_URL + '/movies/MovieSearch'
-export const MOVIES_URL_SIMILAR = BASE_URL + '/movies/Similar'
+export const URL_MOVIE_DETAILS = BASE_URL + '/movies/MovieDetails'
+export const URL_MOVIE_SEARCH = BASE_URL + '/movies/MovieSearch'
+export const URL_MOVIE_SIMILAR = BASE_URL + '/movies/Similar'
 export const MOVIES_PROFILE_DEFAULT_URL = 'https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-4-user-grey-d8fe957375e70239d6abdd549fd7568c89281b2179b5f4470e2e12895792dfa5.svg'
 
 /* auth */

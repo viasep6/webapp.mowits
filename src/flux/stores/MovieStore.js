@@ -3,7 +3,7 @@ import {EventEmitter} from 'events';
 import {
     GET_MOVIE_DETAILS,
     GET_SIMILAR_MOVIES,
-    MOVIES_URL_DETAILS, MOVIES_URL_SIMILAR,
+    URL_MOVIE_DETAILS, URL_MOVIE_SIMILAR,
     SUBSCRIBE_TO_MOVIE,
     URL_SUBSCRIBE_TO_MOVIE
 } from '../../util/constants';
@@ -37,7 +37,7 @@ export class MovieStore extends EventEmitter {
         if (this.authStore.state.authUser?.accessToken){
            userId = this.authStore.state.authUser.uid;
         }
-        axios.get(MOVIES_URL_DETAILS, {
+        axios.get(URL_MOVIE_DETAILS, {
         // axios.get('http://localhost:7071/movies/MovieDetails', {
             params: {
                 movieid: movieId,
@@ -83,7 +83,7 @@ export class MovieStore extends EventEmitter {
     }
 
     fetchSimilarMovies(movieId) {
-        axios.get(MOVIES_URL_SIMILAR, {
+        axios.get(URL_MOVIE_SIMILAR, {
             // axios.get('http://localhost:7071/movies/Similar', {
             params: {
                 movieid: movieId,
