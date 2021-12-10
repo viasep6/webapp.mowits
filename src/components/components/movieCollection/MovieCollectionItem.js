@@ -9,7 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import likeIcon from '../../../assets/img/like-icon.png';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-export default function MovieListItem(props) {
+export default function MovieCollectionItem(props) {
     const movie = props.movie
     const itemClicked = () => props.onClick(movie.id)
     const deleteClicked = () => props.onDelete(movie.id)

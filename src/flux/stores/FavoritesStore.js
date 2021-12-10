@@ -1,9 +1,9 @@
 import {EventEmitter} from 'events';
 import dispatcher from '../dispatcher';
 import {
-    LIST_NOT_FOUND,
-    NEW_USER_MOVIE_LISTS, NO_LISTS_FOUND,
-    USER_MOVIE_LIST
+    COLLECTION_NOT_FOUND,
+    NEW_USER_MOVIE_COLLECTIONS, NO_COLLECTIONS_FOUND,
+    USER_MOVIE_COLLECTION
 } from '../../util/constants';
 
 
@@ -12,22 +12,22 @@ export class FavoritesStore extends EventEmitter {
     constructor(props) {
         super(props);
         this.state = {
-            movieLists: [],
+            movieCollections: [],
         };
 
         dispatcher.register(action => {
             switch (action.type) {
-                case NEW_USER_MOVIE_LISTS:
-                    this.setNewLists(action.payload);
+                case NEW_USER_MOVIE_COLLECTIONS:
+                    this.setNewCollections(action.payload);
                     break;
-                case USER_MOVIE_LIST:
-                    this.listReceived(action.payload);
+                case USER_MOVIE_COLLECTION:
+                    this.collectionReceived(action.payload);
                     break;
-                case NO_LISTS_FOUND:
-                    this.emitNoListsFound();
+                case NO_COLLECTIONS_FOUND:
+                    this.emitNoCollectionsFound();
                     break;
-                case LIST_NOT_FOUND:
-                    this.emitListNotFound();
+                case COLLECTION_NOT_FOUND:
+                    this.emitCollectionNotFound();
                     break;
                 default:
                     break;
@@ -43,21 +43,21 @@ export class FavoritesStore extends EventEmitter {
         this.off(event, callback);
     }
 
-    emitListNotFound() {
-        this.emit(LIST_NOT_FOUND, undefined);
+    emitCollectionNotFound() {
+        this.emit(COLLECTION_NOT_FOUND, undefined);
     }
 
-    emitNoListsFound() {
-        this.emit(NO_LISTS_FOUND, undefined);
+    emitNoCollectionsFound() {
+        this.emit(NO_COLLECTIONS_FOUND, undefined);
     }
 
-    setNewLists(lists) {
-        this.state.movieLists = lists
-        this.emit(NEW_USER_MOVIE_LISTS, this.state.movieLists);
+    setNewCollections(collections) {
+        this.state.movieCollections = collections
+        this.emit(NEW_USER_MOVIE_COLLECTIONS, this.state.movieCollections);
     }
 
-    listReceived(list) {
-        this.emit(USER_MOVIE_LIST, list)
+    collectionReceived(collection) {
+        this.emit(USER_MOVIE_COLLECTION, collection)
     }
 
 }

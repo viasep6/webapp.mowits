@@ -11,14 +11,14 @@ import {
     GET_USER_BY_USERNAME,
     SET_USER_PROFILE_IMAGE,
     GET_MOVIE_DETAILS,
-    GET_MOVIE_LISTS_BY_USER_ID,
+    GET_MOVIE_COLLECTIONS_BY_USER_ID,
     GET_SEARCH_RESULTS,
     SUBSCRIBE_TO_MOVIE,
-    NEW_USER_MOVIE_LISTS,
-    USER_MOVIE_LIST,
-    LIST_NOT_FOUND, 
-    NO_LISTS_FOUND, 
-    CREATE_MOVIE_LIST
+    NEW_USER_MOVIE_COLLECTIONS,
+    USER_MOVIE_COLLECTION,
+    COLLECTION_NOT_FOUND,
+    NO_COLLECTIONS_FOUND,
+    CREATE_MOVIE_COLLECTION
 } from '../../util/constants';
 
 /*
@@ -125,50 +125,50 @@ export const followMovie = (movie) => {
 /*
     Movie Lists.
  */
-export const getMovieListsByUserID = (accessToken, listName='') => {
+export const getMovieCollectionsByUserID = (accessToken, collectionName='') => {
     dispatcher.dispatch({
-        type: GET_MOVIE_LISTS_BY_USER_ID,
+        type: GET_MOVIE_COLLECTIONS_BY_USER_ID,
         payload: {
             accessToken: accessToken,
-            listName: listName
+            collectionName: collectionName
         }
     })
 }
 
-export const newUserMovieLists = (lists) => {
+export const newUserMovieCollections = (collections) => {
     dispatcher.dispatch({
-        type: NEW_USER_MOVIE_LISTS,
-        payload: lists
+        type: NEW_USER_MOVIE_COLLECTIONS,
+        payload: collections
     })
 }
 
-export const listNotFound = () => {
+export const collectionNotFound = () => {
     dispatcher.dispatch({
-        type: LIST_NOT_FOUND,
+        type: COLLECTION_NOT_FOUND,
         payload: undefined
     })
 }
 
-export const noListsFound = () => {
+export const noCollectionsFound = () => {
     dispatcher.dispatch({
-        type: NO_LISTS_FOUND,
+        type: NO_COLLECTIONS_FOUND,
         payload: undefined
     })
 }
 
-export const requestedMovieList = (list) => {
+export const requestedMovieCollection = (collection) => {
     dispatcher.dispatch({
-        type: USER_MOVIE_LIST,
-        payload: list
+        type: USER_MOVIE_COLLECTION,
+        payload: collection
     })
 }
 
-export const createMovieList= (accessToken, listName) => {
+export const createMovieCollection= (accessToken, collectionName) => {
     dispatcher.dispatch({
-        type: CREATE_MOVIE_LIST,
+        type: CREATE_MOVIE_COLLECTION,
         payload: {
             accessToken: accessToken,
-            listName: listName
+            collectionName: collectionName
         }
     })
 }
