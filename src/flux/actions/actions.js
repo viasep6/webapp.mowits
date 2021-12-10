@@ -18,6 +18,7 @@ import {
     USER_MOVIE_LIST,
     LIST_NOT_FOUND, 
     NO_LISTS_FOUND, 
+    GET_SIMILAR_MOVIES,
     CREATE_MOVIE_LIST
 } from '../../util/constants';
 
@@ -104,6 +105,13 @@ export const roarWit = (witId) => {
 export const getMovieDetails = (movieId) => {
     dispatcher.dispatch( {
         type: GET_MOVIE_DETAILS,
+        payload: movieId
+    })
+}
+
+export const getSimilarMovies = (movieId) => {
+    dispatcher.dispatch( {
+        type: GET_SIMILAR_MOVIES,
         payload: movieId
     })
 }
