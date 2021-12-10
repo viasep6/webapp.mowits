@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {EventEmitter} from 'events';
-import {GET_MOVIE_DETAILS, MOVIES_URL_DETAILS, SUBSCRIBE_TO_MOVIE} from '../../util/constants';
+import {GET_MOVIE_DETAILS, MOVIES_URL_DETAILS, SUBSCRIBE_TO_MOVIE, URL_SUBSCRIBE_TO_MOVIE} from '../../util/constants';
 import dispatcher from '../dispatcher';
 
 export class MovieStore extends EventEmitter {
@@ -27,8 +27,8 @@ export class MovieStore extends EventEmitter {
         if (this.authStore.state.authUser?.accessToken){
            userId = this.authStore.state.authUser.uid;
         }
-        // axios.get(MOVIES_URL_DETAILS, {
-        axios.get('http://localhost:7071/movies/MovieDetails', {
+        axios.get(MOVIES_URL_DETAILS, {
+        // axios.get('http://localhost:7071/movies/MovieDetails', {
             params: {
                 movieid: movieId,
                 userId: userId
@@ -60,7 +60,8 @@ export class MovieStore extends EventEmitter {
 
     subscribeToMovie(data) {
         axios.defaults.headers.common = {Authorization: `Bearer ${this.authStore.state.authUser.accessToken}`};
-        axios.post('http://localhost:7071/movies/Follow', {
+        // axios.post('http://localhost:7071/movies/Follow', {
+        axios.post(URL_SUBSCRIBE_TO_MOVIE, {
             movieId: data.movieId,
             title: data.movieTitle,
         }).then((response) => {

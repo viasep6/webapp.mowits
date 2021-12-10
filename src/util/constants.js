@@ -7,6 +7,7 @@ export const URL_GET_BY_FEED = BASE_URL + '/wits/get_by_feed'
 export const URL_GET_BY_MOVIE = BASE_URL + '/wits/get_by_movie'
 export const URL_POST_WIT = BASE_URL + '/wits/create'
 export const URL_CHANGE_PROFILE_IMAGE = BASE_URL + '/users/create'
+export const URL_SUBSCRIBE_TO_MOVIE = BASE_URL + '/movies/Follow'
 
 /* auth */
 export const CHANGE_AUTH_TOKEN = 'CHANGE_AUTH_TOKEN'
