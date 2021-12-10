@@ -274,11 +274,12 @@ function MoviePage(props) {
                         <AccordionDetails>
                             <Grid container justifyContent={'center'}>
                                 {movie.cast.map((cast, key) => (
-                                    <Grid item key={key} sx={{m: 2}} position={"absolute"}>
-                                        <Card>
+                                    <Grid item key={key} sx={{m: 1}}>
+                                        <Card sx={{height: 375, width: 200}}>
                                             <CardMedia
                                                 component="img"
                                                 image={getProfileImage(cast)}
+                                                height="275"
                                                 sx={{borderRadius: 1}}
                                             />
                                             <CardContent>
