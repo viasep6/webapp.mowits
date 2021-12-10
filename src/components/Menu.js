@@ -236,7 +236,7 @@ function MenuBar(props) {
                             id="search"
                             onChange={(event, newValue) => {
                                 if (newValue !== null) {
-                                    props.history.push('/movie/' + newValue.id )
+                                    goToPath('/movie/' + newValue.id)
                                 }
                             }}
                             onInputChange={(event, newInputValue) => {

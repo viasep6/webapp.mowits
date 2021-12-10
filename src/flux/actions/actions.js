@@ -11,7 +11,7 @@ import {
     SET_USER_PROFILE_IMAGE,
     GET_MOVIE_DETAILS,
     GET_MOVIE_LISTS_BY_USER_ID,
-    NEW_USER_MOVIE_LISTS, GET_WITS_BY_MOVIE, GET_SEARCH_RESULTS, SUBSCRIBE_TO_MOVIE,
+    NEW_USER_MOVIE_LISTS, GET_WITS_BY_MOVIE, GET_SEARCH_RESULTS, SUBSCRIBE_TO_MOVIE, GET_SIMILAR_MOVIES,
 } from '../../util/constants';
 
 /*
@@ -97,6 +97,13 @@ export const roarWit = (witId) => {
 export const getMovieDetails = (movieId) => {
     dispatcher.dispatch( {
         type: GET_MOVIE_DETAILS,
+        payload: movieId
+    })
+}
+
+export const getSimilarMovies = (movieId) => {
+    dispatcher.dispatch( {
+        type: GET_SIMILAR_MOVIES,
         payload: movieId
     })
 }
