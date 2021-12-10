@@ -14,7 +14,12 @@ import {
     Typography,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import {CHANGE_AUTH_TOKEN, GET_MOVIE_DETAILS, MOVIES_PROFILE_DEFAULT_URL} from '../../util/constants';
+import {
+    CHANGE_AUTH_TOKEN,
+    GET_MOVIE_DETAILS,
+    GET_SIMILAR_MOVIES,
+    MOVIES_PROFILE_DEFAULT_URL
+} from '../../util/constants';
 import * as actions from '../../flux/actions/actions';
 import ListWitComponent from '../components/wits/ListWitComponent';
 import WriteWitComponent from '../components/wits/WriteWitComponent';
@@ -37,6 +42,7 @@ function MoviePage(props) {
     const movieId = props.match.params.id;
 
     const [movie, setMovie] = useState();
+    const [similarMovies, setSimilarMovies] = useState();
     const [isLoading, setLoading] = useState(true);
     const [isUserLoggedIn, setIsUserLoggedIn] = useState(auth.currentUser !== null);
     const [openModal, setOpenModalModal] = useState(false);
@@ -44,10 +50,12 @@ function MoviePage(props) {
 
     useEffect(() => {
         MovieStore.addChangeListener(GET_MOVIE_DETAILS, handleMovieResponse);
+        MovieStore.addChangeListener(GET_SIMILAR_MOVIES, handleSimilarMoviesResponse);
         AuthStore.authAddChangeListener(CHANGE_AUTH_TOKEN, handleAuthChanged);
 
         return function cleanup() {
             MovieStore.removeChangeListener(GET_MOVIE_DETAILS, handleMovieResponse);
+            MovieStore.removeChangeListener(GET_SIMILAR_MOVIES, handleSimilarMoviesResponse);
             AuthStore.authRemoveChangeListener(CHANGE_AUTH_TOKEN, handleAuthChanged);
         };
         // eslint-disable-next-line
@@ -56,6 +64,8 @@ function MoviePage(props) {
     useEffect(() => {
         if (!isNaN(parseInt(movieId))) {
             actions.getMovieDetails(movieId);
+            actions.getSimilarMovies(movieId);
+
         }
     }, [isUserLoggedIn, movieId])
 
@@ -67,6 +77,16 @@ function MoviePage(props) {
         setMovie(movie);
         setLoading(false);
     }
+
+    function handleSimilarMoviesResponse(movies) {
+        setSimilarMovies(movies);
+        // if (isLoading === true) {}
+    }
+    const goToPath = path => {
+        if (path) {
+            props.history.push(path);
+        }
+    };
 
     function getProfileImage(cast) {
         if (cast.picture_path === null) {
@@ -265,12 +285,12 @@ function MoviePage(props) {
                         <AccordionDetails>
                             <Grid container justifyContent={'center'}>
                                 {movie.cast.map((cast, key) => (
-                                    <Grid item key={key} xs={2} sx={{m: 2}}>
-                                        <Card sx={{height: 350}}>
+                                    <Grid item key={key} sx={{m: 1}}>
+                                        <Card sx={{height: 375, width: 200}}>
                                             <CardMedia
                                                 component="img"
                                                 image={getProfileImage(cast)}
-                                                height="225"
+                                                height="275"
                                                 sx={{borderRadius: 1}}
                                             />
                                             <CardContent>
@@ -285,6 +305,30 @@ function MoviePage(props) {
                     </Accordion>
                 </Grid>
             </Grid>
+
+            {/* Similar movies */}
+            <Typography align={"center"} variant={'h5'} mt={5}>You may also like:</Typography>
+            <Grid container direction={"row"} justifyContent={'space-between'} spacing={2} sx={{overflow: "auto"}} wrap={"nowrap"}>
+                {similarMovies?.map((similarMovie, key) => (
+                    <Grid item key={key} xs="auto">
+                        <Card onClick={() => {
+                            goToPath("/movie/" + similarMovie.id);
+                            window.scrollTo({top: 0, left: 0, behavior: "smooth" });
+                        }}>
+                            <CardMedia
+                                component="img"
+                                image={similarMovie.poster_path}
+                                height="300"
+                                sx={{borderRadius: 1}}
+                            />
+                            <CardContent>
+                                <Typography>{similarMovie.title}</Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                ))}
+            </Grid>
+
             {/*wits */}
             <Grid container direction={'column'} alignItems={'center'} spacing={2} sx={{mt: 5}}>
                 <Typography variant={'h4'}>Movie wits</Typography>

@@ -15,6 +15,7 @@ import {
     SUBSCRIBE_TO_MOVIE,
     NEW_USER_MOVIE_COLLECTIONS,
     BASE_URL,
+    GET_SIMILAR_MOVIES,
 } from '../../util/constants';
 import APIProvider from '../../services/providers/APIProvider';
 import MovieService from '../../services/MovieService';
@@ -107,6 +108,13 @@ export const roarWit = (witId) => {
 export const getMovieDetails = (movieId) => {
     dispatcher.dispatch( {
         type: GET_MOVIE_DETAILS,
+        payload: movieId
+    })
+}
+
+export const getSimilarMovies = (movieId) => {
+    dispatcher.dispatch( {
+        type: GET_SIMILAR_MOVIES,
         payload: movieId
     })
 }

@@ -8,6 +8,10 @@ export const URL_GET_BY_MOVIE = BASE_URL + '/wits/get_by_movie'
 export const URL_POST_WIT = BASE_URL + '/wits/create'
 export const URL_CHANGE_PROFILE_IMAGE = BASE_URL + '/users/create'
 export const URL_SUBSCRIBE_TO_MOVIE = BASE_URL + '/movies/Follow'
+export const URL_MOVIE_DETAILS = BASE_URL + '/movies/MovieDetails'
+export const URL_MOVIE_SEARCH = BASE_URL + '/movies/MovieSearch'
+export const URL_MOVIE_SIMILAR = BASE_URL + '/movies/Similar'
+export const MOVIES_PROFILE_DEFAULT_URL = 'https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-4-user-grey-d8fe957375e70239d6abdd549fd7568c89281b2179b5f4470e2e12895792dfa5.svg'
 
 /* auth */
 export const CHANGE_AUTH_TOKEN = 'CHANGE_AUTH_TOKEN'
@@ -34,14 +38,11 @@ export const GET_WITS_BY_FEED = 'GET_WITS_BY_FEED'
 export const GET_WITS_BY_MOVIE = 'GET_WITS_BY_MOVIE'
 
 /* movies */
-const MOVIES_BASE = 'https://mowitsapp.azure-api.net/movies/'
-export const MOVIES_URL_DETAILS = MOVIES_BASE + 'MovieDetails'
-export const MOVIES_URL_SEARCH = MOVIES_BASE + 'MovieSearch'
-export const MOVIES_PROFILE_DEFAULT_URL = 'https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-4-user-grey-d8fe957375e70239d6abdd549fd7568c89281b2179b5f4470e2e12895792dfa5.svg'
 export const GET_MOVIE_DETAILS = 'GET_MOVIE_DETAILS'
+export const GET_SIMILAR_MOVIES = 'GET_SIMILAR_MOVIES'
 export const GET_SEARCH_RESULTS = 'GET_SEARCH_RESULTS'
-export const DEBOUNCE_TIME = 600
 export const SUBSCRIBE_TO_MOVIE = 'SUBSCRIBE_TO_MOVIE'
+export const DEBOUNCE_TIME = 600
 
 /* lists */
 export const NEW_USER_MOVIE_COLLECTIONS = 'NEW_USER_MOVIE_COLLECTIONS'

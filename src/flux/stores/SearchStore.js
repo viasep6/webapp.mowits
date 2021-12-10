@@ -1,6 +1,6 @@
 import {EventEmitter} from "events";
 import dispatcher from "../dispatcher";
-import {GET_MOVIE_DETAILS, GET_SEARCH_RESULTS, MOVIES_URL_SEARCH} from "../../util/constants";
+import {GET_MOVIE_DETAILS, GET_SEARCH_RESULTS, URL_MOVIE_SEARCH} from "../../util/constants";
 import axios from "axios";
 
 export class SearchStore extends EventEmitter {
@@ -21,7 +21,7 @@ export class SearchStore extends EventEmitter {
     fetchSearchResults(query) {
         if (query !== "")
 
-            axios.get(MOVIES_URL_SEARCH + `?query=${query}`)
+            axios.get(URL_MOVIE_SEARCH + `?query=${query}`)
             .then((response) => {
 
                 let searchOptions = response.data.map(movie => {

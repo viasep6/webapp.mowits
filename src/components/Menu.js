@@ -235,8 +235,8 @@ function MenuBar(props) {
                         <Autocomplete
                             id="search"
                             onChange={(event, newValue) => {
-                                if (newValue !== null) {
-                                    props.history.push('/movie/' + newValue.id )
+                                if (newValue !== null && newValue.id !== undefined) {
+                                    goToPath('/movie/' + newValue.id)
                                 }
                             }}
                             onInputChange={(event, newInputValue) => {
