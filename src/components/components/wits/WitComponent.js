@@ -114,7 +114,7 @@ function WitComponent(props) {
 
                                     </Grid>
                                     <Grid>
-                                        <MoreHorizIcon/>
+                                        <MoreHorizIcon visibility={'hidden'}/>
                                     </Grid>
 
 
@@ -143,7 +143,7 @@ function WitComponent(props) {
                                     alignItems="center"
                                     justifyContent="flex-start"
                                 >
-                                    <Grid item xs container>
+                                    <Grid item xs container visibility={'hidden'}>
                                         <Icon fontSize="small" sx={{...witStyle, mr: 2}}>chat_bubble_outline</Icon>
                                         <Icon fontSize="small" sx={{...witStyle, mr: 2}}>share</Icon>
                                     </Grid>

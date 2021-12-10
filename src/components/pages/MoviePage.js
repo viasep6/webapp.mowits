@@ -41,8 +41,6 @@ function MoviePage(props) {
     const roarImage = require('../../assets/img/like-icon.png').default;
 
     useEffect(() => {
-
-
         MovieStore.addChangeListener(GET_MOVIE_DETAILS, handleMovieResponse);
         AuthStore.authAddChangeListener(CHANGE_AUTH_TOKEN, handleAuthChanged);
 
@@ -64,7 +62,6 @@ function MoviePage(props) {
     }
 
     function handleMovieResponse(movie) {
-        console.log(movie);
         setMovie(movie);
         setLoading(false);
     }
@@ -92,7 +89,6 @@ function MoviePage(props) {
                     isSubscribed: !prevState.mowits.isSubscribed
                 }
             }
-            console.log("newState", newState.mowits, prevState.mowits);
             return newState
         })
     }
@@ -195,9 +191,9 @@ function MoviePage(props) {
                                 variant={'outlined'}
                                 disabled={!isUserLoggedIn}
                                 onClick={handleFollowClick}>
-                                {movie.mowits.isSubscribed ? "Unfollow" : "Follow"}
+                                {movie.mowits !== undefined && movie.mowits?.isSubscribed ? "Unfollow" : "Follow"}
                             </Button>
-                            <Badge color="success" badgeContent={movie.mowits.followCount ? movie.mowits.followCount : 0} max={9999} className={'shake'}>
+                            <Badge color="success" badgeContent={movie.mowits !== undefined && movie.mowits.followCount ? movie.mowits.followCount : 0} max={9999} className={'shake'}>
                                 <Image src={roarImage} fit={'scale-down'} height={40} width={40} title={'Rawr the movie to get wits on your feed'}/>
                             </Badge>
                         </Paper>
