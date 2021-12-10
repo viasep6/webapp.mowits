@@ -5,8 +5,9 @@ import dispatcher from '../dispatcher';
 
 export class MovieStore extends EventEmitter {
 
-    constructor() {
+    constructor(authStore) {
         super();
+        this.authStore = authStore
         dispatcher.register(action => {
             switch (action.type) {
                 case GET_MOVIE_DETAILS:
@@ -22,7 +23,17 @@ export class MovieStore extends EventEmitter {
     }
 
     fetchMovieDetails(movieId) {
-        axios.get(MOVIES_URL_DETAILS + `?movieid=${movieId}`)
+        let userId = undefined;
+        if (this.authStore.state.authUser?.accessToken){
+           userId = this.authStore.state.authUser.uid;
+        }
+        // axios.get(MOVIES_URL_DETAILS, {
+        axios.get('http://localhost:7071/movies/MovieDetails', {
+            params: {
+                movieid: movieId,
+                userId: userId
+            }
+        })
             .then((response) => {
                 this.emit(GET_MOVIE_DETAILS, response.data);
             })
@@ -49,15 +60,15 @@ export class MovieStore extends EventEmitter {
 
     subscribeToMovie(data) {
         axios.defaults.headers.common = {Authorization: `Bearer ${this.authStore.state.authUser.accessToken}`};
-        axios.post('url', {
+        axios.post('http://localhost:7071/movies/Follow', {
             movieId: data.movieId,
-            title: data.title,
+            title: data.movieTitle,
         }).then((response) => {
-
+            // not gonna use response
         })
-            .catch((error) => {
-
-            });
+        .catch((error) => {
+            console.log(error);
+        });
     }
 
     addChangeListener = (event, callback) => {

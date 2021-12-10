@@ -29,7 +29,9 @@ function WriteWitComponent(props) {
             setUser(user)
         })
         setUser(userStore.state.loggedInUser)
+
         return function cleanup() {
+            setUser({})
             witStore.removeChangeListener(POST_WIT, handlePostResponse);
             userStore.userRemoveChangeListener(LOGIN_SUCCESS, () => {})
         };

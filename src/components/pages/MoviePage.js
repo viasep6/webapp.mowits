@@ -41,9 +41,7 @@ function MoviePage(props) {
     const roarImage = require('../../assets/img/like-icon.png').default;
 
     useEffect(() => {
-        if (!isNaN(parseInt(movieId))) {
-            actions.getMovieDetails(movieId);
-        }
+
 
         MovieStore.addChangeListener(GET_MOVIE_DETAILS, handleMovieResponse);
         AuthStore.authAddChangeListener(CHANGE_AUTH_TOKEN, handleAuthChanged);
@@ -53,13 +51,20 @@ function MoviePage(props) {
             AuthStore.authRemoveChangeListener(CHANGE_AUTH_TOKEN, handleAuthChanged);
         };
         // eslint-disable-next-line
-    }, [movieId]);
+    }, []);
+
+    useEffect(() => {
+        if (!isNaN(parseInt(movieId))) {
+            actions.getMovieDetails(movieId);
+        }
+    }, [isUserLoggedIn, movieId])
 
     function handleAuthChanged(user) {
         setIsUserLoggedIn(user !== null);
     }
 
     function handleMovieResponse(movie) {
+        console.log(movie);
         setMovie(movie);
         setLoading(false);
     }
@@ -77,6 +82,19 @@ function MoviePage(props) {
 
     const handleFollowClick = () => {
         actions.followMovie(movie);
+        setMovie( prevState => {
+
+            const newState = {
+                ...prevState,
+                mowits: {
+                    ...prevState.mowits,
+                    followCount: prevState.mowits.isSubscribed ? prevState.mowits.followCount -1 : prevState.mowits.followCount +1,
+                    isSubscribed: !prevState.mowits.isSubscribed
+                }
+            }
+            console.log("newState", newState.mowits, prevState.mowits);
+            return newState
+        })
     }
 
 
@@ -173,8 +191,13 @@ function MoviePage(props) {
                 >
                     <Grid item >
                         <Paper sx={{borderRadius: 1, p: 1}}>
-                            <Button variant={'outlined'} onClick={handleFollowClick}>follow</Button>
-                            <Badge color="success" badgeContent={10} max={9999} className={'shake'}>
+                            <Button
+                                variant={'outlined'}
+                                disabled={!isUserLoggedIn}
+                                onClick={handleFollowClick}>
+                                {movie.mowits.isSubscribed ? "Unfollow" : "Follow"}
+                            </Button>
+                            <Badge color="success" badgeContent={movie.mowits.followCount ? movie.mowits.followCount : 0} max={9999} className={'shake'}>
                                 <Image src={roarImage} fit={'scale-down'} height={40} width={40} title={'Rawr the movie to get wits on your feed'}/>
                             </Badge>
                         </Paper>
@@ -191,7 +214,7 @@ function MoviePage(props) {
                         <Paper sx={{borderRadius: 1, p: 1}}>
                             <Typography variant={'h6'}>Statistics:</Typography>
                             <Typography>TMDB Score: {movie.vote_average} ({movie.vote_count} votes)</Typography>
-                            <Typography>Wits: <b>TO BE IMPLEMENTED</b></Typography>
+                            <Typography>Wits: <b>{movie.mowits !== undefined ? movie.mowits.witCount : 0}</b></Typography>
                             <Typography>Budget: ${movie.budget}</Typography>
                             <Typography>Revenue: ${movie.revenue}</Typography>
                             <Typography>Run time: {movie.runtime} minutes</Typography>
@@ -283,7 +306,7 @@ function MoviePage(props) {
                         border: 0,
                         borderRadius: 0,
                     }}>
-                        <Image src={movie.poster_path} alt="movie poster" onClick={handleCloseModal}/>
+                        <Image src={movie.poster_path} alt="movie poster" onClick={handleCloseModal} height={'95%'}/>
                     </Box>
                 </Modal>
             </div>
