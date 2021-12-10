@@ -47,7 +47,7 @@ const authStore = new AuthStore();
 const userStore = new UserStore(authStore);
 const witStore = new WitStore(authStore)
 const favoritesStore = new FavoritesStore()
-const movieStore = new MovieStore();
+const movieStore = new MovieStore(authStore);
 const searchStore = new SearchStore();
 const stores = {authStore, userStore, witStore, favoritesStore, searchStore, movieStore};
 
