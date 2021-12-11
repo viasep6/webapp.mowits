@@ -24,15 +24,13 @@ function PopularMoviesBoxComponent(props) {
         return movieList;
     }
 
-    let interval = {}
-
+    
     useEffect(() => {
         setSelectedMovies(getRandomMovies(movies, 12));
-        interval = setInterval(() => {setSelectedMovies(getRandomMovies(movies, 12));}, 120000);
+        const interval = setInterval(() => {setSelectedMovies(getRandomMovies(movies, 12));}, 120000);
         return function cleanup() {
             clearInterval(interval);
         };
-    // eslint-disable-next-line
     }, [movies]);
 
     return (
