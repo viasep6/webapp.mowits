@@ -97,7 +97,7 @@ function ListWitComponent(props) {
 
     const inputRef = useRef();
     const handleScroll = () => {
-        if (inputRef.current !== undefined) {
+        if (inputRef.current !== undefined && inputRef.current !== null) {
             const bottom = inputRef.current.getBoundingClientRect().bottom <= window.innerHeight;
             if (bottom) {
                 document.removeEventListener('scroll', handleScroll);
