@@ -153,12 +153,12 @@ export const createMovieCollection = async (accessToken, collectionName) => {
 }
 
 export const addMovieToCollection = async (accessToken, collectionName, movies) => {
-    const updatedCollections = await movieCollectionService.createMovieCollectionByUserID(
+    await movieCollectionService.createMovieCollectionByUserID(
         accessToken,
         collectionName,
         movies)
-    dispatcher.dispatch({
-        type: NEW_USER_MOVIE_COLLECTIONS,
-        payload: updatedCollections
-    })
+    // dispatcher.dispatch({
+    //     type: NEW_USER_MOVIE_COLLECTIONS,
+    //     payload: updatedCollections
+    // })
 }

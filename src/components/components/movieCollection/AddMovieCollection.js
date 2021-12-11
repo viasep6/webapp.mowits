@@ -40,30 +40,27 @@ export default function AddMovieCollection(props) {
                 setTxtFieldValue('')
                 setHelperTxt('')
                 setInProgress(false)
-                props.onDone(collections)
+                props.onDone()
             }
         }
     }
 
-    const addCollection =async  () => {
+    const addCollection = async  () => {
         if (txtFieldValue === '') {
             updateError(true, 'A name must be entered!')
         }
-        else
-        {
-            if (collectionNameExist()) {
-                updateError(true, 'Collection name already exists.')
-            }
-            else {
-                setInProgress(true)
-                await actions.createMovieCollection(props.token, txtFieldValue)
-            }
+        else if (collectionNameExist()) {
+            updateError(true, 'Collection name already exists.')
+        }
+        else {
+            setInProgress(true)
+            await actions.createMovieCollection(props.token, txtFieldValue)
         }
     }
 
-    const keyPressed = (key) => {
+    const keyPressed = async (key) => {
         if(key.keyCode === 13) {
-            addCollection()
+            await addCollection()
         }
     }
 

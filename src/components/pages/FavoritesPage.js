@@ -47,9 +47,8 @@ function FavoritesPage(props) {
 
     const goToMovie = (movieId) => props.history.push('/movie/' + movieId )
 
-    const collectionAdded = (collection) => {
+    const collectionAdded = () => {
         setAddDone(true)
-        updateCollections(collection)
     }
 
     const toggleAddCollection = () => setAddDone(!addDone)
