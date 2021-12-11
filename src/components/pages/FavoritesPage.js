@@ -21,6 +21,7 @@ function FavoritesPage(props) {
 
     const [dataReady, setReady] = useState(false)
     const [addDone, setAddDone] = useState(true)
+    const [enableDelete, setEnableDelete] = useState(false)
 
     useEffect(() => {
         props.stores.authStore.authAddChangeListener(CHANGE_AUTH_TOKEN, updateToken)
@@ -37,15 +38,20 @@ function FavoritesPage(props) {
 
     const updateCollections = (collections) => {
         if (typeof collections === 'undefined' || collections.length === 0) {
+
             setMovieCollections([{name: 'You don´t have any collections yet...'}])
         }
         else {
+            setEnableDelete(true)
             setMovieCollections(collections)
         }
         setReady(true)
     }
 
     const goToMovie = (movieId) => props.history.push('/movie/' + movieId )
+    const deleteItem = (collectionName, movieId) => actions.deleteMovieFromCollection(accessToken, collectionName, movieId)
+    const roarClicked = (movieId) => console.log(movieId)
+    const deleteCollection = (collectionName) => actions.deleteMovieCollection(accessToken, collectionName)
 
     const collectionAdded = () => {
         setAddDone(true)
@@ -71,12 +77,15 @@ function FavoritesPage(props) {
                 >
                     <Typography mx={'auto'} variant={'h5'}>My Amazing Mowit Collections</Typography>
                 </AccordionSummary>
-                <AddMovieCollection
-                    token={accessToken}
-                    favoritesStore={props.stores.favoritesStore}
-                    existingCollections={movieCollections}
-                    onDone={collectionAdded}
-                />
+                <Box
+                marginBottom={2}>
+                    <AddMovieCollection
+                        token={accessToken}
+                        favoritesStore={props.stores.favoritesStore}
+                        existingCollections={movieCollections}
+                        onDone={collectionAdded}
+                    />
+                </Box>
             </Accordion>
             <Grid
                 item
@@ -92,9 +101,12 @@ function FavoritesPage(props) {
                             key={collection.name}
                             title={collection.name}
                             movieCollection={collection.movies}
-                            onMovieClicked={goToMovie}
-                            enableDelete={true}
+                            enableDelete={enableDelete}
                             disableRoars={true}
+                            onMovieClicked={goToMovie}
+                            onDeleteItem={deleteItem}
+                            onDeleteCollection={deleteCollection}
+                            onRoarClicked={roarClicked}
                             marginTop={2}
                             marginButton={0}/> )
                         : <Box marginTop={5}>

@@ -5,6 +5,7 @@ import IconButton from "@mui/material/IconButton";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import Typography from '@mui/material/Typography';
+import DeleteModal from './DeleteModal';
 
 
 export default function HorizontalMovieCollection(props) {
@@ -95,8 +96,9 @@ export default function HorizontalMovieCollection(props) {
     }
 
     const itemClicked = (movieId) => props.onMovieClicked(movieId)
-    const deleteClicked = (movieId) => console.log(movieId)
-    const roarClicked = (movieId) => console.log(movieId)
+    const deleteItem = (movieId) => props.onDeleteItem(title, movieId)
+    const roarClicked = (movieId) => props.onRoarClicked(movieId)
+    const deleteCollection = () => props.onDeleteCollection(title)
 
     return (
         <Grid
@@ -118,6 +120,12 @@ export default function HorizontalMovieCollection(props) {
                 <Typography component="div" variant="h5" marginLeft={6}>
                     {title}
                 </Typography>
+                <DeleteModal
+                    enableDelete={props.enableDelete}
+                    msg={`Delete your entire ${title} collection?`}
+                    cannotBeUndone={true}
+                    onDelete={deleteCollection}
+                />
             </Grid>
             <Grid
                 container
@@ -138,10 +146,11 @@ export default function HorizontalMovieCollection(props) {
                     key={item.id}
                     movie={item}
                     deleteBtn={props.enableDelete}
-                    onDelete={deleteClicked}
+                    onDelete={deleteItem}
                     disableRoar={props.disableRoars}
                     onRoar={roarClicked}
                     onClick={itemClicked}
+                    collectionName={title}
                     margin={1}/>) }
                 <IconButton
                     color="primary"

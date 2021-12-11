@@ -7,7 +7,7 @@ import Badge from "@mui/material/Badge";
 import Typography from '@mui/material/Typography';
 import IconButton from "@mui/material/IconButton";
 import likeIcon from '../../../assets/img/like-icon.png';
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteModal from './DeleteModal';
 
 export default function MovieCollectionItem(props) {
     const movie = props.movie
@@ -17,7 +17,6 @@ export default function MovieCollectionItem(props) {
 
     return (
         <Card sx={{p: 2, maxWidth:355, margin:props.margin}}
-              onClick={itemClicked}
         >
             <Grid
                 container
@@ -42,6 +41,7 @@ export default function MovieCollectionItem(props) {
                             sx={{ height: '100%' }}
                             image={movie.poster_path}
                             alt="Movie cover"
+                            onClick={itemClicked}
                         />
                     </Badge>
                 </Grid>
@@ -53,7 +53,8 @@ export default function MovieCollectionItem(props) {
                     justifyContent="space-between"
                     alignItems="stretch"
                 >
-                    <CardContent>
+                    <CardContent
+                        onClick={itemClicked}>
                         <Typography component="div" variant="h5">
                             {movie.title}
                         </Typography>
@@ -68,14 +69,12 @@ export default function MovieCollectionItem(props) {
                         alignItems="center"
                         paddingLeft={1}
                     >
-                        <IconButton
-                            aria-label="delete"
-                            size="medium"
-                            sx={{ visibility: props.deleteBtn ? 'visible' : 'hidden' }}
-                            onClick={deleteClicked}
-                        >
-                            <DeleteIcon fontSize="inherit" />
-                        </IconButton>
+                        <DeleteModal
+                            enableDelete={props.deleteBtn}
+                            msg={`Delete ${movie.title} from ${props.collectionName}?`}
+                            cannotBeUndone={false}
+                            onDelete={deleteClicked}
+                        />
                         <Badge color="success"
                                title={'Movie roars!'}
                                badgeContent={movie.roars}

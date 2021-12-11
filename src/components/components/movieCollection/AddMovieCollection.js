@@ -5,6 +5,8 @@ import {useEffect, useState} from "react";
 import Box from '@mui/material/Box';
 import {NEW_USER_MOVIE_COLLECTIONS} from "../../../util/constants";
 import * as actions from '../../../flux/actions/actions';
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
+
 
 export default function AddMovieCollection(props) {
     const [inProgress, setInProgress] = useState(false)
@@ -17,9 +19,10 @@ export default function AddMovieCollection(props) {
             }
     )
     const [error, setError] = React.useState(false);
-    const [labelTxt, setLabelTxt] = React.useState('Add Collection')
+    const [labelTxt, setLabelTxt] = React.useState('New collection')
     const [helperTxt, setHelperTxt] = useState('')
     const [txtFieldValue, setTxtFieldValue] = useState('')
+    const [emptyField, setEmptyField] = useState(true)
 
 
     useEffect(() => {
@@ -65,8 +68,8 @@ export default function AddMovieCollection(props) {
     }
 
     const txtFieldUpdated = (val) => {
+        val === '' ? setEmptyField(true) : setEmptyField(false)
         setTxtFieldValue(val)
-        setHelperTxt('Please enter a collection name.')
         if (error) {
             updateError(false, 'Please enter a collection name.')
         }
@@ -100,7 +103,6 @@ export default function AddMovieCollection(props) {
                 direction="row"
                 justifyContent="center"
                 alignItems="center"
-                marginBottom={2}
             >
                 <TextField
                     required={!error}
@@ -113,7 +115,15 @@ export default function AddMovieCollection(props) {
                     onKeyDown={keyPressed}
                     helperText={helperTxt}
                 />
-                <Button variant="text" onClick={addCollection}>Add</Button>
+                <Box marginLeft={1}>
+                    <Button variant="text"
+                            color={'primary'}
+                            onClick={addCollection}
+                            disabled={emptyField}
+                            startIcon={<SaveAltIcon />}>
+                        Create
+                    </Button>
+                </Box>
                 <Box
                     visibility={ inProgress ? 'visible' : 'hidden'}
                 >

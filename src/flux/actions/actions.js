@@ -157,8 +157,17 @@ export const addMovieToCollection = async (accessToken, collectionName, movies) 
         accessToken,
         collectionName,
         movies)
-    // dispatcher.dispatch({
-    //     type: NEW_USER_MOVIE_COLLECTIONS,
-    //     payload: updatedCollections
-    // })
+}
+
+export const deleteMovieFromCollection = async (accessToken, collectionName, movieId) => {
+    await movieCollectionService.deleteMovieFromCollection(
+        accessToken,
+        collectionName,
+        movieId)
+}
+
+export const deleteMovieCollection = async (accessToken, collectionName) => {
+    await movieCollectionService.deleteMovieCollection(
+        accessToken,
+        collectionName)
 }

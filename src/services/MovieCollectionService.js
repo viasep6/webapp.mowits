@@ -68,7 +68,15 @@ function MovieCollectionService(apiProvider, movieService) {
         }
     }
 
-    return { getCollectionsByUserID, createMovieCollectionByUserID }
+    const deleteMovieCollection = async (accessToken, collectionName) => {
+        console.log('service' + collectionName)
+    }
+
+    const deleteMovieFromCollection = async (accessToken, collectionName, movieId) => {
+        console.log('service' + collectionName + ' ' + movieId)
+    }
+
+    return { getCollectionsByUserID, createMovieCollectionByUserID, deleteMovieCollection, deleteMovieFromCollection }
 
 }
 

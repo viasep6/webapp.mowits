@@ -17,6 +17,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Typography from '@mui/material/Typography';
 import Accordion from '@mui/material/Accordion';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 const modalStyle = {
     position: 'absolute',
@@ -123,7 +124,7 @@ export default function AddMovieToCollection(props) {
                         <Accordion
                             expanded={!addCollectionDone}>
                             <AccordionSummary
-                                expandIcon={<ExpandMoreIcon sx={{mt: 2, borderRadius: 0,}} onClick={() => toggleAddCollection()} />}
+                                expandIcon={<ExpandMoreIcon sx={{mt: 15, borderRadius: 0,}} onClick={() => toggleAddCollection()} />}
                             >
                                 <Grid
                                     item
@@ -133,6 +134,7 @@ export default function AddMovieToCollection(props) {
                                     justifyContent="space-between"
                                     alignItems="center"
                                 >
+                                    <Typography mx={'auto'} variant={'p'} marginBottom={2}>Mowit Collections</Typography>
                                     <FormControl
                                         fullWidth>
                                         <InputLabel id="demo-simple-select-label">{labelTxt}</InputLabel>
@@ -152,15 +154,14 @@ export default function AddMovieToCollection(props) {
                                                     </MenuItem>
                                             }
                                         </Select>
+                                        <Box
+                                            marginTop={1}
+                                        >
+                                            <Button size="small" variant="text" color={'primary'} disabled={!collectionSelected} onClick={addMovie} startIcon={<AddCircleOutlineIcon />}>
+                                                Add to collection
+                                            </Button>
+                                        </Box>
                                     </FormControl>
-                                    <Box
-                                        margin={1}
-                                        marginBottom={2}
-                                        visibility={collectionSelected ? 'visible' :'hidden'}
-                                    >
-                                        <Button size="small" variant="text" onClick={addMovie}>Add Movie</Button>
-                                    </Box>
-                                    <Typography mx={'auto'} variant={'p'}>Add Collection</Typography>
                                 </Grid>
                             </AccordionSummary>
                             <Box marginLeft={1}>
