@@ -71,7 +71,7 @@ export default function AddMovieToCollection(props) {
         }
         else {
             movies.push({ id: props.movieId })
-            await actions.addMovieToCollection(props.accessToken, currentSelected.name, movies)
+            await actions.updateMovieCollection(props.accessToken, currentSelected.name, movies)
                 .then(() => handleClose())
         }
     }

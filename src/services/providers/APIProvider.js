@@ -40,7 +40,7 @@ function APIProvider (baseUrl) {
         url: baseUrl + path,
         headers: headers,
         data: body
-    }).catch(err => console.log('API POST Error', err))
+    })
 
     const del = async (path, headers) => await axios
         .delete(baseUrl + path,

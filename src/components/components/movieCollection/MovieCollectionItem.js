@@ -16,7 +16,10 @@ export default function MovieCollectionItem(props) {
     const roarClicked = () => props.onRoar(movie.id)
 
     return (
-        <Card sx={{p: 2, maxWidth:355, margin:props.margin}}
+        <Card sx={{p: 2, maxWidth:590, minWidth:385, margin:props.margin}}
+              onClick={() => {
+                  window.scrollTo({top: 0, left: 0, behavior: "smooth" });
+              }}
         >
             <Grid
                 container
@@ -26,7 +29,7 @@ export default function MovieCollectionItem(props) {
             >
                 <Grid
                     item
-                    xs
+                    xs={6}
                     container
                     direction="column"
                     justifyContent="flex-start"
@@ -38,7 +41,7 @@ export default function MovieCollectionItem(props) {
                     >
                         <CardMedia
                             component="img"
-                            sx={{ height: '100%' }}
+                            sx={{ height: '100%', cursor:'pointer' }}
                             image={movie.poster_path}
                             alt="Movie cover"
                             onClick={itemClicked}
@@ -47,21 +50,31 @@ export default function MovieCollectionItem(props) {
                 </Grid>
                 <Grid
                     item
-                    xs={7}
+                    xs
                     container
                     direction="column"
                     justifyContent="space-between"
                     alignItems="stretch"
                 >
-                    <CardContent
-                        onClick={itemClicked}>
-                        <Typography component="div" variant="h5">
-                            {movie.title}
-                        </Typography>
-                        <Typography variant="subtitle1" color="text.secondary" component="div">
-                            {new Date(movie.release_date).getFullYear().toString()}
-                        </Typography>
-                    </CardContent>
+                    <Grid
+                        item
+                        xs
+                        container
+                        direction="column"
+                        justifyContent="space-between"
+                        alignItems="stretch"
+                        sx={{cursor: 'pointer'}}
+                        onClick={itemClicked}
+                    >
+                        <CardContent>
+                            <Typography component="div" variant="h5">
+                                {movie.title}
+                            </Typography>
+                            <Typography variant="subtitle1" color="text.secondary" component="div">
+                                {new Date(movie.release_date).getFullYear().toString()}
+                            </Typography>
+                        </CardContent>
+                    </Grid>
                     <Grid
                         container
                         direction="row"
@@ -99,3 +112,4 @@ export default function MovieCollectionItem(props) {
         </Card>
     );
 }
+

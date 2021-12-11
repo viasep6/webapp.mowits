@@ -1,6 +1,6 @@
 import {withRouter} from 'react-router-dom';
 import React, {useEffect, useState} from 'react';
-import HorizontalMovieCollection from "../components/movieCollection/HorizontalMovieCollection";
+import MovieCollection from "../components/movieCollection/MovieCollection";
 import {CHANGE_AUTH_TOKEN, NEW_USER_MOVIE_COLLECTIONS} from '../../util/constants';
 import * as actions from '../../flux/actions/actions';
 import {CircularProgress, Grid} from '@mui/material';
@@ -37,9 +37,13 @@ function FavoritesPage(props) {
     const updateToken = (decodedToken) => setAccessToken(decodedToken.accessToken)
 
     const updateCollections = (collections) => {
+        setReady(false)
         if (typeof collections === 'undefined' || collections.length === 0) {
-
-            setMovieCollections([{name: 'You don´t have any collections yet...'}])
+            setEnableDelete(false)
+            setMovieCollections([{
+                name: 'You don´t have any collections yet...',
+                movies: []
+            }])
         }
         else {
             setEnableDelete(true)
@@ -49,7 +53,7 @@ function FavoritesPage(props) {
     }
 
     const goToMovie = (movieId) => props.history.push('/movie/' + movieId )
-    const deleteItem = (collectionName, movieId) => actions.deleteMovieFromCollection(accessToken, collectionName, movieId)
+    const deleteItem = (collectionName, movies) => actions.updateMovieCollection(accessToken, collectionName, movies)
     const roarClicked = (movieId) => console.log(movieId)
     const deleteCollection = (collectionName) => actions.deleteMovieCollection(accessToken, collectionName)
 
@@ -67,13 +71,13 @@ function FavoritesPage(props) {
             direction="column"
             justifyContent="center"
             alignItems="stretch"
-            marginTop={5}
+            marginTop={10}
         >
             <Accordion
                 expanded={!addDone}>
                 <AccordionSummary
                     onClick={() => toggleAddCollection()}
-                    expandIcon={<ExpandMoreIcon sx={{mt: 2, borderRadius: 1}} />}
+                    expandIcon={<ExpandMoreIcon sx={{mt: 3,  borderRadius: 1}} />}
                 >
                     <Typography mx={'auto'} variant={'h5'}>My Amazing Mowit Collections</Typography>
                 </AccordionSummary>
@@ -97,7 +101,7 @@ function FavoritesPage(props) {
             >
                 {
                     dataReady ?
-                        movieCollections.map(collection => <HorizontalMovieCollection
+                        movieCollections.map(collection => <MovieCollection
                             key={collection.name}
                             title={collection.name}
                             movieCollection={collection.movies}

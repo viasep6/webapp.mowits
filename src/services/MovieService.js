@@ -5,8 +5,7 @@ function MovieService(apiProvider) {
     const moviesPath = '/movies'
 
     const getMovieDetails = (movieId) => api
-        .get(`${moviesPath}/MovieDetails?movieid=${movieId}`,
-            {  }
+        .get(`${moviesPath}/MovieDetails?movieid=${movieId}`
         )
 
     return { getMovieDetails }

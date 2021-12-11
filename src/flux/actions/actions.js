@@ -145,29 +145,26 @@ export const getMovieCollectionsByUserID = async (accessToken, collectionName=''
 }
 
 export const createMovieCollection = async (accessToken, collectionName) => {
-    await movieCollectionService.createMovieCollectionByUserID(accessToken, collectionName)
+    await movieCollectionService.updateMovieCollectionByUserID(accessToken, collectionName)
         .then(updatedCollections => dispatcher.dispatch({
             type: NEW_USER_MOVIE_COLLECTIONS,
             payload: updatedCollections
         }))
 }
 
-export const addMovieToCollection = async (accessToken, collectionName, movies) => {
-    await movieCollectionService.createMovieCollectionByUserID(
-        accessToken,
-        collectionName,
-        movies)
-}
-
-export const deleteMovieFromCollection = async (accessToken, collectionName, movieId) => {
-    await movieCollectionService.deleteMovieFromCollection(
-        accessToken,
-        collectionName,
-        movieId)
+export const updateMovieCollection = async (accessToken, collectionName, movies) => {
+    await movieCollectionService.updateMovieCollectionByUserID(accessToken, collectionName, movies)
+        .then(updatedCollections => dispatcher.dispatch({
+                type: NEW_USER_MOVIE_COLLECTIONS,
+                payload: updatedCollections
+        }))
 }
 
 export const deleteMovieCollection = async (accessToken, collectionName) => {
-    await movieCollectionService.deleteMovieCollection(
-        accessToken,
-        collectionName)
+    await movieCollectionService.deleteMovieCollection(accessToken, collectionName)
+        .then(updatedCollections => dispatcher.dispatch({
+            type: NEW_USER_MOVIE_COLLECTIONS,
+            payload: updatedCollections
+        }))
+
 }
