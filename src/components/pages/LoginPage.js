@@ -89,7 +89,6 @@ function LoginPage(props) {
 
 
     useEffect(() => {
-        console.log(props);
         userStore.userAddChangeListener(LOGIN_SUCCESS, handleLoginSuccess);
         userStore.userAddChangeListener(LOGIN_FAILURE, handleLoginFailure);
         authStore.authAddChangeListener(LOGIN_FAILURE, handleLoginFailure);

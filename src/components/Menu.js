@@ -40,6 +40,7 @@ function MenuBar(props) {
 
     const handleLogout = () => {
         actions.logout();
+        setAnchorElNav(null);
     };
 
     const authStatusChanged = (authUser) => {
@@ -178,6 +179,26 @@ function MenuBar(props) {
                             <MenuItem id={'statistics'} key="statistics" onClick={handleCloseNavMenu}>
                                 <Typography textAlign="center">Statistics</Typography>
                             </MenuItem>
+                            {isAuthenticated &&
+                                    <MenuItem id={'profile'} key="profile" onClick={() => goToPath('/profile/' + loggedInUser?.displayName)}>
+                                        <Typography textAlign="center">Profile</Typography>
+                                    </MenuItem>
+                            }
+                            {isAuthenticated &&
+                                <MenuItem id={'logout'} key="logout" onClick={handleLogout}>
+                                    <Typography textAlign="center">Logout</Typography>
+                                </MenuItem>
+                            }
+                            {!isAuthenticated &&
+                                <MenuItem id={'login'} key="login" onClick={handleCloseNavMenu}>
+                                    <Typography textAlign="center">Login</Typography>
+                                </MenuItem>
+                            }
+                            {!isAuthenticated &&
+                                <MenuItem id={'signup'} key="signup" onClick={handleCloseNavMenu}>
+                                    <Typography textAlign="center">Signup</Typography>
+                                </MenuItem>
+                            }
                         </Menu>
                     </Box>
                     <Typography
