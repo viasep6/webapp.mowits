@@ -35,15 +35,15 @@ function WelcomeComponent(props) {
                 }}>
                     <Typography variant={'h4'}
                                 sx={{fontFamily: 'TiemposHeadlineWeb-Bold,Georgia,serif', fontWeight: 400, m: 2}}>
-                        Share wits.
+                        Share wits
                     </Typography>
                     <Typography variant={'h5'}
                                 sx={{fontFamily: 'TiemposHeadlineWeb-Bold,Georgia,serif', fontWeight: 400, m: 2}}>
-                        Keep track of movies.
+                        Keep track of movies
                     </Typography>
                     <Typography variant={'h5'}
                                 sx={{fontFamily: 'TiemposHeadlineWeb-Bold,Georgia,serif', fontWeight: 400, m: 2}}>
-                        Create lists of favorite movies.
+                        Create lists of favorite movies
                     </Typography>
                 </Box>
                 <Box sx={{
@@ -72,7 +72,7 @@ function WelcomeComponent(props) {
             </Grid>
             <Grid item xs={6}>
                 <Button variant={'contained'} sx={{mt: 2, pl: 4, pr: 4, color: 'whitesmoke'}}
-                        onClick={() => props.history.push('/signup')}>Sign up now - FREE</Button>
+                        onClick={() => props.history.push('/signup')}>Sign up now - it's FREE</Button>
             </Grid>
             <Grid item sx={{mt:2}}>
                 <Typography variant={'h5'} sx={{letterSpacing: 3, fontWeight: 'medium', fontFamily: 'Thonburi'}}>
