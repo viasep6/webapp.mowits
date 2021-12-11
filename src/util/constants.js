@@ -8,6 +8,7 @@ export const URL_GET_BY_MOVIE = BASE_URL + '/wits/get_by_movie'
 export const URL_POST_WIT = BASE_URL + '/wits/create'
 export const URL_CHANGE_PROFILE_IMAGE = BASE_URL + '/users/create'
 export const URL_SUBSCRIBE_TO_MOVIE = BASE_URL + '/movies/Follow'
+export const URL_POPULAR_MOVIES = BASE_URL + '/movies/Popular'
 export const URL_MOVIE_DETAILS = BASE_URL + '/movies/MovieDetails'
 export const URL_MOVIE_SEARCH = BASE_URL + '/movies/MovieSearch'
 export const URL_MOVIE_SIMILAR = BASE_URL + '/movies/Similar'
@@ -42,8 +43,12 @@ export const GET_MOVIE_DETAILS = 'GET_MOVIE_DETAILS'
 export const GET_SIMILAR_MOVIES = 'GET_SIMILAR_MOVIES'
 export const GET_SEARCH_RESULTS = 'GET_SEARCH_RESULTS'
 export const SUBSCRIBE_TO_MOVIE = 'SUBSCRIBE_TO_MOVIE'
+export const GET_MOVIE_POPULAR = 'GET_MOVIE_POPULAR'
 export const DEBOUNCE_TIME = 600
 
 /* lists */
-export const GET_MOVIE_LISTS_BY_USER_ID = 'GET_MOVIE_LISTS_BY_USER_ID'
-export const NEW_USER_MOVIE_LISTS = 'NEW_USER_MOVIE_LISTS'
+export const NEW_USER_MOVIE_COLLECTIONS = 'NEW_USER_MOVIE_COLLECTIONS'
+
+
+
+

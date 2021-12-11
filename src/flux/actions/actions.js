@@ -5,14 +5,25 @@ import {
     LOGOUT,
     GET_WITS_BY_USER,
     GET_WITS_BY_FEED,
+    GET_WITS_BY_MOVIE,
     POST_WIT,
     ROAR_WIT,
     GET_USER_BY_USERNAME,
     SET_USER_PROFILE_IMAGE,
     GET_MOVIE_DETAILS,
-    GET_MOVIE_LISTS_BY_USER_ID,
-    NEW_USER_MOVIE_LISTS, GET_WITS_BY_MOVIE, GET_SEARCH_RESULTS, SUBSCRIBE_TO_MOVIE, GET_SIMILAR_MOVIES,
+    GET_SEARCH_RESULTS,
+    SUBSCRIBE_TO_MOVIE,
+    NEW_USER_MOVIE_COLLECTIONS,
+    BASE_URL,
+    GET_SIMILAR_MOVIES,
 } from '../../util/constants';
+import APIProvider from '../../services/providers/APIProvider';
+import MovieService from '../../services/MovieService';
+import MovieCollectionService from '../../services/MovieCollectionService';
+
+const apiProvider = APIProvider(BASE_URL)
+const moviesService = MovieService(apiProvider)
+const movieCollectionService = MovieCollectionService(apiProvider, moviesService)
 
 /*
     Auth actions
@@ -125,16 +136,30 @@ export const followMovie = (movie) => {
 /*
     Movie Lists.
  */
-export const getMovieListsByUserID = (accessToken) => {
+export const getMovieCollectionsByUserID = async (accessToken, collectionName='') => {
+    const collections = await movieCollectionService.getCollectionsByUserID(accessToken, collectionName)
     dispatcher.dispatch({
-        type: GET_MOVIE_LISTS_BY_USER_ID,
-        payload: accessToken
+        type: NEW_USER_MOVIE_COLLECTIONS,
+        payload: collections
     })
 }
 
-export const newUserMovieLists = (lists) => {
+
+export const createMovieCollection = async (accessToken, collectionName) => {
+    const updatedCollections = await movieCollectionService.createMovieCollectionByUserID(accessToken, collectionName)
     dispatcher.dispatch({
-        type: NEW_USER_MOVIE_LISTS,
-        payload: lists
+        type: NEW_USER_MOVIE_COLLECTIONS,
+        payload: updatedCollections
+    })
+}
+
+export const addMovieToCollection = async (accessToken, collectionName, movies) => {
+    const updatedCollections = await movieCollectionService.createMovieCollectionByUserID(
+        accessToken,
+        collectionName,
+        movies)
+    dispatcher.dispatch({
+        type: NEW_USER_MOVIE_COLLECTIONS,
+        payload: updatedCollections
     })
 }

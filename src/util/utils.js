@@ -17,6 +17,13 @@ export function getUnique(arr, comp) {
 }
 
 /*
+ * Substitutes all whitespaces of a string the given chars
+ */
+export function SubstituteSpaces(str,chars) {
+    return str.replace(/\s/g, chars)
+}
+
+/*
     truncate string and replace last letters with dots.
  */
 export function truncate(input, length) {
@@ -25,3 +32,4 @@ export function truncate(input, length) {
     }
     return input;
 };
+

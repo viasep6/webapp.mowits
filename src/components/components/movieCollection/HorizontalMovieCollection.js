@@ -1,35 +1,32 @@
 import React, {useState} from 'react';
-import MovieListItem from "./MovieListItem";
+import MovieCollectionItem from "./MovieCollectionItem";
 import Grid from '@mui/material/Grid';
 import IconButton from "@mui/material/IconButton";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import AddIcon from '@mui/icons-material/Add';
 import Typography from '@mui/material/Typography';
 
 
-export default function HorizontalMovieList(props) {
+export default function HorizontalMovieCollection(props) {
     const title = props.title
-    const movies = props.movieList
-    const itemClicked = (movieId) => props.onMovieClicked(movieId)
-    const deleteClicked = (movieId) => console.log(movieId)
-    const roarClicked = (movieId) => console.log(movieId)
-    const addMovie = () => props.onAdd(props.title)
+    const movies = props.movieCollection
 
-    let  [currentList, setCurrent] = useState(
-        typeof props.movieList === 'undefined'
+    const [currentCollection, setCurrent] = useState(
+        typeof props.movieCollection === 'undefined'
             ? []
             : () => {
                 const maxLength = movies.length > 3 ? 3 : movies.length
-                let initialList = []
+                let initialCollection = []
                 for (let i = 0; i < maxLength; i++) {
-                    initialList.push(movies[i])
+                    initialCollection.push(movies[i])
                 }
-                return initialList
+                return initialCollection
             }
     )
-    let [currentTailIndex, setTailIndex] = useState(2)
-    let hasMoreItems = useState(
+
+    const [currentTailIndex, setTailIndex] = useState(2)
+
+    const hasMoreItems = useState(
         typeof movies === 'undefined'
             ? false
             : movies.length > 3)
@@ -38,14 +35,14 @@ export default function HorizontalMovieList(props) {
         if (currentTailIndex === 0) {
             setTailIndex(() => {
                 const newIndex = movies.length -1
-                updateList(newIndex)
+                updateCollection(newIndex)
                 return newIndex
             })
         }
         else {
             setTailIndex(prevIndex =>  {
                 const newIndex = prevIndex - 1
-                updateList(newIndex)
+                updateCollection(newIndex)
                 return newIndex
             })
         }
@@ -55,20 +52,20 @@ export default function HorizontalMovieList(props) {
     const next = () => {
         if (currentTailIndex + 1 === movies.length) {
             setTailIndex(() => {
-                updateList(0)
+                updateCollection(0)
                 return 0
             })
         }
         else {
             setTailIndex(prevIndex =>  {
                 const newIndex = prevIndex + 1
-                updateList(newIndex)
+                updateCollection(newIndex)
                 return newIndex
             })
         }
     }
 
-    const updateList = (newTailIndex) => {
+    const updateCollection = (newTailIndex) => {
         switch (newTailIndex) {
             case 0:
                 setCurrent([
@@ -97,6 +94,10 @@ export default function HorizontalMovieList(props) {
         }
     }
 
+    const itemClicked = (movieId) => props.onMovieClicked(movieId)
+    const deleteClicked = (movieId) => console.log(movieId)
+    const roarClicked = (movieId) => console.log(movieId)
+
     return (
         <Grid
             item
@@ -117,16 +118,6 @@ export default function HorizontalMovieList(props) {
                 <Typography component="div" variant="h5" marginLeft={6}>
                     {title}
                 </Typography>
-                <IconButton
-                    color="primary"
-                    aria-label="Add Movie to list."
-                    component="span"
-                    onClick={addMovie}
-                    sx={{ visibility: props.addButton ? 'visible' : 'hidden' }}
-                >
-                    <AddIcon />
-                </IconButton>
-
             </Grid>
             <Grid
                 container
@@ -143,7 +134,7 @@ export default function HorizontalMovieList(props) {
                 >
                     <ArrowBackIosIcon />
                 </IconButton>
-                { currentList.map(item => <MovieListItem
+                { currentCollection.map(item => <MovieCollectionItem
                     key={item.id}
                     movie={item}
                     deleteBtn={props.enableDelete}

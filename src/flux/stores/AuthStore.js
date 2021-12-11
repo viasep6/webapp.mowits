@@ -14,7 +14,6 @@ import axios from 'axios';
     AuthStore observes auth state and its changes.
     Login, logout, auth change.
  */
-
 export class AuthStore extends EventEmitter {
 
     constructor(props) {
@@ -61,6 +60,7 @@ export class AuthStore extends EventEmitter {
                 this.emit(CHANGE_AUTH_TOKEN, user);
             }
         });
+
     }
 
     signup(user) {

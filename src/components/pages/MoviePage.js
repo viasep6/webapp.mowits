@@ -29,6 +29,7 @@ import {ArrowDownwardOutlined} from '@mui/icons-material';
 import Image from 'mui-image';
 import Badge from '@mui/material/Badge';
 import Button from '@mui/material/Button';
+import AddMovieToCollection from '../components/movieCollection/AddMovieToCollection';
 
 function MoviePage(props) {
 
@@ -36,6 +37,7 @@ function MoviePage(props) {
     const AuthStore = props.stores.authStore;
     const MovieStore = props.stores.movieStore;
     const UserStore = props.stores.userStore;
+    const FavoritesStore = props.stores.favoritesStore;
 
     const movieId = props.match.params.id;
 
@@ -72,8 +74,10 @@ function MoviePage(props) {
     }
 
     function handleMovieResponse(movie) {
-        setMovie(movie);
-        setLoading(false);
+        if (!movie.errorMessage) {
+            setMovie(movie);
+            setLoading(false);
+        }
     }
 
     function handleSimilarMoviesResponse(movies) {
@@ -205,17 +209,26 @@ function MoviePage(props) {
                     justifyContent={'space-between'}
                     spacing={2}
                 >
-                    <Grid item >
-                        <Paper sx={{borderRadius: 1, p: 1}}>
-                            <Button
-                                variant={'outlined'}
+                    <Grid item>
+                        <Paper sx={{borderRadius: 1, p: 1, display: 'flex',alignItems: 'center', justifyContent: 'space-between'}}>
+                            <Box>
+                                <Button
+                                    variant={'outlined'}
+                                    disabled={!isUserLoggedIn}
+                                    onClick={handleFollowClick}>
+                                    {movie.mowits !== undefined && movie.mowits?.isSubscribed ? "Unfollow" : "Follow"}
+                                </Button>
+                                <Badge color="success" badgeContent={movie.mowits !== undefined && movie.mowits.followCount ? movie.mowits.followCount : 0} max={9999} className={'shake'}>
+                                    <Image src={roarImage} fit={'scale-down'} height={40} width={40} title={'Rawr the movie to get wits on your feed'}/>
+                                </Badge>
+                            </Box>
+                            <AddMovieToCollection
                                 disabled={!isUserLoggedIn}
-                                onClick={handleFollowClick}>
-                                {movie.mowits !== undefined && movie.mowits?.isSubscribed ? "Unfollow" : "Follow"}
-                            </Button>
-                            <Badge color="success" badgeContent={movie.mowits !== undefined && movie.mowits.followCount ? movie.mowits.followCount : 0} max={9999} className={'shake'}>
-                                <Image src={roarImage} fit={'scale-down'} height={40} width={40} title={'Rawr the movie to get wits on your feed'}/>
-                            </Badge>
+                                favoritesStore={FavoritesStore}
+                                accessToken={isUserLoggedIn ? AuthStore.state.authUser.accessToken : ''}
+                                movieId={movieId}
+                                movieTitle={movie.title}
+                            />
                         </Paper>
                     </Grid>
                     <Grid item>

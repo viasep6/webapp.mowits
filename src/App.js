@@ -20,6 +20,7 @@ import {Container, CssBaseline} from '@mui/material';
 import FeedPage from './components/pages/FeedPage';
 import {SearchStore} from "./flux/stores/SearchStore";
 
+
 const theme = createTheme({
     palette: {
         primary: {
@@ -58,7 +59,7 @@ function App() {
             <CssBaseline/>
             <BrowserRouter>
                 <Menu stores={stores}/>
-                <Container fixed maxWidth={'lg'} sx={{pt:6, pb: 6}} disableGutters>
+                <Container fixed maxWidth={'lg'} sx={{mt:7, pb: 6}} disableGutters>
                     <Switch>
                         <Route exact path="/" component={() => <HomePage stores={stores}/>}/>
                         <Route exact path="/home" component={() => <HomePage stores={stores}/>}/>

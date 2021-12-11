@@ -1,7 +1,7 @@
 import {EventEmitter} from 'events';
 import dispatcher from '../dispatcher';
 import {
-    NEW_USER_MOVIE_LISTS
+    NEW_USER_MOVIE_COLLECTIONS,
 } from '../../util/constants';
 
 
@@ -10,25 +10,19 @@ export class FavoritesStore extends EventEmitter {
     constructor(props) {
         super(props);
         this.state = {
-            movieLists: [],
+            movieCollections: [],
         };
 
         dispatcher.register(action => {
             switch (action.type) {
-                case NEW_USER_MOVIE_LISTS:
-                    this.setNewLists(action.payload);
+                case NEW_USER_MOVIE_COLLECTIONS:
+                    this.setNewCollections(action.payload);
                     break;
                 default:
                     break;
             }
         });
     }
-
-    setNewLists(lists) {
-        this.state.movieLists = lists
-        this.emit(NEW_USER_MOVIE_LISTS, this.state.movieLists);
-    }
-
 
     addChangeListener(event, callback) {
         this.on(event, callback);
@@ -37,5 +31,11 @@ export class FavoritesStore extends EventEmitter {
     removeChangeListener(event, callback) {
         this.off(event, callback);
     }
+
+    setNewCollections(collections) {
+        this.state.movieCollections = collections
+        this.emit(NEW_USER_MOVIE_COLLECTIONS, this.state.movieCollections);
+    }
+
 
 }

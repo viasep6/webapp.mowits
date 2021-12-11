@@ -5,19 +5,20 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Badge from "@mui/material/Badge";
 import Typography from '@mui/material/Typography';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import IconButton from "@mui/material/IconButton";
 import likeIcon from '../../../assets/img/like-icon.png';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-export default function MovieListItem(props) {
+export default function MovieCollectionItem(props) {
     const movie = props.movie
     const itemClicked = () => props.onClick(movie.id)
     const deleteClicked = () => props.onDelete(movie.id)
     const roarClicked = () => props.onRoar(movie.id)
 
     return (
-        <Card sx={{p: 2, maxWidth:355, margin:props.margin}}>
+        <Card sx={{p: 2, maxWidth:355, margin:props.margin}}
+              onClick={itemClicked}
+        >
             <Grid
                 container
                 direction="row"
@@ -93,14 +94,6 @@ export default function MovieListItem(props) {
                                      title="Movie roars!"/>
                             </IconButton>
                         </Badge>
-                        <IconButton
-                            color="primary"
-                            aria-label="Go to movie."
-                            component="span"
-                            onClick={itemClicked}
-                        >
-                            <ArrowForwardIosIcon />
-                        </IconButton>
                     </Grid>
                 </Grid>
             </Grid>
