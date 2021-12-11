@@ -74,8 +74,10 @@ function MoviePage(props) {
     }
 
     function handleMovieResponse(movie) {
-        setMovie(movie);
-        setLoading(false);
+        if (!movie.errorMessage) {
+            setMovie(movie);
+            setLoading(false);
+        }
     }
 
     function handleSimilarMoviesResponse(movies) {

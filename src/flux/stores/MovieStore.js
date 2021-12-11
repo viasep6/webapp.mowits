@@ -1,11 +1,14 @@
 import axios from 'axios';
 import {EventEmitter} from 'events';
 import {
+    URL_POPULAR_MOVIES,
+    URL_MOVIE_DETAILS,
+    URL_MOVIE_SIMILAR,
+    URL_SUBSCRIBE_TO_MOVIE,
     GET_MOVIE_DETAILS,
     GET_SIMILAR_MOVIES,
-    URL_MOVIE_DETAILS, URL_MOVIE_SIMILAR,
     SUBSCRIBE_TO_MOVIE,
-    URL_SUBSCRIBE_TO_MOVIE
+    GET_MOVIE_POPULAR,
 } from '../../util/constants';
 import dispatcher from '../dispatcher';
 
@@ -14,7 +17,7 @@ export class MovieStore extends EventEmitter {
 
     constructor(authStore) {
         super();
-        this.authStore = authStore
+        this.authStore = authStore;
         dispatcher.register(action => {
             switch (action.type) {
                 case GET_MOVIE_DETAILS:
@@ -26,6 +29,9 @@ export class MovieStore extends EventEmitter {
                 case GET_SIMILAR_MOVIES:
                     this.fetchSimilarMovies(action.payload);
                     break;
+                case GET_MOVIE_POPULAR:
+                    this.fetchPopularMovies();
+                    break;
                 default:
                     break;
             }
@@ -34,11 +40,11 @@ export class MovieStore extends EventEmitter {
 
     fetchMovieDetails(movieId) {
         let userId = undefined;
-        if (this.authStore.state.authUser?.accessToken){
-           userId = this.authStore.state.authUser.uid;
+        if (this.authStore.state.authUser?.accessToken) {
+            userId = this.authStore.state.authUser.uid;
         }
         axios.get(URL_MOVIE_DETAILS, {
-        // axios.get('http://localhost:7071/movies/MovieDetails', {
+            // axios.get('http://localhost:7071/movies/MovieDetails', {
             params: {
                 movieid: movieId,
                 userId: userId
@@ -68,6 +74,34 @@ export class MovieStore extends EventEmitter {
             });
     }
 
+    fetchPopularMovies() {
+        axios.get(URL_POPULAR_MOVIES
+        // axios.get('http://localhost:7071/movies/Popular',
+        )
+        .then((response) => {
+            this.emit(GET_MOVIE_POPULAR, response.data);
+        })
+        .catch(error => {
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+            } else if (error.request) {
+                // The request was made but no response was received
+                // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                // http.ClientRequest in node.js
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+            }
+            console.log(error.config);
+            this.emit(GET_MOVIE_DETAILS, {errorMessage: error});
+        });
+    }
+
     subscribeToMovie(data) {
         axios.defaults.headers.common = {Authorization: `Bearer ${this.authStore.state.authUser.accessToken}`};
         // axios.post('http://localhost:7071/movies/Follow', {
@@ -77,9 +111,9 @@ export class MovieStore extends EventEmitter {
         }).then((response) => {
             // not gonna use response
         })
-        .catch((error) => {
-            console.log(error);
-        });
+            .catch((error) => {
+                console.log(error);
+            });
     }
 
     fetchSimilarMovies(movieId) {
