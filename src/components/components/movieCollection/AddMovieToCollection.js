@@ -38,9 +38,7 @@ export default function AddMovieToCollection(props) {
     const [currentSelected, setCurrentSelected] = useState('')
     const [dataReady, setDataReady] = useState(false)
     const [addCollectionDone, setAddCollectionDone] = useState(true)
-    const [saveInProgress, setSaveInProgress] = useState(false)
     const [idPresent, setIdPresent] = useState(false)
-
 
     useEffect(() => {
         props.favoritesStore.addChangeListener(NEW_USER_MOVIE_COLLECTIONS, updateOptions)
@@ -57,17 +55,14 @@ export default function AddMovieToCollection(props) {
     }
 
     const handleClose = () => {
-        setOptions([])
         setCurrentSelected('')
         setLabelTxt('')
         setCollectionSelected(false)
         setDataReady(false)
-        setSaveInProgress(false)
         setOpen(false);
     }
 
     const addMovie = async () => {
-        setSaveInProgress(true)
         const movies = currentSelected.movies
         if (inCollection(movies)) {
             setIdPresent(true)
@@ -76,6 +71,7 @@ export default function AddMovieToCollection(props) {
         else {
             movies.push({ id: props.movieId })
             await actions.addMovieToCollection(props.accessToken, currentSelected.name, movies)
+                .then(() => handleClose())
         }
     }
 
@@ -90,17 +86,12 @@ export default function AddMovieToCollection(props) {
     }
 
     const updateOptions = (collections) => {
-        if (saveInProgress) {
-            handleClose()
+        if (typeof collections === 'undefined' || collections.length === 0) {
+            toggleAddCollection()
         }
         else {
-            if (typeof collections === 'undefined' || collections.length === 0) {
-                toggleAddCollection()
-            }
-            else {
-                setOptions(collections)
-                setDataReady(true)
-            }
+            setOptions(collections)
+            setDataReady(true)
         }
     }
 

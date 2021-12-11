@@ -11,8 +11,8 @@ export default function AddMovieCollection(props) {
     const [collections, setCollections] = useState(() =>
         props.existingCollections.length > 0
             ? props.existingCollections
-            : () => {
-                actions.getMovieCollectionsByUserID(props.token)
+            : async () => {
+                await actions.getMovieCollectionsByUserID(props.token)
                 return []
             }
     )

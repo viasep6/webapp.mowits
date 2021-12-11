@@ -137,20 +137,19 @@ export const followMovie = (movie) => {
     Movie Lists.
  */
 export const getMovieCollectionsByUserID = async (accessToken, collectionName='') => {
-    const collections = await movieCollectionService.getCollectionsByUserID(accessToken, collectionName)
-    dispatcher.dispatch({
-        type: NEW_USER_MOVIE_COLLECTIONS,
-        payload: collections
-    })
+    await movieCollectionService.getCollectionsByUserID(accessToken, collectionName)
+        .then(collections =>  dispatcher.dispatch({
+            type: NEW_USER_MOVIE_COLLECTIONS,
+            payload: collections
+        }))
 }
 
-
 export const createMovieCollection = async (accessToken, collectionName) => {
-    const updatedCollections = await movieCollectionService.createMovieCollectionByUserID(accessToken, collectionName)
-    dispatcher.dispatch({
-        type: NEW_USER_MOVIE_COLLECTIONS,
-        payload: updatedCollections
-    })
+    await movieCollectionService.createMovieCollectionByUserID(accessToken, collectionName)
+        .then(updatedCollections => dispatcher.dispatch({
+            type: NEW_USER_MOVIE_COLLECTIONS,
+            payload: updatedCollections
+        }))
 }
 
 export const addMovieToCollection = async (accessToken, collectionName, movies) => {
