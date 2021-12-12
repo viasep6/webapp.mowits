@@ -61,7 +61,19 @@ function MovieCollectionService(apiProvider, MovieService) {
                 let movieCollection = []
                 for (const movie of collection.movies) {
                     await movieService.getMovieDetails(movie.id)
-                        .then(m => movieCollection.push(m.data))
+                        .then(m => {
+                            const addedToList = new Date(movie.added)
+                            return movieCollection.push({
+                                id: m.data.id,
+                                title: m.data.original_title,
+                                year: new Date(m.data.release_date).getFullYear().toString(),
+                                poster: m.data.poster_path,
+                                tagline: m.data.tagline,
+                                score: `${m.data.vote_average * 10}%`,
+                                roars: m.data.vote_count,
+                                added: `${addedToList.getFullYear()}-${(addedToList.getMonth()+1)}-${addedToList.getDate()}`
+                            })
+                        })
                 }
                 userCollections.push({
                     name: collection.name,

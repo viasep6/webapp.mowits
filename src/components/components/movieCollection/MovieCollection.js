@@ -7,18 +7,21 @@ import DeleteModal from './DeleteModal';
 
 
 export default function MovieCollection(props) {
-    const [currentCollection] = useState(props.movieCollection)
+    const [currentCollections] = useState(props.movieCollection)
 
 
     const itemClicked = (movieId) => props.onMovieClicked(movieId)
     const deleteItem = (movieId) => {
-        const newCollection = []
-        currentCollection.forEach(movie => {
+        const updatedMovies = []
+        currentCollections.forEach(movie => {
             if (parseInt(movie.id) !== parseInt(movieId)) {
-                newCollection.push(movie)
+                updatedMovies.push({
+                    id: movie.id,
+                    added: movie.added
+                })
             }
         })
-        props.onDeleteItem(props.title, newCollection)
+        props.onDeleteItem(props.title, updatedMovies)
     }
     const roarClicked = (movieId) => props.onRoarClicked(movieId)
     const deleteCollection = () => props.onDeleteCollection(props.title)
@@ -53,7 +56,7 @@ export default function MovieCollection(props) {
                 />
             </Grid>
             <Grid container direction={"row"} justifyContent={'space-between'} spacing={2} sx={{overflow: "auto"}} wrap={"nowrap"}>
-                { currentCollection.map(item => <MovieCollectionItem
+                { currentCollections.map(item => <MovieCollectionItem
                         key={item.id}
                         movie={item}
                         deleteBtn={props.enableDelete}

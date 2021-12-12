@@ -1,7 +1,7 @@
 import {withRouter} from 'react-router-dom';
 import React, {useEffect, useState} from 'react';
 import MovieCollection from "../components/movieCollection/MovieCollection";
-import {CHANGE_AUTH_TOKEN, NEW_USER_MOVIE_COLLECTIONS} from '../../util/constants';
+import {CHANGE_AUTH_TOKEN, UPDATED_MOVIE_COLLECTIONS} from '../../util/constants';
 import * as actions from '../../flux/actions/actions';
 import {CircularProgress, Grid} from '@mui/material';
 import Box from '@mui/material/Box';
@@ -25,12 +25,12 @@ function FavoritesPage(props) {
 
     useEffect(() => {
         props.stores.authStore.authAddChangeListener(CHANGE_AUTH_TOKEN, updateToken)
-        props.stores.favoritesStore.addChangeListener(NEW_USER_MOVIE_COLLECTIONS, updateCollections)
+        props.stores.favoritesStore.addChangeListener(UPDATED_MOVIE_COLLECTIONS, updateCollections)
 
 
         return function cleanup() {
             props.stores.authStore.authRemoveChangeListener(CHANGE_AUTH_TOKEN, updateToken);
-            props.stores.favoritesStore.removeChangeListener(NEW_USER_MOVIE_COLLECTIONS, updateCollections)
+            props.stores.favoritesStore.removeChangeListener(UPDATED_MOVIE_COLLECTIONS, updateCollections)
         };
     });
 

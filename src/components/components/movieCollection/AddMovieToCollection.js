@@ -6,7 +6,7 @@ import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import {Grid} from "@mui/material";
 import {useEffect, useState} from "react";
-import { NEW_USER_MOVIE_COLLECTIONS} from '../../../util/constants';
+import { UPDATED_MOVIE_COLLECTIONS} from '../../../util/constants';
 import * as actions from '../../../flux/actions/actions';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -42,10 +42,10 @@ export default function AddMovieToCollection(props) {
     const [idPresent, setIdPresent] = useState(false)
 
     useEffect(() => {
-        props.favoritesStore.addChangeListener(NEW_USER_MOVIE_COLLECTIONS, updateOptions)
+        props.favoritesStore.addChangeListener(UPDATED_MOVIE_COLLECTIONS, updateOptions)
 
         return function cleanup() {
-            props.favoritesStore.removeChangeListener(NEW_USER_MOVIE_COLLECTIONS, updateOptions)
+            props.favoritesStore.removeChangeListener(UPDATED_MOVIE_COLLECTIONS, updateOptions)
         };
     });
 
@@ -64,14 +64,21 @@ export default function AddMovieToCollection(props) {
     }
 
     const addMovie = async () => {
-        const movies = currentSelected.movies
-        if (inCollection(movies)) {
+        const currentMovies = currentSelected.movies
+        if (inCollection(currentMovies)) {
             setIdPresent(true)
             setLabelTxt('Movie already in collection!')
         }
         else {
-            movies.push({ id: props.movieId })
-            await actions.updateMovieCollection(props.accessToken, currentSelected.name, movies)
+            const updatedMovies = currentMovies.map(movie => ({
+                id: movie.id,
+                added: movie.added
+            }))
+            updatedMovies.push({
+                id: props.movieId,
+                added: new Date().toISOString()
+            })
+            await actions.updateMovieCollection(props.accessToken, currentSelected.name, updatedMovies)
                 .then(() => handleClose())
         }
     }

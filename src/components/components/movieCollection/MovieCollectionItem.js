@@ -7,7 +7,9 @@ import Badge from "@mui/material/Badge";
 import Typography from '@mui/material/Typography';
 import IconButton from "@mui/material/IconButton";
 import likeIcon from '../../../assets/img/like-icon.png';
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import DeleteModal from './DeleteModal';
+import {Box, Tooltip} from '@mui/material';
 
 export default function MovieCollectionItem(props) {
     const movie = props.movie
@@ -36,16 +38,22 @@ export default function MovieCollectionItem(props) {
                     alignItems="center"
                 >
                     <Badge
-                        badgeContent={movie.vote_average * 10 + '%'}
+                        badgeContent={
+                            <Tooltip title="User score"  placement="top-end">
+                                <span>{movie.score}</span>
+                            </Tooltip>
+                        }
                         color="success"
                     >
-                        <CardMedia
-                            component="img"
-                            sx={{ height: '100%', cursor:'pointer' }}
-                            image={movie.poster_path}
-                            alt="Movie cover"
-                            onClick={itemClicked}
-                        />
+                        <Tooltip title={movie.tagline} placement={'right'}>
+                            <CardMedia
+                                component="img"
+                                sx={{ height: '100%', cursor:'pointer' }}
+                                image={movie.poster}
+                                alt="Movie cover"
+                                onClick={itemClicked}
+                            />
+                        </Tooltip>
                     </Badge>
                 </Grid>
                 <Grid
@@ -71,8 +79,26 @@ export default function MovieCollectionItem(props) {
                                 {movie.title}
                             </Typography>
                             <Typography variant="subtitle1" color="text.secondary" component="div">
-                                {new Date(movie.release_date).getFullYear().toString()}
+                                {movie.year}
                             </Typography>
+                        </CardContent>
+                        <CardContent>
+                        </CardContent>
+                        <CardContent>
+                                <Grid
+                                    item
+                                    container
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    alignItems="center"
+                                    marginLeft={0}>
+                                    <PlaylistAddIcon />
+                                    <Tooltip title="Date added"  placement="top-end">
+                                        <Typography variant="subtitle2" color="text.secondary" component="div" marginLeft={1}>
+                                            {movie.added}
+                                        </Typography>
+                                    </Tooltip>
+                                </Grid>
                         </CardContent>
                     </Grid>
                     <Grid
@@ -88,24 +114,27 @@ export default function MovieCollectionItem(props) {
                             cannotBeUndone={false}
                             onDelete={deleteClicked}
                         />
-                        <Badge color="success"
-                               title={'Movie roars!'}
-                               badgeContent={movie.roars}
-                               max={999}
-                               sx={[ {mr:2, pr:1} ]}
-                        >
-                            <IconButton
-                                aria-label="delete"
-                                size="medium"
-                                disabled={props.disableRoar}
-                                onClick={roarClicked}
+                        <Tooltip title="Movie Roars!"  placement="top-end">
+                            <Badge color="success"
+                                   title={'Movie roars!'}
+                                   badgeContent={
+                                           <span>{movie.roars}</span>
+                                   }
+                                   max={99999}
+                                   sx={[ {mr:2, pr:1} ]}
                             >
-                                <img style={{filter: `grayscale(${movie.roars > 0 ? 30 : 100}%)`}}
-                                     src={likeIcon}
-                                     alt=""
-                                     title="Movie roars!"/>
-                            </IconButton>
-                        </Badge>
+                                <IconButton
+                                    aria-label="delete"
+                                    size="medium"
+                                    disabled={props.disableRoar}
+                                    onClick={roarClicked}
+                                >
+                                    <img style={{filter: `grayscale(${movie.roars > 0 ? 30 : 100}%)`}}
+                                         src={likeIcon}
+                                    />
+                                </IconButton>
+                            </Badge>
+                        </Tooltip>
                     </Grid>
                 </Grid>
             </Grid>

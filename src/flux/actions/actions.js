@@ -13,7 +13,7 @@ import {
     GET_MOVIE_DETAILS,
     GET_SEARCH_RESULTS,
     SUBSCRIBE_TO_MOVIE,
-    NEW_USER_MOVIE_COLLECTIONS,
+    UPDATED_MOVIE_COLLECTIONS,
     BASE_URL,
     GET_SIMILAR_MOVIES,
 } from '../../util/constants';
@@ -139,7 +139,7 @@ export const followMovie = (movie) => {
 export const getMovieCollectionsByUserID = async (accessToken, collectionName='') => {
     await movieCollectionService.getCollectionsByUserID(accessToken, collectionName)
         .then(collections =>  dispatcher.dispatch({
-            type: NEW_USER_MOVIE_COLLECTIONS,
+            type: UPDATED_MOVIE_COLLECTIONS,
             payload: collections
         }))
 }
@@ -147,7 +147,7 @@ export const getMovieCollectionsByUserID = async (accessToken, collectionName=''
 export const createMovieCollection = async (accessToken, collectionName) => {
     await movieCollectionService.updateMovieCollectionByUserID(accessToken, collectionName)
         .then(updatedCollections => dispatcher.dispatch({
-            type: NEW_USER_MOVIE_COLLECTIONS,
+            type: UPDATED_MOVIE_COLLECTIONS,
             payload: updatedCollections
         }))
 }
@@ -155,7 +155,7 @@ export const createMovieCollection = async (accessToken, collectionName) => {
 export const updateMovieCollection = async (accessToken, collectionName, movies) => {
     await movieCollectionService.updateMovieCollectionByUserID(accessToken, collectionName, movies)
         .then(updatedCollections => dispatcher.dispatch({
-                type: NEW_USER_MOVIE_COLLECTIONS,
+                type: UPDATED_MOVIE_COLLECTIONS,
                 payload: updatedCollections
         }))
 }
@@ -163,7 +163,7 @@ export const updateMovieCollection = async (accessToken, collectionName, movies)
 export const deleteMovieCollection = async (accessToken, collectionName) => {
     await movieCollectionService.deleteMovieCollection(accessToken, collectionName)
         .then(updatedCollections => dispatcher.dispatch({
-            type: NEW_USER_MOVIE_COLLECTIONS,
+            type: UPDATED_MOVIE_COLLECTIONS,
             payload: updatedCollections
         }))
 

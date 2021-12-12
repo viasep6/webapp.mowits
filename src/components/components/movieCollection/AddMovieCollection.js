@@ -1,9 +1,9 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
-import {CircularProgress, Grid, TextField} from "@mui/material";
+import {CircularProgress, Grid, TextField, Tooltip} from '@mui/material';
 import {useEffect, useState} from "react";
 import Box from '@mui/material/Box';
-import {NEW_USER_MOVIE_COLLECTIONS} from "../../../util/constants";
+import {UPDATED_MOVIE_COLLECTIONS} from "../../../util/constants";
 import * as actions from '../../../flux/actions/actions';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 
@@ -26,10 +26,10 @@ export default function AddMovieCollection(props) {
 
 
     useEffect(() => {
-        props.favoritesStore.addChangeListener(NEW_USER_MOVIE_COLLECTIONS, updateCollections)
+        props.favoritesStore.addChangeListener(UPDATED_MOVIE_COLLECTIONS, updateCollections)
 
         return function cleanup() {
-            props.favoritesStore.removeChangeListener(NEW_USER_MOVIE_COLLECTIONS, updateCollections)
+            props.favoritesStore.removeChangeListener(UPDATED_MOVIE_COLLECTIONS, updateCollections)
         };
     });
 
@@ -116,13 +116,15 @@ export default function AddMovieCollection(props) {
                     helperText={helperTxt}
                 />
                 <Box marginLeft={1}>
-                    <Button variant="text"
-                            color={'primary'}
-                            onClick={addCollection}
-                            disabled={emptyField}
-                            startIcon={<SaveAltIcon />}>
-                        Create
-                    </Button>
+                    <Tooltip title={'Now go to a movie and add it to your collection.'} placement={'top'}>
+                        <Button variant="text"
+                                color={'primary'}
+                                onClick={addCollection}
+                                disabled={emptyField}
+                                startIcon={<SaveAltIcon />}>
+                            Create
+                        </Button>
+                    </Tooltip>
                 </Box>
                 <Box
                     visibility={ inProgress ? 'visible' : 'hidden'}

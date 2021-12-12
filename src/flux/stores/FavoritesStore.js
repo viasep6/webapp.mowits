@@ -1,7 +1,7 @@
 import {EventEmitter} from 'events';
 import dispatcher from '../dispatcher';
 import {
-    NEW_USER_MOVIE_COLLECTIONS,
+    UPDATED_MOVIE_COLLECTIONS,
 } from '../../util/constants';
 
 
@@ -15,7 +15,7 @@ export class FavoritesStore extends EventEmitter {
 
         dispatcher.register(action => {
             switch (action.type) {
-                case NEW_USER_MOVIE_COLLECTIONS:
+                case UPDATED_MOVIE_COLLECTIONS:
                     this.setNewCollections(action.payload);
                     break;
                 default:
@@ -34,7 +34,7 @@ export class FavoritesStore extends EventEmitter {
 
     setNewCollections(collections) {
         this.state.movieCollections = collections
-        this.emit(NEW_USER_MOVIE_COLLECTIONS, this.state.movieCollections);
+        this.emit(UPDATED_MOVIE_COLLECTIONS, this.state.movieCollections);
     }
 
 
