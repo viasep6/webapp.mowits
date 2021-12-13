@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
-import {Grid} from "@mui/material";
+import {CircularProgress, Grid} from '@mui/material';
 import {useEffect, useState} from "react";
 import { UPDATED_MOVIE_COLLECTIONS} from '../../../util/constants';
 import * as actions from '../../../flux/actions/actions';
@@ -18,6 +18,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Typography from '@mui/material/Typography';
 import Accordion from '@mui/material/Accordion';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import {getStorageItemFromDisplayItem, getNewStorageItem} from '../../../util/movieCollectionConverter';
 
 const modalStyle = {
     position: 'absolute',
@@ -33,6 +34,7 @@ const modalStyle = {
 
 export default function AddMovieToCollection(props) {
     const [open, setOpen] = React.useState(false);
+    const [loading, setLoading] = useState(true)
     const [labelTxt, setLabelTxt] = React.useState('')
     const [options, setOptions] = useState([])
     const [collectionSelected, setCollectionSelected] = useState(false)
@@ -40,6 +42,8 @@ export default function AddMovieToCollection(props) {
     const [dataReady, setDataReady] = useState(false)
     const [addCollectionDone, setAddCollectionDone] = useState(true)
     const [idPresent, setIdPresent] = useState(false)
+    const [saving, setSaving] = useState(false)
+    const [progressMsg, setProgressMsg] = useState('Loading your collections...')
 
     useEffect(() => {
         props.favoritesStore.addChangeListener(UPDATED_MOVIE_COLLECTIONS, updateOptions)
@@ -51,8 +55,10 @@ export default function AddMovieToCollection(props) {
 
     const handleOpen = async () => {
         setLabelTxt(props.movieTitle)
-        await actions.getMovieCollectionsByUserID(props.accessToken)
+        setLoading(true)
         setOpen(true);
+        await actions.getMovieCollectionsByUserID(props.accessToken)
+        setLoading(false)
     }
 
     const handleClose = () => {
@@ -60,6 +66,7 @@ export default function AddMovieToCollection(props) {
         setLabelTxt('')
         setCollectionSelected(false)
         setDataReady(false)
+        setSaving(false)
         setOpen(false);
     }
 
@@ -70,14 +77,10 @@ export default function AddMovieToCollection(props) {
             setLabelTxt('Movie already in collection!')
         }
         else {
-            const updatedMovies = currentMovies.map(movie => ({
-                id: movie.id,
-                added: movie.added
-            }))
-            updatedMovies.push({
-                id: props.movieId,
-                added: new Date().toISOString()
-            })
+            setProgressMsg('Saving to your collection...')
+            setSaving(true)
+            const updatedMovies = currentMovies.map(movie => getStorageItemFromDisplayItem(movie))
+            updatedMovies.push(getNewStorageItem(props.movieId))
             await actions.updateMovieCollection(props.accessToken, currentSelected.name, updatedMovies)
                 .then(() => handleClose())
         }
@@ -128,58 +131,89 @@ export default function AddMovieToCollection(props) {
             >
                 <Fade in={open}>
                     <Box sx={modalStyle}>
-                        <Accordion
-                            expanded={!addCollectionDone}>
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon sx={{mt: 15, borderRadius: 0,}} onClick={() => toggleAddCollection()} />}
-                            >
-                                <Grid
-                                    item
-                                    xs
-                                    container
-                                    direction="column"
-                                    justifyContent="space-between"
-                                    alignItems="center"
-                                >
-                                    <Typography mx={'auto'} variant={'p'} marginBottom={2}>Mowit Collections</Typography>
-                                    <FormControl
-                                        fullWidth>
-                                        <InputLabel id="demo-simple-select-label">{labelTxt}</InputLabel>
-                                        <Select
-                                            labelId="select-label"
-                                            error={idPresent}
-                                            id="select"
-                                            value={currentSelected}
-                                            label={labelTxt}
-                                            onChange={(event) => {selectedChanged(event.target.value)}}
-                                        >
-                                            {
-                                                dataReady
-                                                    ? options.map(option => <MenuItem key={option.name} value={option}>{option.name}</MenuItem>)
-                                                    : <MenuItem value="">
-                                                        <em>None</em>
-                                                    </MenuItem>
-                                            }
-                                        </Select>
-                                        <Box
-                                            marginTop={1}
-                                        >
-                                            <Button size="small" variant="text" color={'primary'} disabled={!collectionSelected} onClick={addMovie} startIcon={<AddCircleOutlineIcon />}>
-                                                Add to collection
-                                            </Button>
-                                        </Box>
-                                    </FormControl>
+                        {
+                            saving || loading
+                                ? <Grid  item
+                                         xs
+                                         container
+                                         direction="row"
+                                         justifyContent="center"
+                                         alignItems="center"
+                                         padding={2}
+                                         >
+                                    <Typography mx={'auto'} variant={'p'}>
+                                        {progressMsg}
+                                    </Typography>
+                                    <CircularProgress />
                                 </Grid>
-                            </AccordionSummary>
-                            <Box marginLeft={1}>
-                                <AddMovieCollection
-                                    token={props.accessToken}
-                                    favoritesStore={props.favoritesStore}
-                                    existingCollections={options}
-                                    onDone={updateOptions}
-                                />
-                            </Box>
-                        </Accordion>
+                                : <Accordion
+                                    expanded={!addCollectionDone}>
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon sx={{mt: 15, borderRadius: 0,}}
+                                                                    onClick={() => toggleAddCollection()} />}
+                                    >
+                                        <Grid
+                                            item
+                                            xs
+                                            container
+                                            direction="column"
+                                            justifyContent="space-between"
+                                            alignItems="center"
+                                        >
+                                            <Typography mx={'auto'} variant={'p'} marginBottom={2}>
+                                                Mowit Collections
+                                            </Typography>
+                                            <FormControl
+                                                fullWidth>
+                                                <InputLabel id="demo-simple-select-label">{labelTxt}</InputLabel>
+                                                <Select
+                                                    labelId="select-label"
+                                                    error={idPresent}
+                                                    id="select"
+                                                    value={currentSelected}
+                                                    label={labelTxt}
+                                                    onChange={(event) => {selectedChanged(event.target.value)}}
+                                                >
+                                                    {
+                                                        dataReady
+                                                            ? options.map(option => <MenuItem
+                                                                key={option.name}
+                                                                value={option}>
+                                                                {option.name}
+                                                            </MenuItem>)
+                                                            : <MenuItem value="">
+                                                                <em>None</em>
+                                                            </MenuItem>
+                                                    }
+                                                </Select>
+                                                <Box
+                                                    marginTop={1}
+                                                >
+                                                    <Button
+                                                        size="small"
+                                                        variant="text"
+                                                        color={'primary'}
+                                                        disabled={!collectionSelected}
+                                                        onClick={addMovie}
+                                                        startIcon={<AddCircleOutlineIcon />}
+                                                    >
+                                                        Add to collection
+                                                    </Button>
+                                                </Box>
+                                            </FormControl>
+                                        </Grid>
+                                    </AccordionSummary>
+                                    <Box marginLeft={1}>
+                                        <AddMovieCollection
+                                            token={props.accessToken}
+                                            favoritesStore={props.favoritesStore}
+                                            existingCollections={options}
+                                            onDone={updateOptions}
+                                        />
+                                    </Box>
+                                </Accordion>
+                        }
+
                     </Box>
                 </Fade>
             </Modal>

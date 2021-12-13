@@ -2,28 +2,25 @@ import React, {useState} from 'react';
 import MovieCollectionItem from "./MovieCollectionItem";
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import DeleteModal from './DeleteModal';
+import DeleteModal from '../DeleteModal';
+import {getStorageItemFromDisplayItem} from '../../../util/movieCollectionConverter';
 
 
 
 export default function MovieCollection(props) {
     const [currentCollections] = useState(props.movieCollection)
 
-
     const itemClicked = (movieId) => props.onMovieClicked(movieId)
     const deleteItem = (movieId) => {
         const updatedMovies = []
         currentCollections.forEach(movie => {
             if (parseInt(movie.id) !== parseInt(movieId)) {
-                updatedMovies.push({
-                    id: movie.id,
-                    added: movie.added
-                })
+                updatedMovies.push(getStorageItemFromDisplayItem(movie))
             }
         })
         props.onDeleteItem(props.title, updatedMovies)
     }
-    const roarClicked = (movieId) => props.onRoarClicked(movieId)
+    const voteClicked = (movieId) => props.onVoteClicked(movieId)
     const deleteCollection = () => props.onDeleteCollection(props.title)
 
     return (
@@ -61,8 +58,8 @@ export default function MovieCollection(props) {
                         movie={item}
                         deleteBtn={props.enableDelete}
                         onDelete={deleteItem}
-                        disableRoar={props.disableRoars}
-                        onRoar={roarClicked}
+                        disableVote={props.disableVote}
+                        onVote={voteClicked}
                         onClick={itemClicked}
                         collectionName={props.title}
                         margin={1}/>) }

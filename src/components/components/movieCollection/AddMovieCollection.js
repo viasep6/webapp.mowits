@@ -7,7 +7,6 @@ import {UPDATED_MOVIE_COLLECTIONS} from "../../../util/constants";
 import * as actions from '../../../flux/actions/actions';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 
-
 export default function AddMovieCollection(props) {
     const [inProgress, setInProgress] = useState(false)
     const [collections, setCollections] = useState(() =>
@@ -117,13 +116,15 @@ export default function AddMovieCollection(props) {
                 />
                 <Box marginLeft={1}>
                     <Tooltip title={'Now go to a movie and add it to your collection.'} placement={'top'}>
-                        <Button variant="text"
-                                color={'primary'}
-                                onClick={addCollection}
-                                disabled={emptyField}
-                                startIcon={<SaveAltIcon />}>
+                        <span>
+                            <Button variant="text"
+                                    color={'primary'}
+                                    onClick={addCollection}
+                                    disabled={emptyField}
+                                    startIcon={<SaveAltIcon />}>
                             Create
                         </Button>
+                        </span>
                     </Tooltip>
                 </Box>
                 <Box

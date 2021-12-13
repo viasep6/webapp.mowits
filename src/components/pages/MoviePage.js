@@ -25,7 +25,7 @@ import ListWitComponent from '../components/wits/ListWitComponent';
 import WriteWitComponent from '../components/wits/WriteWitComponent';
 import {auth} from '../../firebase/firebase';
 import Box from '@mui/material/Box';
-import {ArrowDownwardOutlined} from '@mui/icons-material';
+import {ArrowDownwardOutlined, PlayCircleOutlined} from '@mui/icons-material';
 import Image from 'mui-image';
 import Badge from '@mui/material/Badge';
 import Button from '@mui/material/Button';
@@ -46,6 +46,7 @@ function MoviePage(props) {
     const [isLoading, setLoading] = useState(true);
     const [isUserLoggedIn, setIsUserLoggedIn] = useState(auth.currentUser !== null);
     const [openModal, setOpenModalModal] = useState(false);
+    const [openTrailerModal, setOpenTrailerModal] = useState(false);
     const roarImage = require('../../assets/img/like-icon.png').default;
 
     useEffect(() => {
@@ -82,7 +83,6 @@ function MoviePage(props) {
 
     function handleSimilarMoviesResponse(movies) {
         setSimilarMovies(movies);
-        // if (isLoading === true) {}
     }
     const goToPath = path => {
         if (path) {
@@ -98,8 +98,8 @@ function MoviePage(props) {
     }
 
     const handleOpenModal = () => setOpenModalModal(true);
-
     const handleCloseModal = () => setOpenModalModal(false);
+    const handleCloseTrailerModal = () => setOpenTrailerModal(false);
 
     const handleFollowClick = () => {
         actions.followMovie(movie);
@@ -133,7 +133,23 @@ function MoviePage(props) {
     ) : (
         <Container sx={{mt: 0, mb:0}} disableGutters>
             {/*backdrop*/}
-            <Grid sx={{height: '100vh'}}>
+            <Grid sx={{height: '100vh', '&:hover > *': {opacity: 1}}}>
+
+                {movie.trailer && <PlayCircleOutlined sx={{
+                    position: 'absolute',
+                    top:0,
+                    left: 0,
+                    bottom: 0,
+                    right: 0,
+                    margin: 'auto',
+                    height: 120,
+                    width: 120,
+                    color: 'whitesmoke',
+                    opacity: 0.3,
+                    cursor: 'pointer',
+                }} onClick={() => setOpenTrailerModal(true)}/>}
+
+
                 <Box sx={{position: 'absolute', top: 0, left: 0, width: '100%', zIndex: -1}}>
                     <Grid sx={{position: 'relative'}}>
                         <img src={movie.backdrop_path}
@@ -142,6 +158,9 @@ function MoviePage(props) {
                                  width: '100%',
                                  objectFit: 'cover',
                              }} alt="Transparent movie backdrop"/>
+
+
+
                         <Grid container alignItems={'flex-end'}
                               sx={{
                                   position: 'absolute',
@@ -363,6 +382,31 @@ function MoviePage(props) {
                     </Box>
                 </Modal>
             </div>
+
+            {/*YouTube Trailer Modal*/}
+            <Modal
+                open={openTrailerModal}
+                onClose={handleCloseTrailerModal}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+                sx={{bgcolor: 'rgba(0,0,0,0.80)'}}
+            >
+                <iframe
+                    src={movie.trailer}
+                    title="YouTube video player" frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    style={{position: "absolute",
+                        top: 0,
+                        left: 0,
+                        bottom: 0,
+                        right: 0,
+                        width: "70%",
+                        height: "70%",
+                        margin: "auto"
+                    }}
+                />
+            </Modal>
         </Container>
     );
 

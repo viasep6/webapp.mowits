@@ -20,7 +20,7 @@ function FavoritesPage(props) {
     })
 
     const [dataReady, setReady] = useState(false)
-    const [addDone, setAddDone] = useState(true)
+    const [addDone, setAddDone] = useState(false)
     const [enableDelete, setEnableDelete] = useState(false)
 
     useEffect(() => {
@@ -29,6 +29,7 @@ function FavoritesPage(props) {
 
 
         return function cleanup() {
+
             props.stores.authStore.authRemoveChangeListener(CHANGE_AUTH_TOKEN, updateToken);
             props.stores.favoritesStore.removeChangeListener(UPDATED_MOVIE_COLLECTIONS, updateCollections)
         };
@@ -46,6 +47,7 @@ function FavoritesPage(props) {
             }])
         }
         else {
+            setAddDone(true)
             setEnableDelete(true)
             setMovieCollections(collections)
         }
@@ -54,7 +56,7 @@ function FavoritesPage(props) {
 
     const goToMovie = (movieId) => props.history.push('/movie/' + movieId )
     const deleteItem = (collectionName, movies) => actions.updateMovieCollection(accessToken, collectionName, movies)
-    const roarClicked = (movieId) => console.log(movieId)
+    const votesClicked = (movieId) => console.log('Votes not implemented!')
     const deleteCollection = (collectionName) => actions.deleteMovieCollection(accessToken, collectionName)
 
     const collectionAdded = () => {
@@ -106,11 +108,11 @@ function FavoritesPage(props) {
                             title={collection.name}
                             movieCollection={collection.movies}
                             enableDelete={enableDelete}
-                            disableRoars={true}
+                            disableVote={true}
                             onMovieClicked={goToMovie}
                             onDeleteItem={deleteItem}
                             onDeleteCollection={deleteCollection}
-                            onRoarClicked={roarClicked}
+                            onVoteClicked={votesClicked}
                             marginTop={2}
                             marginButton={0}/> )
                         : <Box marginTop={5}>

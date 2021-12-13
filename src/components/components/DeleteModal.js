@@ -7,6 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import {Grid} from '@mui/material';
+import {useState} from 'react';
 
 const style = {
     position: 'absolute',
@@ -21,7 +22,7 @@ const style = {
 };
 
 export default function DeleteModal(props) {
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const handleDelete = () => {
