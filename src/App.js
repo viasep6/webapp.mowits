@@ -19,6 +19,7 @@ import {MovieStore} from './flux/stores/MovieStore';
 import {Container, CssBaseline} from '@mui/material';
 import FeedPage from './components/pages/FeedPage';
 import {SearchStore} from "./flux/stores/SearchStore";
+import FeaturedPage from './components/pages/FeaturedPage';
 
 
 const theme = createTheme({
@@ -67,6 +68,7 @@ function App() {
                         <ProtectedRoute exact authStore={authStore} path="/feed" component={() => <FeedPage stores={stores}/>}/>
                         <Route exact path="/login" component={() => <LoginPage stores={stores}/>}/>
                         <Route exact path="/signup" component={() => <SignupPage stores={stores}/>}/>
+                        <Route exact path={"/featured"} component={() => <FeaturedPage stores={stores}/>}/>
                         <Route path="/profile/:displayName" component={() => <ProfilePage stores={stores}/>}/>
                         <Route path={'/movie/:id'} component={() => <MoviePage stores={stores}/>}/>
                         <Route exact path="/test" component={() => <TestPage stores={stores}/>}/>
