@@ -30,6 +30,7 @@ import Image from 'mui-image';
 import Badge from '@mui/material/Badge';
 import Button from '@mui/material/Button';
 import AddMovieToCollection from '../components/movieCollection/AddMovieToCollection';
+import {truncate} from '../../util/utils';
 
 function MoviePage(props) {
 
@@ -335,7 +336,8 @@ function MoviePage(props) {
                         <Card onClick={() => {
                             goToPath("/movie/" + similarMovie.id);
                             window.scrollTo({top: 0, left: 0, behavior: "smooth" });
-                        }}>
+                        }}
+                        sx={{cursor:'pointer', mb:2, mt:1}}>
                             <CardMedia
                                 component="img"
                                 image={similarMovie.poster_path}
@@ -343,7 +345,7 @@ function MoviePage(props) {
                                 sx={{borderRadius: 1}}
                             />
                             <CardContent>
-                                <Typography>{similarMovie.title}</Typography>
+                                <Typography>{truncate(similarMovie.title, 20)}</Typography>
                             </CardContent>
                         </Card>
                     </Grid>

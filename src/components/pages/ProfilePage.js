@@ -13,6 +13,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import validUrl from 'valid-url';
+import moment from 'moment';
 
 const modalStyle = {
     position: 'absolute',
@@ -155,7 +156,7 @@ function ProfilePage(props) {
                                     </Grid>
 
                                     <h3 className="m-b-0">{profileUser.displayName}</h3>
-                                    <p>Joined MoWits {new Date(profileUser.createdAt).toLocaleDateString()}</p>
+                                    <p>Became a true <span style={{color: 'green', fontWeight:'bolder'}}>MoWits</span> believer <span>{moment(profileUser.createdAt).fromNow()}</span></p>
                                     <Grid
                                         container
                                         direction="row"
@@ -170,14 +171,8 @@ function ProfilePage(props) {
                                         </Grid>
                                         <Grid>
                                             <small>Movie Following</small>
-                                            <h3 className="m-b-0 font-light">{profileUser.favCount
-                                                ? profileUser.favCount
-                                                : 0}</h3>
-                                        </Grid>
-                                        <Grid>
-                                            <small>Roars</small>
-                                            <h3 className="m-b-0 font-light">{profileUser.roarCount
-                                                ? profileUser.roarCount
+                                            <h3 className="m-b-0 font-light">{profileUser.followCount
+                                                ? profileUser.followCount
                                                 : 0}</h3>
                                         </Grid>
                                     </Grid>
