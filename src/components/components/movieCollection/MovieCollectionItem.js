@@ -8,17 +8,17 @@ import Typography from '@mui/material/Typography';
 import IconButton from "@mui/material/IconButton";
 import likeIcon from '../../../assets/img/like-icon.png';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
-import DeleteModal from './DeleteModal';
-import {Box, Tooltip} from '@mui/material';
+import DeleteModal from '../DeleteModal';
+import {Tooltip} from '@mui/material';
 
 export default function MovieCollectionItem(props) {
     const movie = props.movie
     const itemClicked = () => props.onClick(movie.id)
     const deleteClicked = () => props.onDelete(movie.id)
-    const roarClicked = () => props.onRoar(movie.id)
+    const roarClicked = () => props.onVote(movie.id)
 
     return (
-        <Card sx={{p: 2, maxWidth:590, minWidth:385, margin:props.margin}}
+        <Card sx={{p: 2, maxWidth:590, minWidth:430, margin:props.margin}}
               onClick={() => {
                   window.scrollTo({top: 0, left: 0, behavior: "smooth" });
               }}
@@ -114,11 +114,10 @@ export default function MovieCollectionItem(props) {
                             cannotBeUndone={false}
                             onDelete={deleteClicked}
                         />
-                        <Tooltip title="Movie Roars!"  placement="top-end">
+                        <Tooltip title="User votes"  placement="top-end">
                             <Badge color="success"
-                                   title={'Movie roars!'}
                                    badgeContent={
-                                           <span>{movie.roars}</span>
+                                           <span>{movie.votes}</span>
                                    }
                                    max={99999}
                                    sx={[ {mr:2, pr:1} ]}
@@ -126,11 +125,12 @@ export default function MovieCollectionItem(props) {
                                 <IconButton
                                     aria-label="delete"
                                     size="medium"
-                                    disabled={props.disableRoar}
+                                    disabled={props.disableVote}
                                     onClick={roarClicked}
                                 >
-                                    <img style={{filter: `grayscale(${movie.roars > 0 ? 30 : 100}%)`}}
+                                    <img style={{filter: `grayscale(${movie.votes > 0 ? 30 : 100}%)`}}
                                          src={likeIcon}
+                                         alt={''}
                                     />
                                 </IconButton>
                             </Badge>

@@ -1,4 +1,5 @@
 import {SubstituteSpaces} from '../util/utils'
+import {getDisplayItemFromResult} from '../util/movieCollectionConverter';
 
 function MovieCollectionService(apiProvider, MovieService) {
     const api = apiProvider
@@ -54,36 +55,25 @@ function MovieCollectionService(apiProvider, MovieService) {
         return collections
     }
 
-    const getMovieDetails = async (data) => {
-        let userCollections = []
-        if (data.length > 0) {
-            for (const collection of data) {
-                let movieCollection = []
-                for (const movie of collection.movies) {
-                    await movieService.getMovieDetails(movie.id)
-                        .then(m => {
-                            const addedToList = new Date(movie.added)
-                            return movieCollection.push({
-                                id: m.data.id,
-                                title: m.data.original_title,
-                                year: new Date(m.data.release_date).getFullYear().toString(),
-                                poster: m.data.poster_path,
-                                tagline: m.data.tagline,
-                                score: `${m.data.vote_average * 10}%`,
-                                roars: m.data.vote_count,
-                                added: `${addedToList.getFullYear()}-${(addedToList.getMonth()+1)}-${addedToList.getDate()}`
-                            })
-                        })
+    const getMovieDetails = async (storedCollections) => {
+        let detailedCollections = []
+        if (storedCollections.length > 0) {
+            for (const storedCollection of storedCollections) {
+                let detailedCollection = []
+                for (const storedMovie of storedCollection.movies) {
+                    await movieService.getMovieDetails(storedMovie.id)
+                        .then(movieDetails => detailedCollection.push(getDisplayItemFromResult(storedMovie, movieDetails))
+                        )
                 }
-                userCollections.push({
-                    name: collection.name,
-                    movies: movieCollection,
-                    created: collection.created,
-                    updated: collection.updated
+                detailedCollections.push({
+                    name: storedCollection.name,
+                    movies: detailedCollection,
+                    created: storedCollection.created,
+                    updated: storedCollection.updated
                 })
             }
         }
-        return userCollections
+        return detailedCollections
     }
 
     return { getCollectionsByUserID, updateMovieCollectionByUserID, deleteMovieCollection }
