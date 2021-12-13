@@ -1,10 +1,12 @@
-import {LOGIN_FAILURE, LOGIN_SUCCESS, SIGNUP_FAILURE, SIGNUP_SUCCESS} from '../util/constants';
-import {loginWithEmailAndPassword} from './providers/Firebase';
+import {ERROR, LOGIN_FAILURE, LOGIN_SUCCESS, SIGNUP_FAILURE, SIGNUP_SUCCESS, SUCCESS} from '../util/constants';
+import {auth, loginWithEmailAndPassword} from './providers/Firebase';
+import {getResponseObject} from '../util/ServiceResponse';
+
 
 function UserService(apiProvider) {
     const userPath = '/users'
 
-    const signup = async (user) => await apiProvider.post(`${userPath}/create`, user)
+    const signup = (user) => apiProvider.post(`${userPath}/create`, user)
         .then((response) => {
             if (response.data.success) {
                 return getResponseObject(SIGNUP_SUCCESS, {success: 'Success'})
@@ -39,14 +41,26 @@ function UserService(apiProvider) {
         });
     }
 
-    const getResponseObject = (status, payload) => {
-        return {
-            state: status,
-            payload: payload
-        }
+    const getUserByDisplayName = (displayName) => {
+        const params = { user: displayName}
+        return apiProvider.get(`${userPath}/get`, {}, params)
+            .then(res => getResponseObject(SUCCESS, res.data))
+            .catch(error => getResponseObject(ERROR, { errorMsg: error }))
     }
 
-    return { signup, login}
+    const changeProfileImage = (profileImageUrl) => apiProvider.post(`${userPath}/create`,
+        {
+            imageUrl: profileImageUrl
+        })
+        .catch(error => console.log('User Service Change Image Error:', error))
+
+    const getLoggedInUser = () => apiProvider.get(`${userPath}/Get`,
+            { Authorization: `Bearer ${auth.currentUser?.accessToken}` })
+        .then(res => getResponseObject(SUCCESS, res.data))
+        .catch(error => getResponseObject(ERROR, { errorMsg: error }))
+
+
+    return { signup, login, getUserByDisplayName, changeProfileImage, getLoggedInUser }
 
 }
 

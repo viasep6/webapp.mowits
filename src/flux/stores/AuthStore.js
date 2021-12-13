@@ -65,7 +65,7 @@ export class AuthStore extends EventEmitter {
                 this.emit(SIGNUP_SUCCESS)
                 break
             case SIGNUP_FAILURE:
-                this.emit(SIGNUP_FAILURE, result.payload)
+                this.emit(SIGNUP_FAILURE, result.data)
                 break
             default:
                 break
@@ -75,9 +75,9 @@ export class AuthStore extends EventEmitter {
     login(result) {
         switch (result.state) {
             case LOGIN_SUCCESS:
-                let token = result.payload.user.accessToken;
+                let token = result.data.user.accessToken;
                 if (token !== null) {
-                    this.state.authUser = result.payload.user;
+                    this.state.authUser = result.data.user;
                 } else {
                     if (this.state.authUser !== null) {
                         this.state.authUser = null;
@@ -86,7 +86,7 @@ export class AuthStore extends EventEmitter {
                 }
                 break
             case LOGIN_FAILURE:
-                this.emit(LOGIN_FAILURE, result.payload)
+                this.emit(LOGIN_FAILURE, result.data)
                 break
             default:
                 break

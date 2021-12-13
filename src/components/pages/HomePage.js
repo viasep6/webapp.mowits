@@ -4,6 +4,7 @@ import {Grid} from '@mui/material';
 import {GET_MOVIE_POPULAR} from '../../util/constants';
 import WelcomeComponent from '../components/home/WelcomeComponent';
 import PopularMoviesBoxComponent from '../components/home/PopularMoviesBoxComponent';
+import {getPopularMovies} from '../../flux/actions/actions';
 
 function HomePage(props) {
 
@@ -13,8 +14,8 @@ function HomePage(props) {
     const [selectedPopularMovie, setSelectedPopularMovie] = useState();
 
     useEffect(() => {
-        movieStore.fetchPopularMovies();
         movieStore.addChangeListener(GET_MOVIE_POPULAR, handleNewPopularMovies);
+        getPopularMovies()
 
         return function cleanup() {
             movieStore.removeChangeListener(GET_MOVIE_POPULAR, handleNewPopularMovies);

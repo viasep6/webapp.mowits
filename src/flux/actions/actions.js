@@ -3,28 +3,28 @@ import {
     SIGNUP,
     LOGIN,
     LOGOUT,
-    GET_WITS_BY_USER,
-    GET_WITS_BY_FEED,
-    GET_WITS_BY_MOVIE,
-    POST_WIT,
-    ROAR_WIT,
     GET_USER_BY_USERNAME,
-    SET_USER_PROFILE_IMAGE,
-    GET_MOVIE_DETAILS,
+    MOVIE_DETAILS_SUCCESS,
     GET_SEARCH_RESULTS,
-    SUBSCRIBE_TO_MOVIE,
-    UPDATED_MOVIE_COLLECTIONS,
+    UPDATED_USER_COLLECTIONS,
     BASE_URL,
     GET_SIMILAR_MOVIES,
+    NEW_WITS_RETURNED,
+    GET_MOVIE_POPULAR,
+    GET_MOVIE_UPCOMING,
+    GET_MOVIE_TOP_RATED,
+    GET_MOVIE_NOW_PLAYING, LOGGED_IN_USER,
 } from '../../util/constants';
 import APIProvider from '../../services/providers/APIProvider';
 import MovieService from '../../services/MovieService';
 import MovieCollectionService from '../../services/MovieCollectionService';
 import UserService from '../../services/UserService';
+import WitService from '../../services/WitService';
 
 const apiProvider = APIProvider(BASE_URL)
 const userService = UserService(apiProvider)
 const moviesService = MovieService(apiProvider)
+const witService = WitService(apiProvider)
 const movieCollectionService = MovieCollectionService(apiProvider, moviesService)
 
 /*
@@ -36,139 +36,180 @@ export const logout = () => {
     })
 }
 
-export const login = async (username, password) => {
-    const result = await userService.login(username, password)
-    dispatcher.dispatch( {
-        type: LOGIN,
-        payload: result
-    })
+export const login = (username, password) => {
+    userService.login(username, password)
+        .then(result => dispatcher.dispatch( {
+            type: LOGIN,
+            payload: result
+        }))
 }
 
-export const signup = async (username, email, password) => {
-    const result = await userService.signup({displayName: username, email: email, password:password})
-    dispatcher.dispatch({
-        type: SIGNUP,
-        payload: result
-    })
+export const signup = (username, email, password) => {
+    userService.signup({displayName: username, email: email, password:password})
+        .then(result =>  dispatcher.dispatch({
+            type: SIGNUP,
+            payload: result
+        }))
 }
 
 /*
     User actions
 */
 export const getUserByUsername = (username) => {
-    dispatcher.dispatch({
-        type: GET_USER_BY_USERNAME,
-        payload: username
-    })
+    userService.getUserByDisplayName(username)
+        .then(result => dispatcher.dispatch({
+            type: GET_USER_BY_USERNAME,
+            payload: result
+        }))
 }
 export const setUserProfileImage = (profileImageUrl) => {
-    dispatcher.dispatch({
-        type: SET_USER_PROFILE_IMAGE,
-        payload: profileImageUrl
-    })
+    userService.changeProfileImage(profileImageUrl)
+}
+
+export const getLoggedInUser = () => {
+    userService.getLoggedInUser()
+        .then(result => dispatcher.dispatch({
+            type: LOGGED_IN_USER,
+            payload: result
+        }))
 }
 
 /*
     Wits actions
  */
 export const postWit = (wit) => {
-    dispatcher.dispatch({
-        type: POST_WIT,
-        payload: wit
-    })
+    witService.postWit(wit)
+        .then(result =>  dispatcher.dispatch({
+                type: NEW_WITS_RETURNED,
+                payload: result
+        }))
 }
 
 export const getWitsByUser = (data) => {
-    dispatcher.dispatch({
-        type: GET_WITS_BY_USER,
-        payload: data
-    })
+    witService.getWitsByUser(data)
+        .then(result => dispatcher.dispatch({
+            type: NEW_WITS_RETURNED,
+            payload: result
+        }))
 }
 
 export const getWitsByFeed = (data) => {
-    dispatcher.dispatch({
-        type: GET_WITS_BY_FEED,
-        payload: data
-    })
+    witService.getWitsByFeed(data)
+        .then(result => dispatcher.dispatch({
+            type: NEW_WITS_RETURNED,
+            payload: result
+        }))
 }
 
 export const getWitsByMovie = (movieId) => {
-    dispatcher.dispatch({
-        type: GET_WITS_BY_MOVIE,
-        payload: movieId
-    })
+    witService.getWitsByMovie(movieId)
+        .then(result => dispatcher.dispatch({
+                type: NEW_WITS_RETURNED,
+                payload: result
+            })
+        )
 }
 
 export const roarWit = (witId) => {
-    dispatcher.dispatch( {
-        type: ROAR_WIT,
-        payload: witId
-    })
+    witService.postWitRoar(witId)
 }
 
 /*
  Movie actions
 */
 export const getMovieDetails = (movieId) => {
-    dispatcher.dispatch( {
-        type: GET_MOVIE_DETAILS,
-        payload: movieId
-    })
-}
-
-export const getSimilarMovies = (movieId) => {
-    dispatcher.dispatch( {
-        type: GET_SIMILAR_MOVIES,
-        payload: movieId
-    })
+    moviesService.getMovieDetails(movieId)
+        .then(result => dispatcher.dispatch( {
+            type: MOVIE_DETAILS_SUCCESS,
+            payload: result
+        }))
 }
 
 export const getSearchResults = (query) => {
-    dispatcher.dispatch( {
-        type: GET_SEARCH_RESULTS,
-        payload: query
-    })
+    moviesService.getSearchResults(query)
+        .then(result => dispatcher.dispatch( {
+            type: GET_SEARCH_RESULTS,
+            payload: result
+        }))
+
 }
 
 export const followMovie = (movie) => {
-    dispatcher.dispatch({
-        type: SUBSCRIBE_TO_MOVIE,
-        payload: {movieId: movie.id, movieTitle: movie.title}
-    })
+    moviesService.followMovie(movie.id, movie.title)
 }
+
+export const getPopularMovies = () => {
+    moviesService.getMoviesByCollectionType(moviesService.movieCollectionTypes.POPULAR)
+        .then(result => dispatcher.dispatch( {
+            type: GET_MOVIE_POPULAR,
+            payload: result
+        }))
+}
+
+export const getUpcomingMovies = () => {
+    moviesService.getMoviesByCollectionType(moviesService.movieCollectionTypes.UPCOMING)
+        .then(result => dispatcher.dispatch( {
+            type: GET_MOVIE_UPCOMING,
+            payload: result
+        }))
+}
+
+export const getTopRatedMovies = () => {
+    moviesService.getMoviesByCollectionType(moviesService.movieCollectionTypes.TOP_RATED)
+        .then(result => dispatcher.dispatch( {
+            type: GET_MOVIE_TOP_RATED,
+            payload: result
+        }))
+}
+
+export const getMoviesNowPlaying = () => {
+    moviesService.getMoviesByCollectionType(moviesService.movieCollectionTypes.NOW_PLAYING)
+        .then(result => dispatcher.dispatch( {
+            type: GET_MOVIE_NOW_PLAYING,
+            payload: result
+        }))
+}
+
+export const getSimilarMovies = (movieId) => {
+    moviesService.getMoviesByCollectionType(moviesService.movieCollectionTypes.SIMILAR_MOVIES, movieId)
+        .then(result => dispatcher.dispatch( {
+            type: GET_SIMILAR_MOVIES,
+            payload: result
+        }))
+}
+
 
 /*
     Movie Lists.
  */
-export const getMovieCollectionsByUserID = async (collectionName='') => {
-    await movieCollectionService.getCollectionsByUserID(collectionName)
+export const getMovieCollectionsByUserID = (collectionName='') => {
+    movieCollectionService.getCollectionsByUserID(collectionName)
         .then(collections =>  dispatcher.dispatch({
-            type: UPDATED_MOVIE_COLLECTIONS,
+            type: UPDATED_USER_COLLECTIONS,
             payload: collections
         }))
 }
 
-export const createMovieCollection = async (collectionName) => {
-    await movieCollectionService.updateMovieCollectionByUserID(collectionName)
+export const createMovieCollection = (collectionName) => {
+    movieCollectionService.updateMovieCollectionByUserID(collectionName)
         .then(updatedCollections => dispatcher.dispatch({
-            type: UPDATED_MOVIE_COLLECTIONS,
+            type: UPDATED_USER_COLLECTIONS,
             payload: updatedCollections
         }))
 }
 
-export const updateMovieCollection = async (collectionName, movies) => {
-    await movieCollectionService.updateMovieCollectionByUserID(collectionName, movies)
+export const updateMovieCollection = (collectionName, movies) => {
+    movieCollectionService.updateMovieCollectionByUserID(collectionName, movies)
         .then(updatedCollections => dispatcher.dispatch({
-                type: UPDATED_MOVIE_COLLECTIONS,
+                type: UPDATED_USER_COLLECTIONS,
                 payload: updatedCollections
         }))
 }
 
-export const deleteMovieCollection = async (collectionName) => {
-    await movieCollectionService.deleteMovieCollection(collectionName)
+export const deleteMovieCollection = (collectionName) => {
+    movieCollectionService.deleteMovieCollection(collectionName)
         .then(updatedCollections => dispatcher.dispatch({
-            type: UPDATED_MOVIE_COLLECTIONS,
+            type: UPDATED_USER_COLLECTIONS,
             payload: updatedCollections
         }))
-
 }

@@ -82,12 +82,12 @@ function ListWitComponent(props) {
         setIsLoading(false);
     };
 
-    const loadNextWits = () => {
+    const loadNextWits = async () => {
         if (!isLastItem) {
             if (user) {
                 actions.getWitsByUser({userId: user.idtoken, startAfter: wits[wits.length - 1]?.created});
             } else if (movie) {
-                actions.getWitsByMovie(movie.id);
+                actions.getWitsByMovie( { movieId: movie.id, startAfter: wits[wits.length - 1]?.created });
             } else if (feed) {
                 actions.getWitsByFeed({startAfter: wits[wits.length - 1]?.created});
             }

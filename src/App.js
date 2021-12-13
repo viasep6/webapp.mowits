@@ -14,11 +14,9 @@ import FavoritesPage from "./components/pages/FavoritesPage";
 import {UserStore} from './flux/stores/UserStore';
 import {AuthStore} from './flux/stores/AuthStore';
 import {WitStore} from './flux/stores/WitStore';
-import {FavoritesStore} from './flux/stores/FavoritesStore'
 import {MovieStore} from './flux/stores/MovieStore';
 import {Container, CssBaseline} from '@mui/material';
 import FeedPage from './components/pages/FeedPage';
-import {SearchStore} from "./flux/stores/SearchStore";
 import FeaturedPage from './components/pages/FeaturedPage';
 
 
@@ -44,12 +42,10 @@ const theme = createTheme({
 });
 
 const authStore = new AuthStore();
+const witStore = new WitStore()
+const movieStore = new MovieStore();
 const userStore = new UserStore(authStore);
-const witStore = new WitStore(authStore)
-const favoritesStore = new FavoritesStore()
-const movieStore = new MovieStore(authStore);
-const searchStore = new SearchStore();
-const stores = {authStore, userStore, witStore, favoritesStore, searchStore, movieStore};
+const stores = {authStore, userStore, witStore, movieStore};
 
 function App() {
 

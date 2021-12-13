@@ -1,7 +1,7 @@
 import {withRouter} from 'react-router-dom';
 import React, {useEffect, useState} from 'react';
 import MovieCollection from "../components/movieCollection/MovieCollection";
-import {UPDATED_MOVIE_COLLECTIONS} from '../../util/constants';
+import {UPDATED_USER_COLLECTIONS} from '../../util/constants';
 import * as actions from '../../flux/actions/actions';
 import {CircularProgress, Grid} from '@mui/material';
 import Box from '@mui/material/Box';
@@ -12,9 +12,10 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddMovieCollection from "../components/movieCollection/AddMovieCollection";
 
 function FavoritesPage(props) {
+    const movieStore = props.stores.movieStore
 
-    const [movieCollections, setMovieCollections] = useState(async () => {
-        await actions.getMovieCollectionsByUserID()
+    const [movieCollections, setMovieCollections] = useState(() => {
+        actions.getMovieCollectionsByUserID()
         return []
     })
 
@@ -23,10 +24,10 @@ function FavoritesPage(props) {
     const [enableDelete, setEnableDelete] = useState(false)
 
     useEffect(() => {
-        props.stores.favoritesStore.addChangeListener(UPDATED_MOVIE_COLLECTIONS, updateCollections)
+        movieStore.addChangeListener(UPDATED_USER_COLLECTIONS, updateCollections)
 
         return function cleanup() {
-            props.stores.favoritesStore.removeChangeListener(UPDATED_MOVIE_COLLECTIONS, updateCollections)
+            movieStore.removeChangeListener(UPDATED_USER_COLLECTIONS, updateCollections)
         };
     });
 
@@ -79,7 +80,7 @@ function FavoritesPage(props) {
                 <Box
                 marginBottom={2}>
                     <AddMovieCollection
-                        favoritesStore={props.stores.favoritesStore}
+                        store={movieStore}
                         existingCollections={movieCollections}
                         onDone={collectionAdded}
                     />

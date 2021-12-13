@@ -3,13 +3,13 @@
 export function getDisplayItemFromResult (storageItem, detailItem) {
     const addedToList = new Date(storageItem.added)
     return {
-        id: detailItem.data.id,
-        title: detailItem.data.original_title,
-        year: new Date(detailItem.data.release_date).getFullYear().toString(),
-        poster: detailItem.data.poster_path,
-        tagline: detailItem.data.tagline,
-        score: `${detailItem.data.vote_average * 10}%`,
-        votes: detailItem.data.vote_count,
+        id: detailItem.id,
+        title: detailItem.original_title,
+        year: new Date(detailItem.release_date).getFullYear().toString(),
+        poster: detailItem.poster_path,
+        tagline: detailItem.tagline,
+        score: `${detailItem.vote_average * 10}%`,
+        votes: detailItem.vote_count,
         added: `${addedToList.getFullYear()}-${(addedToList.getMonth()+1)}-${addedToList.getDate()}`
     }
 }

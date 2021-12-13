@@ -8,6 +8,7 @@ import {
     GET_MOVIE_TOP_RATED,
     GET_MOVIE_UPCOMING,
 } from '../../util/constants';
+import {getMoviesNowPlaying, getPopularMovies, getTopRatedMovies, getUpcomingMovies} from '../../flux/actions/actions';
 
 function FeaturedPage(props) {
 
@@ -21,10 +22,10 @@ function FeaturedPage(props) {
 
 
     function init() {
-        movieStore.fetchPopularMovies();
-        movieStore.fetchUpcomingMovies();
-        movieStore.fetchTopRatedMovies();
-        movieStore.fetchNowPlayingMovies();
+        getPopularMovies()
+        getUpcomingMovies()
+        getTopRatedMovies()
+        getMoviesNowPlaying()
     }
 
 

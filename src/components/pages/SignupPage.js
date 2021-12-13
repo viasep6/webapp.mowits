@@ -82,9 +82,9 @@ function SignupPage(props) {
         });
     };
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = (event) => {
         event.preventDefault();
-        await actions.signup(state.displayName, state.email, state.password);
+        actions.signup(state.displayName, state.email, state.password);
         setState({...state, loading: true});
     };
 

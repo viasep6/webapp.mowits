@@ -74,7 +74,7 @@ function LoginPage(props) {
         });
     };
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = (event) => {
         event.preventDefault();
 
         setState({
@@ -82,7 +82,7 @@ function LoginPage(props) {
             loading: true,
         });
 
-        await actions.login(state.email, state.password);
+        actions.login(state.email, state.password);
     };
 
 

@@ -16,7 +16,7 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
     CHANGE_AUTH_TOKEN,
-    GET_MOVIE_DETAILS,
+    MOVIE_DETAILS_SUCCESS,
     GET_SIMILAR_MOVIES,
     MOVIES_PROFILE_DEFAULT_URL
 } from '../../util/constants';
@@ -37,7 +37,6 @@ function MoviePage(props) {
     const AuthStore = props.stores.authStore;
     const MovieStore = props.stores.movieStore;
     const UserStore = props.stores.userStore;
-    const FavoritesStore = props.stores.favoritesStore;
 
     const movieId = props.match.params.id;
 
@@ -49,12 +48,12 @@ function MoviePage(props) {
     const roarImage = require('../../assets/img/like-icon.png').default;
 
     useEffect(() => {
-        MovieStore.addChangeListener(GET_MOVIE_DETAILS, handleMovieResponse);
+        MovieStore.addChangeListener(MOVIE_DETAILS_SUCCESS, handleMovieResponse);
         MovieStore.addChangeListener(GET_SIMILAR_MOVIES, handleSimilarMoviesResponse);
         AuthStore.authAddChangeListener(CHANGE_AUTH_TOKEN, handleAuthChanged);
 
         return function cleanup() {
-            MovieStore.removeChangeListener(GET_MOVIE_DETAILS, handleMovieResponse);
+            MovieStore.removeChangeListener(MOVIE_DETAILS_SUCCESS, handleMovieResponse);
             MovieStore.removeChangeListener(GET_SIMILAR_MOVIES, handleSimilarMoviesResponse);
             AuthStore.authRemoveChangeListener(CHANGE_AUTH_TOKEN, handleAuthChanged);
         };
@@ -224,7 +223,7 @@ function MoviePage(props) {
                             </Box>
                             <AddMovieToCollection
                                 disabled={!isUserLoggedIn}
-                                favoritesStore={FavoritesStore}
+                                store={MovieStore}
                                 accessToken={isUserLoggedIn ? AuthStore.state.authUser.accessToken : ''}
                                 movieId={movie.id}
                                 movieTitle={movie.title}
