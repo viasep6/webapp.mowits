@@ -40,7 +40,6 @@ export class AuthStore extends EventEmitter {
 
         // firebase token is automatically persisted (https://firebase.google.com/docs/auth/web/manage-users#get_the_currently_signed_in_user)
         auth.onIdTokenChanged(user => {
-
             if (user) {
                 if (this.state.authUser !== user) {
                     this.state = {
