@@ -3,7 +3,6 @@ import {Grid} from '@mui/material';
 import {useEffect, useState} from 'react';
 import FeaturedMoviesComponent from '../components/featured/FeaturedMoviesComponent';
 import {
-    GET_MOVIE_LATEST,
     GET_MOVIE_NOW_PLAYING,
     GET_MOVIE_POPULAR,
     GET_MOVIE_TOP_RATED,
@@ -19,9 +18,6 @@ function FeaturedPage(props) {
     const [upcomingMovies, setUpcomingMovies] = useState([]);
     const [topRatedMovies, setTopRatedMovies] = useState([]);
     const [nowPlayingMovies, setNowPlayingMovies] = useState([]);
-
-    const [topWitMovies, setTopWitMovies] = useState([]);
-    const [topFollowMovies, setTopFollowMovies] = useState([]);
 
 
     function init() {
@@ -95,14 +91,6 @@ function FeaturedPage(props) {
                 <FeaturedMoviesComponent movies={topRatedMovies} title={"Top Rated"}/>
             </Grid>
 
-
-            <Grid xs item>
-                Top Witted
-            </Grid>
-
-            <Grid xs item>
-                Top follow
-            </Grid>
         </Grid>
     );
 }
