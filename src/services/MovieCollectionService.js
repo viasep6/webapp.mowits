@@ -1,59 +1,20 @@
 import {SubstituteSpaces} from '../util/utils'
 
-function MovieCollectionService(apiProvider, movieService) {
+function MovieCollectionService(apiProvider, MovieService) {
     const api = apiProvider
-    const movieServ = movieService
+    const movieService = MovieService
     const movieCollectionPath = '/movielists'
 
     const getCollectionsByUserID = async (accessToken, collectionName='') => await api
         .get(`${movieCollectionPath}/Get${collectionName === '' ? collectionName : '?list=' + SubstituteSpaces(collectionName, '%20')}`,
             { Authorization: `Bearer ${accessToken}` })
-        .then(res => {
-            let collections = []
-            if (collectionName === '') {
-                for (const collection of Object.keys(res.data)) {
-                    collections.push({
-                        name: collection,
-                        movies: res.data[collection].movies,
-                        updated: res.data[collection].updated,
-                        created: res.data[collection].created
-                    })
-                }
-            }
-            else {
-                if (typeof res.data.created !== 'undefined') {
-                    collections.push({
-                        name: collectionName,
-                        movies: res.data.movies,
-                        updated: res.data.updated,
-                        created: res.data.created
-                    })
-                }
-            }
-            return collections
+        .then(result => convertResultToList(result))
+        .then(async data => await getMovieDetails(data))
+        .catch(err => {
+            console.log('Movie collection service API GET error: ', err)
         })
-        .then(async data => {
-            let userCollections = []
-            if (data.length > 0) {
-                for (const collection of data) {
-                    let movieCollection = []
-                    for (const movie of collection.movies) {
-                        await movieServ.getMovieDetails(movie.id)
-                            .then(m => movieCollection.push(m.data))
-                    }
-                    userCollections.push({
-                        name: collection.name,
-                        movies: movieCollection,
-                        created: collection.created,
-                        updated: collection.updated
-                    })
-                }
-            }
-            return userCollections
-        })
-        .catch(err => console.log('Service Error:', err))
 
-    const createMovieCollectionByUserID = async (accessToken, collectionName, movies=[]) => {
+    const updateMovieCollectionByUserID = async (accessToken, collectionName, movies=[]) => {
         if (typeof collectionName !== 'undefined' && collectionName !== '') {
             return await api.post(`${movieCollectionPath}/Add`,
                     {
@@ -61,14 +22,71 @@ function MovieCollectionService(apiProvider, movieService) {
                         movies: movies
                     },
                     { Authorization: `Bearer ${accessToken}` })
-                 .then(() => getCollectionsByUserID(accessToken))
+                .then(result => convertResultToList(result))
+                .then(async data => await getMovieDetails(data))
                 .catch(err => {
                     console.log('Movie collection service API POST error: ', err)
                 })
         }
     }
 
-    return { getCollectionsByUserID, createMovieCollectionByUserID }
+    const deleteMovieCollection = async (accessToken, collectionName) => await api
+        .del(`${movieCollectionPath}/delete?list=${SubstituteSpaces(collectionName, '%20')}`,
+            { Authorization: `Bearer ${accessToken}` }
+        )
+        .then(result => convertResultToList(result))
+        .then(async data => await getMovieDetails(data))
+        .catch(err => {
+            console.log('Movie collection service API Delete error: ', err)
+        })
+
+    const convertResultToList = (result) => {
+        let collections = []
+        for (const collection of Object.keys(result.data)) {
+            collections.push({
+                name: collection,
+                movies: result.data[collection].movies,
+                updated: result.data[collection].updated,
+                created: result.data[collection].created
+            })
+        }
+
+        return collections
+    }
+
+    const getMovieDetails = async (data) => {
+        let userCollections = []
+        if (data.length > 0) {
+            for (const collection of data) {
+                let movieCollection = []
+                for (const movie of collection.movies) {
+                    await movieService.getMovieDetails(movie.id)
+                        .then(m => {
+                            const addedToList = new Date(movie.added)
+                            return movieCollection.push({
+                                id: m.data.id,
+                                title: m.data.original_title,
+                                year: new Date(m.data.release_date).getFullYear().toString(),
+                                poster: m.data.poster_path,
+                                tagline: m.data.tagline,
+                                score: `${m.data.vote_average * 10}%`,
+                                roars: m.data.vote_count,
+                                added: `${addedToList.getFullYear()}-${(addedToList.getMonth()+1)}-${addedToList.getDate()}`
+                            })
+                        })
+                }
+                userCollections.push({
+                    name: collection.name,
+                    movies: movieCollection,
+                    created: collection.created,
+                    updated: collection.updated
+                })
+            }
+        }
+        return userCollections
+    }
+
+    return { getCollectionsByUserID, updateMovieCollectionByUserID, deleteMovieCollection }
 
 }
 

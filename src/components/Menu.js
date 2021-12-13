@@ -66,20 +66,19 @@ function MenuBar(props) {
         setSearchData(result);
     };
 
-
     useEffect(() => {
         // NOTE: use effect is run twice because strict is 'on' in dev mode
         // see https://stackoverflow.com/a/66304817/3861983
         AuthStore.authAddChangeListener(CHANGE_AUTH_TOKEN, authStatusChanged);
         UserStore.userAddChangeListener(LOGIN_SUCCESS, handleLoginSuccess);
-        SearchStore.addSearchChangeListener(GET_SEARCH_RESULTS, handleSearchResult)
+        SearchStore.addSearchChangeListener(GET_SEARCH_RESULTS, handleSearchResult);
 
         return function cleanup() {
             setIsAuthenticated(false);
             setLoggedInUser(null);
             AuthStore.authRemoveChangeListener(CHANGE_AUTH_TOKEN, authStatusChanged);
             UserStore.userRemoveChangeListener(LOGIN_SUCCESS, handleLoginSuccess);
-            SearchStore.removeSearchChangeListener(GET_SEARCH_RESULTS, handleSearchResult)
+            SearchStore.removeSearchChangeListener(GET_SEARCH_RESULTS, handleSearchResult);
         };
         // eslint-disable-next-line
     }, []);
@@ -167,37 +166,42 @@ function MenuBar(props) {
                             <MenuItem id={'home'} key="home" onClick={handleCloseNavMenu}>
                                 <Typography textAlign="center">Home</Typography>
                             </MenuItem>
-                            <MenuItem id={'favorites'} key="fav" onClick={handleCloseNavMenu}>
-                                <Typography textAlign="center">Favorites</Typography>
-                            </MenuItem>
-                            <MenuItem id={'test'} key="test" onClick={handleCloseNavMenu}>
-                                <Typography textAlign="center">Test</Typography>
-                            </MenuItem>
+                            {isAuthenticated &&
                             <MenuItem id={'feed'} key="feed" onClick={handleCloseNavMenu}>
                                 <Typography textAlign="center">My Feed</Typography>
                             </MenuItem>
-                            <MenuItem id={'statistics'} key="statistics" onClick={handleCloseNavMenu}>
-                                <Typography textAlign="center">Statistics</Typography>
+                            }
+
+                            {isAuthenticated &&
+                            <MenuItem id={'favorites'} key="fav" onClick={handleCloseNavMenu}>
+                                <Typography textAlign="center">Favorites</Typography>
                             </MenuItem>
-                            {isAuthenticated &&
-                                    <MenuItem id={'profile'} key="profile" onClick={() => goToPath('/profile/' + loggedInUser?.displayName)}>
-                                        <Typography textAlign="center">Profile</Typography>
-                                    </MenuItem>
                             }
                             {isAuthenticated &&
-                                <MenuItem id={'logout'} key="logout" onClick={handleLogout}>
-                                    <Typography textAlign="center">Logout</Typography>
-                                </MenuItem>
+                            <MenuItem id={'featured'} key="featured" onClick={handleCloseNavMenu}>
+                                <Typography textAlign="center">Featured</Typography>
+                            </MenuItem>
+                            }
+                            {isAuthenticated &&
+                            <MenuItem id={'profile'} key="profile"
+                                      onClick={() => goToPath('/profile/' + loggedInUser?.displayName)}>
+                                <Typography textAlign="center">Profile</Typography>
+                            </MenuItem>
+                            }
+                            {isAuthenticated &&
+                            <MenuItem id={'logout'} key="logout" onClick={handleLogout}>
+                                <Typography textAlign="center">Logout</Typography>
+                            </MenuItem>
                             }
                             {!isAuthenticated &&
-                                <MenuItem id={'login'} key="login" onClick={handleCloseNavMenu}>
-                                    <Typography textAlign="center">Login</Typography>
-                                </MenuItem>
+                            <MenuItem id={'login'} key="login" onClick={handleCloseNavMenu}>
+                                <Typography textAlign="center">Login</Typography>
+                            </MenuItem>
                             }
                             {!isAuthenticated &&
-                                <MenuItem id={'signup'} key="signup" onClick={handleCloseNavMenu}>
-                                    <Typography textAlign="center">Signup</Typography>
-                                </MenuItem>
+                            <MenuItem id={'signup'} key="signup" onClick={handleCloseNavMenu}>
+                                <Typography textAlign="center">Signup</Typography>
+                            </MenuItem>
                             }
                         </Menu>
                     </Box>
@@ -219,20 +223,7 @@ function MenuBar(props) {
                         >
                             Home
                         </Button>
-                        <Button
-                            id="favorites"
-                            onClick={handleCloseNavMenu}
-                            sx={sxMenuButton}
-                        >
-                            Favorites
-                        </Button>
-                        <Button
-                            id="test"
-                            onClick={handleCloseNavMenu}
-                            sx={sxMenuButton}
-                        >
-                            Test
-                        </Button>
+                        {isAuthenticated &&
                         <Button
                             id="feed"
                             onClick={handleCloseNavMenu}
@@ -240,13 +231,28 @@ function MenuBar(props) {
                         >
                             My Feed
                         </Button>
+                        }
+
+                        {isAuthenticated &&
                         <Button
-                            id="statistics"
+                            id="favorites"
                             onClick={handleCloseNavMenu}
                             sx={sxMenuButton}
                         >
-                            Statistics
+                            Favorites
                         </Button>
+                        }
+
+                        {isAuthenticated &&
+                        <Button
+                            id="featured"
+                            onClick={handleCloseNavMenu}
+                            sx={sxMenuButton}
+                        >
+                            Featured
+                        </Button>
+                        }
+
 
                     </Box>
                     {/*Search field*/}
@@ -257,7 +263,7 @@ function MenuBar(props) {
                             id="search"
                             onChange={(event, newValue) => {
                                 if (newValue !== null && newValue.id !== undefined) {
-                                    goToPath('/movie/' + newValue.id)
+                                    goToPath('/movie/' + newValue.id);
                                 }
                             }}
                             onInputChange={(event, newInputValue) => {
@@ -275,7 +281,8 @@ function MenuBar(props) {
                     {
                         isAuthenticated ? (
                             <Box sx={{flexGrow: 0, display: {xs: 'none', md: 'flex'}}}>
-                                <IconButton onClick={() => goToPath('/profile/' + loggedInUser?.displayName)}
+                                <IconButton id={'profile'}
+                                            onClick={() => goToPath('/profile/' + loggedInUser?.displayName)}
                                             sx={sxMenuButton}>
                                     <Avatar alt="profile image" src={loggedInUser?.profileImage}
                                             sx={{width: 34, height: 34, m: 1}}
@@ -317,4 +324,5 @@ function MenuBar(props) {
     );
 
 }
+
 export default withRouter(MenuBar);

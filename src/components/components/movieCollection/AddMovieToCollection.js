@@ -6,7 +6,7 @@ import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import {Grid} from "@mui/material";
 import {useEffect, useState} from "react";
-import { NEW_USER_MOVIE_COLLECTIONS} from '../../../util/constants';
+import { UPDATED_MOVIE_COLLECTIONS} from '../../../util/constants';
 import * as actions from '../../../flux/actions/actions';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -17,6 +17,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Typography from '@mui/material/Typography';
 import Accordion from '@mui/material/Accordion';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 const modalStyle = {
     position: 'absolute',
@@ -38,15 +39,13 @@ export default function AddMovieToCollection(props) {
     const [currentSelected, setCurrentSelected] = useState('')
     const [dataReady, setDataReady] = useState(false)
     const [addCollectionDone, setAddCollectionDone] = useState(true)
-    const [saveInProgress, setSaveInProgress] = useState(false)
     const [idPresent, setIdPresent] = useState(false)
 
-
     useEffect(() => {
-        props.favoritesStore.addChangeListener(NEW_USER_MOVIE_COLLECTIONS, updateOptions)
+        props.favoritesStore.addChangeListener(UPDATED_MOVIE_COLLECTIONS, updateOptions)
 
         return function cleanup() {
-            props.favoritesStore.removeChangeListener(NEW_USER_MOVIE_COLLECTIONS, updateOptions)
+            props.favoritesStore.removeChangeListener(UPDATED_MOVIE_COLLECTIONS, updateOptions)
         };
     });
 
@@ -57,25 +56,30 @@ export default function AddMovieToCollection(props) {
     }
 
     const handleClose = () => {
-        setOptions([])
         setCurrentSelected('')
         setLabelTxt('')
         setCollectionSelected(false)
         setDataReady(false)
-        setSaveInProgress(false)
         setOpen(false);
     }
 
     const addMovie = async () => {
-        setSaveInProgress(true)
-        const movies = currentSelected.movies
-        if (inCollection(movies)) {
+        const currentMovies = currentSelected.movies
+        if (inCollection(currentMovies)) {
             setIdPresent(true)
             setLabelTxt('Movie already in collection!')
         }
         else {
-            movies.push({ id: props.movieId })
-            await actions.addMovieToCollection(props.accessToken, currentSelected.name, movies)
+            const updatedMovies = currentMovies.map(movie => ({
+                id: movie.id,
+                added: movie.added
+            }))
+            updatedMovies.push({
+                id: props.movieId,
+                added: new Date().toISOString()
+            })
+            await actions.updateMovieCollection(props.accessToken, currentSelected.name, updatedMovies)
+                .then(() => handleClose())
         }
     }
 
@@ -90,17 +94,12 @@ export default function AddMovieToCollection(props) {
     }
 
     const updateOptions = (collections) => {
-        if (saveInProgress) {
-            handleClose()
+        if (typeof collections === 'undefined' || collections.length === 0) {
+            toggleAddCollection()
         }
         else {
-            if (typeof collections === 'undefined' || collections.length === 0) {
-                toggleAddCollection()
-            }
-            else {
-                setOptions(collections)
-                setDataReady(true)
-            }
+            setOptions(collections)
+            setDataReady(true)
         }
     }
 
@@ -132,7 +131,7 @@ export default function AddMovieToCollection(props) {
                         <Accordion
                             expanded={!addCollectionDone}>
                             <AccordionSummary
-                                expandIcon={<ExpandMoreIcon sx={{mt: 2, borderRadius: 0,}} onClick={() => toggleAddCollection()} />}
+                                expandIcon={<ExpandMoreIcon sx={{mt: 15, borderRadius: 0,}} onClick={() => toggleAddCollection()} />}
                             >
                                 <Grid
                                     item
@@ -142,6 +141,7 @@ export default function AddMovieToCollection(props) {
                                     justifyContent="space-between"
                                     alignItems="center"
                                 >
+                                    <Typography mx={'auto'} variant={'p'} marginBottom={2}>Mowit Collections</Typography>
                                     <FormControl
                                         fullWidth>
                                         <InputLabel id="demo-simple-select-label">{labelTxt}</InputLabel>
@@ -161,15 +161,14 @@ export default function AddMovieToCollection(props) {
                                                     </MenuItem>
                                             }
                                         </Select>
+                                        <Box
+                                            marginTop={1}
+                                        >
+                                            <Button size="small" variant="text" color={'primary'} disabled={!collectionSelected} onClick={addMovie} startIcon={<AddCircleOutlineIcon />}>
+                                                Add to collection
+                                            </Button>
+                                        </Box>
                                     </FormControl>
-                                    <Box
-                                        margin={1}
-                                        marginBottom={2}
-                                        visibility={collectionSelected ? 'visible' :'hidden'}
-                                    >
-                                        <Button size="small" variant="text" onClick={addMovie}>Add Movie</Button>
-                                    </Box>
-                                    <Typography mx={'auto'} variant={'p'}>Add Collection</Typography>
                                 </Grid>
                             </AccordionSummary>
                             <Box marginLeft={1}>

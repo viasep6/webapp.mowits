@@ -226,7 +226,7 @@ function MoviePage(props) {
                                 disabled={!isUserLoggedIn}
                                 favoritesStore={FavoritesStore}
                                 accessToken={isUserLoggedIn ? AuthStore.state.authUser.accessToken : ''}
-                                movieId={movieId}
+                                movieId={movie.id}
                                 movieTitle={movie.title}
                             />
                         </Paper>

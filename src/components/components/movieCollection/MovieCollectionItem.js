@@ -7,7 +7,9 @@ import Badge from "@mui/material/Badge";
 import Typography from '@mui/material/Typography';
 import IconButton from "@mui/material/IconButton";
 import likeIcon from '../../../assets/img/like-icon.png';
-import DeleteIcon from '@mui/icons-material/Delete';
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
+import DeleteModal from './DeleteModal';
+import {Box, Tooltip} from '@mui/material';
 
 export default function MovieCollectionItem(props) {
     const movie = props.movie
@@ -16,8 +18,10 @@ export default function MovieCollectionItem(props) {
     const roarClicked = () => props.onRoar(movie.id)
 
     return (
-        <Card sx={{p: 2, maxWidth:355, margin:props.margin}}
-              onClick={itemClicked}
+        <Card sx={{p: 2, maxWidth:590, minWidth:385, margin:props.margin}}
+              onClick={() => {
+                  window.scrollTo({top: 0, left: 0, behavior: "smooth" });
+              }}
         >
             <Grid
                 container
@@ -27,40 +31,76 @@ export default function MovieCollectionItem(props) {
             >
                 <Grid
                     item
-                    xs
+                    xs={6}
                     container
                     direction="column"
                     justifyContent="flex-start"
                     alignItems="center"
                 >
                     <Badge
-                        badgeContent={movie.vote_average * 10 + '%'}
+                        badgeContent={
+                            <Tooltip title="User score"  placement="top-end">
+                                <span>{movie.score}</span>
+                            </Tooltip>
+                        }
                         color="success"
                     >
-                        <CardMedia
-                            component="img"
-                            sx={{ height: '100%' }}
-                            image={movie.poster_path}
-                            alt="Movie cover"
-                        />
+                        <Tooltip title={movie.tagline} placement={'right'}>
+                            <CardMedia
+                                component="img"
+                                sx={{ height: '100%', cursor:'pointer' }}
+                                image={movie.poster}
+                                alt="Movie cover"
+                                onClick={itemClicked}
+                            />
+                        </Tooltip>
                     </Badge>
                 </Grid>
                 <Grid
                     item
-                    xs={7}
+                    xs
                     container
                     direction="column"
                     justifyContent="space-between"
                     alignItems="stretch"
                 >
-                    <CardContent>
-                        <Typography component="div" variant="h5">
-                            {movie.title}
-                        </Typography>
-                        <Typography variant="subtitle1" color="text.secondary" component="div">
-                            {new Date(movie.release_date).getFullYear().toString()}
-                        </Typography>
-                    </CardContent>
+                    <Grid
+                        item
+                        xs
+                        container
+                        direction="column"
+                        justifyContent="space-between"
+                        alignItems="stretch"
+                        sx={{cursor: 'pointer'}}
+                        onClick={itemClicked}
+                    >
+                        <CardContent>
+                            <Typography component="div" variant="h5">
+                                {movie.title}
+                            </Typography>
+                            <Typography variant="subtitle1" color="text.secondary" component="div">
+                                {movie.year}
+                            </Typography>
+                        </CardContent>
+                        <CardContent>
+                        </CardContent>
+                        <CardContent>
+                                <Grid
+                                    item
+                                    container
+                                    direction="row"
+                                    justifyContent="flex-start"
+                                    alignItems="center"
+                                    marginLeft={0}>
+                                    <PlaylistAddIcon />
+                                    <Tooltip title="Date added"  placement="top-end">
+                                        <Typography variant="subtitle2" color="text.secondary" component="div" marginLeft={1}>
+                                            {movie.added}
+                                        </Typography>
+                                    </Tooltip>
+                                </Grid>
+                        </CardContent>
+                    </Grid>
                     <Grid
                         container
                         direction="row"
@@ -68,35 +108,37 @@ export default function MovieCollectionItem(props) {
                         alignItems="center"
                         paddingLeft={1}
                     >
-                        <IconButton
-                            aria-label="delete"
-                            size="medium"
-                            sx={{ visibility: props.deleteBtn ? 'visible' : 'hidden' }}
-                            onClick={deleteClicked}
-                        >
-                            <DeleteIcon fontSize="inherit" />
-                        </IconButton>
-                        <Badge color="success"
-                               title={'Movie roars!'}
-                               badgeContent={movie.roars}
-                               max={999}
-                               sx={[ {mr:2, pr:1} ]}
-                        >
-                            <IconButton
-                                aria-label="delete"
-                                size="medium"
-                                disabled={props.disableRoar}
-                                onClick={roarClicked}
+                        <DeleteModal
+                            enableDelete={props.deleteBtn}
+                            msg={`Delete ${movie.title} from ${props.collectionName}?`}
+                            cannotBeUndone={false}
+                            onDelete={deleteClicked}
+                        />
+                        <Tooltip title="Movie Roars!"  placement="top-end">
+                            <Badge color="success"
+                                   title={'Movie roars!'}
+                                   badgeContent={
+                                           <span>{movie.roars}</span>
+                                   }
+                                   max={99999}
+                                   sx={[ {mr:2, pr:1} ]}
                             >
-                                <img style={{filter: `grayscale(${movie.roars > 0 ? 30 : 100}%)`}}
-                                     src={likeIcon}
-                                     alt=""
-                                     title="Movie roars!"/>
-                            </IconButton>
-                        </Badge>
+                                <IconButton
+                                    aria-label="delete"
+                                    size="medium"
+                                    disabled={props.disableRoar}
+                                    onClick={roarClicked}
+                                >
+                                    <img style={{filter: `grayscale(${movie.roars > 0 ? 30 : 100}%)`}}
+                                         src={likeIcon}
+                                    />
+                                </IconButton>
+                            </Badge>
+                        </Tooltip>
                     </Grid>
                 </Grid>
             </Grid>
         </Card>
     );
 }
+

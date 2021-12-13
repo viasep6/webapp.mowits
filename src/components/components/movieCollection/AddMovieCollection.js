@@ -1,32 +1,35 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
-import {CircularProgress, Grid, TextField} from "@mui/material";
+import {CircularProgress, Grid, TextField, Tooltip} from '@mui/material';
 import {useEffect, useState} from "react";
 import Box from '@mui/material/Box';
-import {NEW_USER_MOVIE_COLLECTIONS} from "../../../util/constants";
+import {UPDATED_MOVIE_COLLECTIONS} from "../../../util/constants";
 import * as actions from '../../../flux/actions/actions';
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
+
 
 export default function AddMovieCollection(props) {
     const [inProgress, setInProgress] = useState(false)
     const [collections, setCollections] = useState(() =>
         props.existingCollections.length > 0
             ? props.existingCollections
-            : () => {
-                actions.getMovieCollectionsByUserID(props.token)
+            : async () => {
+                await actions.getMovieCollectionsByUserID(props.token)
                 return []
             }
     )
     const [error, setError] = React.useState(false);
-    const [labelTxt, setLabelTxt] = React.useState('Add Collection')
+    const [labelTxt, setLabelTxt] = React.useState('New collection')
     const [helperTxt, setHelperTxt] = useState('')
     const [txtFieldValue, setTxtFieldValue] = useState('')
+    const [emptyField, setEmptyField] = useState(true)
 
 
     useEffect(() => {
-        props.favoritesStore.addChangeListener(NEW_USER_MOVIE_COLLECTIONS, updateCollections)
+        props.favoritesStore.addChangeListener(UPDATED_MOVIE_COLLECTIONS, updateCollections)
 
         return function cleanup() {
-            props.favoritesStore.removeChangeListener(NEW_USER_MOVIE_COLLECTIONS, updateCollections)
+            props.favoritesStore.removeChangeListener(UPDATED_MOVIE_COLLECTIONS, updateCollections)
         };
     });
 
@@ -40,36 +43,33 @@ export default function AddMovieCollection(props) {
                 setTxtFieldValue('')
                 setHelperTxt('')
                 setInProgress(false)
-                props.onDone(collections)
+                props.onDone()
             }
         }
     }
 
-    const addCollection =async  () => {
+    const addCollection = async  () => {
         if (txtFieldValue === '') {
             updateError(true, 'A name must be entered!')
         }
-        else
-        {
-            if (collectionNameExist()) {
-                updateError(true, 'Collection name already exists.')
-            }
-            else {
-                setInProgress(true)
-                await actions.createMovieCollection(props.token, txtFieldValue)
-            }
+        else if (collectionNameExist()) {
+            updateError(true, 'Collection name already exists.')
+        }
+        else {
+            setInProgress(true)
+            await actions.createMovieCollection(props.token, txtFieldValue)
         }
     }
 
-    const keyPressed = (key) => {
+    const keyPressed = async (key) => {
         if(key.keyCode === 13) {
-            addCollection()
+            await addCollection()
         }
     }
 
     const txtFieldUpdated = (val) => {
+        val === '' ? setEmptyField(true) : setEmptyField(false)
         setTxtFieldValue(val)
-        setHelperTxt('Please enter a collection name.')
         if (error) {
             updateError(false, 'Please enter a collection name.')
         }
@@ -103,7 +103,6 @@ export default function AddMovieCollection(props) {
                 direction="row"
                 justifyContent="center"
                 alignItems="center"
-                marginBottom={2}
             >
                 <TextField
                     required={!error}
@@ -116,7 +115,17 @@ export default function AddMovieCollection(props) {
                     onKeyDown={keyPressed}
                     helperText={helperTxt}
                 />
-                <Button variant="text" onClick={addCollection}>Add</Button>
+                <Box marginLeft={1}>
+                    <Tooltip title={'Now go to a movie and add it to your collection.'} placement={'top'}>
+                        <Button variant="text"
+                                color={'primary'}
+                                onClick={addCollection}
+                                disabled={emptyField}
+                                startIcon={<SaveAltIcon />}>
+                            Create
+                        </Button>
+                    </Tooltip>
+                </Box>
                 <Box
                     visibility={ inProgress ? 'visible' : 'hidden'}
                 >

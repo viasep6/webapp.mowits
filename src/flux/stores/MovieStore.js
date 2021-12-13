@@ -9,6 +9,10 @@ import {
     GET_SIMILAR_MOVIES,
     SUBSCRIBE_TO_MOVIE,
     GET_MOVIE_POPULAR,
+    URL_UPCOMING_MOVIES,
+    GET_MOVIE_UPCOMING,
+    GET_MOVIE_TOP_RATED,
+    GET_MOVIE_NOW_PLAYING, URL_NOW_PLAYING_MOVIES, URL_TOP_RATED_MOVIES,
 } from '../../util/constants';
 import dispatcher from '../dispatcher';
 
@@ -98,9 +102,95 @@ export class MovieStore extends EventEmitter {
                 console.log('Error', error.message);
             }
             console.log(error.config);
-            this.emit(GET_MOVIE_DETAILS, {errorMessage: error});
+            this.emit(URL_POPULAR_MOVIES, {errorMessage: error});
         });
     }
+
+    fetchUpcomingMovies() {
+        axios.get(URL_UPCOMING_MOVIES
+            // axios.get('http://localhost:7071/movies/Upcoming',
+        )
+            .then((response) => {
+                this.emit(GET_MOVIE_UPCOMING, response.data);
+            })
+            .catch(error => {
+                if (error.response) {
+                    // The request was made and the server responded with a status code
+                    // that falls out of the range of 2xx
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+                } else if (error.request) {
+                    // The request was made but no response was received
+                    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                    // http.ClientRequest in node.js
+                    console.log(error.request);
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    console.log('Error', error.message);
+                }
+                console.log(error.config);
+                this.emit(GET_MOVIE_UPCOMING, {errorMessage: error});
+            });
+    }
+
+    fetchTopRatedMovies() {
+        axios.get(URL_TOP_RATED_MOVIES
+        // axios.get('http://localhost:7071/movies/TopRated',
+        )
+            .then((response) => {
+                this.emit(GET_MOVIE_TOP_RATED, response.data);
+            })
+            .catch(error => {
+                if (error.response) {
+                    // The request was made and the server responded with a status code
+                    // that falls out of the range of 2xx
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+                } else if (error.request) {
+                    // The request was made but no response was received
+                    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                    // http.ClientRequest in node.js
+                    console.log(error.request);
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    console.log('Error', error.message);
+                }
+                console.log(error.config);
+                this.emit(GET_MOVIE_TOP_RATED, {errorMessage: error});
+            });
+    }
+
+    fetchNowPlayingMovies() {
+        axios.get(URL_NOW_PLAYING_MOVIES
+        // axios.get('http://localhost:7071/movies/NowPlaying',
+        )
+            .then((response) => {
+                this.emit(GET_MOVIE_NOW_PLAYING, response.data);
+            })
+            .catch(error => {
+                if (error.response) {
+                    // The request was made and the server responded with a status code
+                    // that falls out of the range of 2xx
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+                } else if (error.request) {
+                    // The request was made but no response was received
+                    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                    // http.ClientRequest in node.js
+                    console.log(error.request);
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    console.log('Error', error.message);
+                }
+                console.log(error.config);
+                this.emit(GET_MOVIE_NOW_PLAYING, {errorMessage: error});
+            });
+    }
+
+
 
     subscribeToMovie(data) {
         axios.defaults.headers.common = {Authorization: `Bearer ${this.authStore.state.authUser.accessToken}`};
@@ -143,7 +233,7 @@ export class MovieStore extends EventEmitter {
                     console.log('Error', error.message);
                 }
                 console.log(error.config);
-                this.emit(GET_MOVIE_DETAILS, {errorMessage: error});
+                this.emit(GET_SIMILAR_MOVIES, {errorMessage: error});
             });
 
     }
