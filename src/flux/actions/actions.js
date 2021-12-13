@@ -20,8 +20,10 @@ import {
 import APIProvider from '../../services/providers/APIProvider';
 import MovieService from '../../services/MovieService';
 import MovieCollectionService from '../../services/MovieCollectionService';
+import UserService from '../../services/UserService';
 
 const apiProvider = APIProvider(BASE_URL)
+const userService = UserService(apiProvider)
 const moviesService = MovieService(apiProvider)
 const movieCollectionService = MovieCollectionService(apiProvider, moviesService)
 
@@ -34,17 +36,19 @@ export const logout = () => {
     })
 }
 
-export const login = (username, password) => {
+export const login = async (username, password) => {
+    const result = await userService.login(username, password)
     dispatcher.dispatch( {
         type: LOGIN,
-        payload: {username: username, password: password}
+        payload: result
     })
 }
 
-export const signup = (username, email, password) => {
+export const signup = async (username, email, password) => {
+    const result = await userService.signup({displayName: username, email: email, password:password})
     dispatcher.dispatch({
         type: SIGNUP,
-        payload: {displayName: username, email: email, password:password}
+        payload: result
     })
 }
 
@@ -136,32 +140,32 @@ export const followMovie = (movie) => {
 /*
     Movie Lists.
  */
-export const getMovieCollectionsByUserID = async (accessToken, collectionName='') => {
-    await movieCollectionService.getCollectionsByUserID(accessToken, collectionName)
+export const getMovieCollectionsByUserID = async (collectionName='') => {
+    await movieCollectionService.getCollectionsByUserID(collectionName)
         .then(collections =>  dispatcher.dispatch({
             type: UPDATED_MOVIE_COLLECTIONS,
             payload: collections
         }))
 }
 
-export const createMovieCollection = async (accessToken, collectionName) => {
-    await movieCollectionService.updateMovieCollectionByUserID(accessToken, collectionName)
+export const createMovieCollection = async (collectionName) => {
+    await movieCollectionService.updateMovieCollectionByUserID(collectionName)
         .then(updatedCollections => dispatcher.dispatch({
             type: UPDATED_MOVIE_COLLECTIONS,
             payload: updatedCollections
         }))
 }
 
-export const updateMovieCollection = async (accessToken, collectionName, movies) => {
-    await movieCollectionService.updateMovieCollectionByUserID(accessToken, collectionName, movies)
+export const updateMovieCollection = async (collectionName, movies) => {
+    await movieCollectionService.updateMovieCollectionByUserID(collectionName, movies)
         .then(updatedCollections => dispatcher.dispatch({
                 type: UPDATED_MOVIE_COLLECTIONS,
                 payload: updatedCollections
         }))
 }
 
-export const deleteMovieCollection = async (accessToken, collectionName) => {
-    await movieCollectionService.deleteMovieCollection(accessToken, collectionName)
+export const deleteMovieCollection = async (collectionName) => {
+    await movieCollectionService.deleteMovieCollection(collectionName)
         .then(updatedCollections => dispatcher.dispatch({
             type: UPDATED_MOVIE_COLLECTIONS,
             payload: updatedCollections

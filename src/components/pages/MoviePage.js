@@ -23,7 +23,7 @@ import {
 import * as actions from '../../flux/actions/actions';
 import ListWitComponent from '../components/wits/ListWitComponent';
 import WriteWitComponent from '../components/wits/WriteWitComponent';
-import {auth} from '../../firebase/firebase';
+import {auth} from '../../services/providers/Firebase';
 import Box from '@mui/material/Box';
 import {ArrowDownwardOutlined} from '@mui/icons-material';
 import Image from 'mui-image';

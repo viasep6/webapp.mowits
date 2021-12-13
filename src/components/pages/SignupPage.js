@@ -16,7 +16,7 @@ import {
     Typography,
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import {auth} from '../../firebase/firebase';
+import {auth} from '../../services/providers/Firebase';
 
 const styles = (theme) => ({
     paper: {
@@ -82,9 +82,9 @@ function SignupPage(props) {
         });
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        actions.signup(state.displayName, state.email, state.password);
+        await actions.signup(state.displayName, state.email, state.password);
         setState({...state, loading: true});
     };
 

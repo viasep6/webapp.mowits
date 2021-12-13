@@ -57,7 +57,7 @@ export default function AddMovieToCollection(props) {
         setLabelTxt(props.movieTitle)
         setLoading(true)
         setOpen(true);
-        await actions.getMovieCollectionsByUserID(props.accessToken)
+        await actions.getMovieCollectionsByUserID()
         setLoading(false)
     }
 
@@ -81,7 +81,7 @@ export default function AddMovieToCollection(props) {
             setSaving(true)
             const updatedMovies = currentMovies.map(movie => getStorageItemFromDisplayItem(movie))
             updatedMovies.push(getNewStorageItem(props.movieId))
-            await actions.updateMovieCollection(props.accessToken, currentSelected.name, updatedMovies)
+            await actions.updateMovieCollection(currentSelected.name, updatedMovies)
                 .then(() => handleClose())
         }
     }
@@ -205,7 +205,6 @@ export default function AddMovieToCollection(props) {
                                     </AccordionSummary>
                                     <Box marginLeft={1}>
                                         <AddMovieCollection
-                                            token={props.accessToken}
                                             favoritesStore={props.favoritesStore}
                                             existingCollections={options}
                                             onDone={updateOptions}

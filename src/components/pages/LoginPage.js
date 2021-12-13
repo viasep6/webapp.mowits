@@ -63,7 +63,6 @@ function LoginPage(props) {
     };
     const handleLoginSuccess = (response) => {
         setState({loading: false});
-        console.log(props);
         // props.history.push('/');
         props.history.goBack()
     };
@@ -75,7 +74,7 @@ function LoginPage(props) {
         });
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
         setState({
@@ -83,7 +82,7 @@ function LoginPage(props) {
             loading: true,
         });
 
-        actions.login(state.email, state.password);
+        await actions.login(state.email, state.password);
     };
 
 

@@ -41,9 +41,7 @@ const theme = createTheme({
 
         },
     },
-
 });
-
 
 const authStore = new AuthStore();
 const userStore = new UserStore(authStore);

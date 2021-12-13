@@ -1,7 +1,7 @@
 import {withRouter} from 'react-router-dom';
 import React, {useEffect, useState} from 'react';
 import MovieCollection from "../components/movieCollection/MovieCollection";
-import {CHANGE_AUTH_TOKEN, UPDATED_MOVIE_COLLECTIONS} from '../../util/constants';
+import {UPDATED_MOVIE_COLLECTIONS} from '../../util/constants';
 import * as actions from '../../flux/actions/actions';
 import {CircularProgress, Grid} from '@mui/material';
 import Box from '@mui/material/Box';
@@ -12,10 +12,9 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddMovieCollection from "../components/movieCollection/AddMovieCollection";
 
 function FavoritesPage(props) {
-    const [accessToken, setAccessToken] = useState(props.stores.authStore.state.authUser.accessToken)
 
     const [movieCollections, setMovieCollections] = useState(async () => {
-        await actions.getMovieCollectionsByUserID(accessToken)
+        await actions.getMovieCollectionsByUserID()
         return []
     })
 
@@ -24,18 +23,12 @@ function FavoritesPage(props) {
     const [enableDelete, setEnableDelete] = useState(false)
 
     useEffect(() => {
-        props.stores.authStore.authAddChangeListener(CHANGE_AUTH_TOKEN, updateToken)
         props.stores.favoritesStore.addChangeListener(UPDATED_MOVIE_COLLECTIONS, updateCollections)
 
-
         return function cleanup() {
-
-            props.stores.authStore.authRemoveChangeListener(CHANGE_AUTH_TOKEN, updateToken);
             props.stores.favoritesStore.removeChangeListener(UPDATED_MOVIE_COLLECTIONS, updateCollections)
         };
     });
-
-    const updateToken = (decodedToken) => setAccessToken(decodedToken.accessToken)
 
     const updateCollections = (collections) => {
         setReady(false)
@@ -55,9 +48,9 @@ function FavoritesPage(props) {
     }
 
     const goToMovie = (movieId) => props.history.push('/movie/' + movieId )
-    const deleteItem = (collectionName, movies) => actions.updateMovieCollection(accessToken, collectionName, movies)
+    const deleteItem = (collectionName, movies) => actions.updateMovieCollection(collectionName, movies)
     const votesClicked = (movieId) => console.log('Votes not implemented!')
-    const deleteCollection = (collectionName) => actions.deleteMovieCollection(accessToken, collectionName)
+    const deleteCollection = (collectionName) => actions.deleteMovieCollection(collectionName)
 
     const collectionAdded = () => {
         setAddDone(true)
@@ -86,7 +79,6 @@ function FavoritesPage(props) {
                 <Box
                 marginBottom={2}>
                     <AddMovieCollection
-                        token={accessToken}
                         favoritesStore={props.stores.favoritesStore}
                         existingCollections={movieCollections}
                         onDone={collectionAdded}

@@ -17,9 +17,9 @@ function APIProvider (baseUrl) {
                 // console.log(error.response.headers);
                 switch (error.response.status) {
                     case 403:
-                        throw new Error(error.response.data)
+                        throw new Error(error.response)
                     case 404:
-                        throw new Error(error.response.data)
+                        throw new Error(error.response)
                     default:
                         throw new Error('Unable to complete the request at the moment')
                 }

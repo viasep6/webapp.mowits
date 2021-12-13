@@ -13,7 +13,7 @@ export default function AddMovieCollection(props) {
         props.existingCollections.length > 0
             ? props.existingCollections
             : async () => {
-                await actions.getMovieCollectionsByUserID(props.token)
+                await actions.getMovieCollectionsByUserID()
                 return []
             }
     )
@@ -56,7 +56,7 @@ export default function AddMovieCollection(props) {
         }
         else {
             setInProgress(true)
-            await actions.createMovieCollection(props.token, txtFieldValue)
+            await actions.createMovieCollection(txtFieldValue)
         }
     }
 

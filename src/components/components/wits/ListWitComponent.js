@@ -6,7 +6,7 @@ import * as actions from '../../../flux/actions/actions';
 import {CHANGE_AUTH_TOKEN, NEW_WITS_RETURNED, POST_WIT} from '../../../util/constants';
 import Typography from '@mui/material/Typography';
 import {getUnique} from '../../../util/utils';
-import {auth} from '../../../firebase/firebase';
+import {auth} from '../../../services/providers/Firebase';
 
 function ListWitComponent(props) {
 

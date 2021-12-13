@@ -1,28 +1,29 @@
 import {SubstituteSpaces} from '../util/utils'
 import {getDisplayItemFromResult} from '../util/movieCollectionConverter';
+import {auth} from './providers/Firebase';
 
 function MovieCollectionService(apiProvider, MovieService) {
     const api = apiProvider
     const movieService = MovieService
     const movieCollectionPath = '/movielists'
 
-    const getCollectionsByUserID = async (accessToken, collectionName='') => await api
+    const getCollectionsByUserID = async (collectionName='') => await api
         .get(`${movieCollectionPath}/Get${collectionName === '' ? collectionName : '?list=' + SubstituteSpaces(collectionName, '%20')}`,
-            { Authorization: `Bearer ${accessToken}` })
+            { Authorization: `Bearer ${auth.currentUser.accessToken}` })
         .then(result => convertResultToList(result))
         .then(async data => await getMovieDetails(data))
         .catch(err => {
             console.log('Movie collection service API GET error: ', err)
         })
 
-    const updateMovieCollectionByUserID = async (accessToken, collectionName, movies=[]) => {
+    const updateMovieCollectionByUserID = async (collectionName, movies=[]) => {
         if (typeof collectionName !== 'undefined' && collectionName !== '') {
             return await api.post(`${movieCollectionPath}/Add`,
                     {
                         name: collectionName,
                         movies: movies
                     },
-                    { Authorization: `Bearer ${accessToken}` })
+                    { Authorization: `Bearer ${auth.currentUser.accessToken}` })
                 .then(result => convertResultToList(result))
                 .then(async data => await getMovieDetails(data))
                 .catch(err => {
@@ -31,9 +32,9 @@ function MovieCollectionService(apiProvider, MovieService) {
         }
     }
 
-    const deleteMovieCollection = async (accessToken, collectionName) => await api
+    const deleteMovieCollection = async (collectionName) => await api
         .del(`${movieCollectionPath}/delete?list=${SubstituteSpaces(collectionName, '%20')}`,
-            { Authorization: `Bearer ${accessToken}` }
+            { Authorization: `Bearer ${auth.currentUser.accessToken}` }
         )
         .then(result => convertResultToList(result))
         .then(async data => await getMovieDetails(data))
