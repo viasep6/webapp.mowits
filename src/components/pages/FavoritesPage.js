@@ -14,17 +14,15 @@ import AddMovieCollection from "../components/movieCollection/AddMovieCollection
 function FavoritesPage(props) {
     const movieStore = props.stores.movieStore
 
-    const [movieCollections, setMovieCollections] = useState(() => {
-        actions.getMovieCollectionsByUserID()
-        return []
-    })
+    const [movieCollections, setMovieCollections] = useState([])
 
     const [dataReady, setReady] = useState(false)
-    const [addDone, setAddDone] = useState(false)
+    const [addDone, setAddDone] = useState(true)
     const [enableDelete, setEnableDelete] = useState(false)
 
     useEffect(() => {
         movieStore.addChangeListener(UPDATED_USER_COLLECTIONS, updateCollections)
+        init()
 
         return function cleanup() {
             movieStore.removeChangeListener(UPDATED_USER_COLLECTIONS, updateCollections)
@@ -34,6 +32,7 @@ function FavoritesPage(props) {
     const updateCollections = (collections) => {
         setReady(false)
         if (typeof collections === 'undefined' || collections.length === 0) {
+            setAddDone(false)
             setEnableDelete(false)
             setMovieCollections([{
                 name: 'You don´t have any collections yet...',
@@ -59,6 +58,8 @@ function FavoritesPage(props) {
 
     const toggleAddCollection = () => setAddDone(!addDone)
 
+    const init = () => movieStore.requestUserCollections()
+
     return (
         <Grid
             item
@@ -81,7 +82,6 @@ function FavoritesPage(props) {
                 marginBottom={2}>
                     <AddMovieCollection
                         store={movieStore}
-                        existingCollections={movieCollections}
                         onDone={collectionAdded}
                     />
                 </Box>

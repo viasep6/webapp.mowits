@@ -10,14 +10,7 @@ import SaveAltIcon from '@mui/icons-material/SaveAlt';
 export default function AddMovieCollection(props) {
     const movieStore = props.store
     const [inProgress, setInProgress] = useState(false)
-    const [collections, setCollections] = useState(() =>
-        props.existingCollections.length > 0
-            ? props.existingCollections
-            : () => {
-                actions.getMovieCollectionsByUserID()
-                return []
-            }
-    )
+    const [collections, setCollections] = useState([])
     const [error, setError] = React.useState(false);
     const [labelTxt, setLabelTxt] = React.useState('New collection')
     const [helperTxt, setHelperTxt] = useState('')
@@ -27,6 +20,7 @@ export default function AddMovieCollection(props) {
 
     useEffect(() => {
         movieStore.addChangeListener(UPDATED_USER_COLLECTIONS, updateCollections)
+        init()
 
         return function cleanup() {
             movieStore.removeChangeListener(UPDATED_USER_COLLECTIONS, updateCollections)
@@ -88,6 +82,8 @@ export default function AddMovieCollection(props) {
         setLabelTxt(bool ? 'Error' : 'Required')
         setHelperTxt(msg)
     }
+
+    const init = () => movieStore.requestUserCollections()
 
     return (
         <Grid

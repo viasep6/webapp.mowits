@@ -11,12 +11,17 @@ import {
     GET_SIMILAR_MOVIES, UPDATED_USER_COLLECTIONS,
 } from '../../util/constants';
 import dispatcher from '../dispatcher';
+import {getMovieCollectionsByUserID} from '../actions/actions';
 
 
 export class MovieStore extends EventEmitter {
 
     constructor(props) {
         super(props);
+        this.state = {
+            userCollections: []
+        }
+
         dispatcher.register(action => {
             switch (action.type) {
                 case MOVIE_DETAILS_SUCCESS:
@@ -41,7 +46,7 @@ export class MovieStore extends EventEmitter {
                     this.collectionTypeReceived(action.payload, action.type)
                     break
                 case UPDATED_USER_COLLECTIONS:
-                    this.setNewCollections(action.payload);
+                    this.setNewUserCollections(action.payload);
                     break
                 default:
                     break
@@ -94,8 +99,15 @@ export class MovieStore extends EventEmitter {
         }
     }
 
-    setNewCollections(collections) {
-        this.emit(UPDATED_USER_COLLECTIONS, collections);
+    setNewUserCollections(collections) {
+        this.state.userCollections = collections
+        this.emit(UPDATED_USER_COLLECTIONS, this.state.userCollections);
+    }
+
+    requestUserCollections = () => {
+        this.state.userCollections.length === 0
+            ? getMovieCollectionsByUserID()
+            : this.emit(UPDATED_USER_COLLECTIONS, this.state.userCollections);
     }
 
     addChangeListener = (event, callback) => {

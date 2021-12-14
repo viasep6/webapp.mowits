@@ -58,7 +58,7 @@ export default function AddMovieToCollection(props) {
         setLabelTxt(props.movieTitle)
         setLoading(true)
         setOpen(true);
-        actions.getMovieCollectionsByUserID()
+        movieStore.requestUserCollections()
     }
 
     const handleClose = () => {
@@ -208,7 +208,6 @@ export default function AddMovieToCollection(props) {
                                     <Box marginLeft={1}>
                                         <AddMovieCollection
                                             store={movieStore}
-                                            existingCollections={options}
                                             onDone={updateOptions}
                                         />
                                     </Box>
