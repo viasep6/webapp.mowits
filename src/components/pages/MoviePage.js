@@ -112,6 +112,7 @@ function MoviePage(props) {
                     isSubscribed: !prevState.mowits.isSubscribed
                 }
             }
+
             return newState
         })
     }

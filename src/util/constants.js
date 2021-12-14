@@ -34,7 +34,7 @@ export const GET_MOVIE_NOW_PLAYING = 'GET_MOVIE_NOW_PLAYING'
 export const DEBOUNCE_TIME = 600
 export const UPDATED_USER_COLLECTIONS = 'UPDATED_MOVIE_COLLECTIONS'
 
-
+/* request results */
 export const SUCCESS = 'SUCCESS'
 export const ERROR = 'ERROR'
 

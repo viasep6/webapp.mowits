@@ -58,7 +58,9 @@ export default function AddMovieToCollection(props) {
         setLabelTxt(props.movieTitle)
         setLoading(true)
         setOpen(true);
-        movieStore.requestUserCollections()
+        if (!movieStore.requestCollection(UPDATED_USER_COLLECTIONS)) {
+            actions.getMovieCollectionsByUserID()
+        }
     }
 
     const handleClose = () => {

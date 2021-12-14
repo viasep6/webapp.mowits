@@ -6,9 +6,9 @@ import {
     GET_MOVIE_NOW_PLAYING,
     GET_MOVIE_POPULAR,
     GET_MOVIE_TOP_RATED,
-    GET_MOVIE_UPCOMING,
+    GET_MOVIE_UPCOMING
 } from '../../util/constants';
-import {getMoviesNowPlaying, getPopularMovies, getTopRatedMovies, getUpcomingMovies} from '../../flux/actions/actions';
+import * as actions from '../../flux/actions/actions';
 
 function FeaturedPage(props) {
 
@@ -22,10 +22,18 @@ function FeaturedPage(props) {
 
 
     function init() {
-        getPopularMovies()
-        getUpcomingMovies()
-        getTopRatedMovies()
-        getMoviesNowPlaying()
+        if (!movieStore.requestCollection(GET_MOVIE_POPULAR)) {
+            actions.getPopularMovies()
+        }
+        if (!movieStore.requestCollection(GET_MOVIE_UPCOMING)) {
+            actions.getUpcomingMovies()
+        }
+        if (!movieStore.requestCollection(GET_MOVIE_TOP_RATED)) {
+            actions.getTopRatedMovies()
+        }
+        if (!movieStore.requestCollection(GET_MOVIE_NOW_PLAYING)) {
+            actions.getMoviesNowPlaying()
+        }
     }
 
 

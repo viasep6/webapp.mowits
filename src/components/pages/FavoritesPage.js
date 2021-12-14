@@ -58,7 +58,11 @@ function FavoritesPage(props) {
 
     const toggleAddCollection = () => setAddDone(!addDone)
 
-    const init = () => movieStore.requestUserCollections()
+    const init = () => {
+        if (!movieStore.requestCollection(UPDATED_USER_COLLECTIONS)) {
+            actions.getMovieCollectionsByUserID()
+        }
+    }
 
     return (
         <Grid

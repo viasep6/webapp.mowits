@@ -11,7 +11,6 @@ import {
     GET_SIMILAR_MOVIES, UPDATED_USER_COLLECTIONS,
 } from '../../util/constants';
 import dispatcher from '../dispatcher';
-import {getMovieCollectionsByUserID} from '../actions/actions';
 
 
 export class MovieStore extends EventEmitter {
@@ -19,7 +18,13 @@ export class MovieStore extends EventEmitter {
     constructor(props) {
         super(props);
         this.state = {
-            userCollections: []
+            collections: {
+                popular: [],
+                upcoming: [],
+                topRated: [],
+                nowPlaying: [],
+                userCollections: []
+            }
         }
 
         dispatcher.register(action => {
@@ -31,22 +36,22 @@ export class MovieStore extends EventEmitter {
                     this.searchResultReceived(action.payload)
                     break
                 case GET_MOVIE_POPULAR:
-                    this.collectionTypeReceived(action.payload, action.type)
+                    this.popularReceived(action.payload)
                     break
                 case GET_MOVIE_UPCOMING:
-                    this.collectionTypeReceived(action.payload, action.type)
+                    this.upcomingReceived(action.payload)
                     break
                 case GET_MOVIE_TOP_RATED:
-                    this.collectionTypeReceived(action.payload, action.type)
+                    this.topRatedReceived(action.payload)
                     break
                 case GET_MOVIE_NOW_PLAYING:
-                    this.collectionTypeReceived(action.payload, action.type)
+                    this.nowPlayingReceived(action.payload)
                     break
                 case GET_SIMILAR_MOVIES:
-                    this.collectionTypeReceived(action.payload, action.type)
+                    this.similarMoviesReceived(action.payload)
                     break
                 case UPDATED_USER_COLLECTIONS:
-                    this.setNewUserCollections(action.payload);
+                    this.userCollectionsReceived(action.payload);
                     break
                 default:
                     break
@@ -67,17 +72,78 @@ export class MovieStore extends EventEmitter {
         }
     }
 
-    collectionTypeReceived(result, emitType) {
+    popularReceived(result) {
         switch (result.state) {
             case SUCCESS:
-                this.emit(emitType, result.data)
+                this.state.collections.popular = result.data
+                this.emit(GET_MOVIE_POPULAR, this.state.collections.popular)
                 break
             case ERROR:
-                this.emit(emitType, result.data)
+                this.emit(GET_MOVIE_POPULAR, result.data)
                 break
             default:
                 break
         }
+    }
+
+    upcomingReceived(result) {
+        switch (result.state) {
+            case SUCCESS:
+                this.state.collections.upcoming = result.data
+                this.emit(GET_MOVIE_UPCOMING, this.state.collections.upcoming)
+                break
+            case ERROR:
+                this.emit(GET_MOVIE_UPCOMING, result.data)
+                break
+            default:
+                break
+        }
+    }
+
+    topRatedReceived(result) {
+        switch (result.state) {
+            case SUCCESS:
+                this.state.collections.topRated = result.data
+                this.emit(GET_MOVIE_TOP_RATED, this.state.collections.topRated)
+                break
+            case ERROR:
+                this.emit(GET_MOVIE_TOP_RATED, result.data)
+                break
+            default:
+                break
+        }
+    }
+
+    nowPlayingReceived(result) {
+        switch (result.state) {
+            case SUCCESS:
+                this.state.collections.nowPlaying = result.data
+                this.emit(GET_MOVIE_NOW_PLAYING, this.state.collections.nowPlaying)
+                break
+            case ERROR:
+                this.emit(GET_MOVIE_NOW_PLAYING, result.data)
+                break
+            default:
+                break
+        }
+    }
+
+    similarMoviesReceived(result) {
+        switch (result.state) {
+            case SUCCESS:
+                this.emit(GET_SIMILAR_MOVIES, result.data)
+                break
+            case ERROR:
+                this.emit(GET_SIMILAR_MOVIES, result.data)
+                break
+            default:
+                break
+        }
+    }
+
+    userCollectionsReceived(collections) {
+        this.state.collections.userCollections = collections
+        this.emit(UPDATED_USER_COLLECTIONS, this.state.collections.userCollections);
     }
 
     searchResultReceived(result) {
@@ -99,15 +165,31 @@ export class MovieStore extends EventEmitter {
         }
     }
 
-    setNewUserCollections(collections) {
-        this.state.userCollections = collections
-        this.emit(UPDATED_USER_COLLECTIONS, this.state.userCollections);
+    requestCollection(actionType) {
+        switch (actionType) {
+            case GET_MOVIE_POPULAR:
+                return this.checkCollectionContent(this.state.collections.popular, actionType)
+            case GET_MOVIE_UPCOMING:
+                return this.checkCollectionContent(this.state.collections.upcoming, actionType)
+            case GET_MOVIE_TOP_RATED:
+                return this.checkCollectionContent(this.state.collections.topRated, actionType)
+            case GET_MOVIE_NOW_PLAYING:
+                return this.checkCollectionContent(this.state.collections.nowPlaying, actionType)
+            case UPDATED_USER_COLLECTIONS:
+                return this.checkCollectionContent(this.state.collections.userCollections, actionType)
+            default:
+                break
+        }
     }
 
-    requestUserCollections = () => {
-        this.state.userCollections.length === 0
-            ? getMovieCollectionsByUserID()
-            : this.emit(UPDATED_USER_COLLECTIONS, this.state.userCollections);
+    checkCollectionContent = (collection, emitType) => {
+        if (collection.length === 0) {
+            return false
+        }
+        else {
+            this.emit(emitType, collection);
+            return true
+        }
     }
 
     addChangeListener = (event, callback) => {

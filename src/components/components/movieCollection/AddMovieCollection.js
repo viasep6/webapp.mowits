@@ -83,7 +83,11 @@ export default function AddMovieCollection(props) {
         setHelperTxt(msg)
     }
 
-    const init = () => movieStore.requestUserCollections()
+    const init = () => {
+        if (!movieStore.requestCollection(UPDATED_USER_COLLECTIONS)) {
+            actions.getMovieCollectionsByUserID()
+        }
+    }
 
     return (
         <Grid
