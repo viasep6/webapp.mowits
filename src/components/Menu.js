@@ -33,7 +33,7 @@ const _ = require('lodash');
 function MenuBar(props) {
     const AuthStore = props.stores.authStore;
     const UserStore = props.stores.userStore;
-    const SearchStore = props.stores.searchStore;
+    const MovieStore = props.stores.movieStore;
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loggedInUser, setLoggedInUser] = useState(null);
     const [searchData, setSearchData] = useState([]);
@@ -71,14 +71,14 @@ function MenuBar(props) {
         // see https://stackoverflow.com/a/66304817/3861983
         AuthStore.authAddChangeListener(CHANGE_AUTH_TOKEN, authStatusChanged);
         UserStore.userAddChangeListener(LOGIN_SUCCESS, handleLoginSuccess);
-        SearchStore.addSearchChangeListener(GET_SEARCH_RESULTS, handleSearchResult);
+        MovieStore.addChangeListener(GET_SEARCH_RESULTS, handleSearchResult);
 
         return function cleanup() {
             setIsAuthenticated(false);
             setLoggedInUser(null);
             AuthStore.authRemoveChangeListener(CHANGE_AUTH_TOKEN, authStatusChanged);
             UserStore.userRemoveChangeListener(LOGIN_SUCCESS, handleLoginSuccess);
-            SearchStore.removeSearchChangeListener(GET_SEARCH_RESULTS, handleSearchResult);
+            MovieStore.removeChangeListener(GET_SEARCH_RESULTS, handleSearchResult);
         };
         // eslint-disable-next-line
     }, []);
@@ -87,8 +87,11 @@ function MenuBar(props) {
         // empty, used for re-render when authenticated
     }, [isAuthenticated, loggedInUser]);
 
-    const searchInputChanged = (input) =>
-        actions.getSearchResults(input);
+    const searchInputChanged = (input) => {
+        if (input !== '') {
+            actions.getSearchResults(input);
+        }
+    }
 
     const debounce = _.debounce(searchInputChanged, DEBOUNCE_TIME);
 
@@ -177,11 +180,11 @@ function MenuBar(props) {
                                 <Typography textAlign="center">Favorites</Typography>
                             </MenuItem>
                             }
-                            {isAuthenticated &&
+
                             <MenuItem id={'featured'} key="featured" onClick={handleCloseNavMenu}>
                                 <Typography textAlign="center">Featured</Typography>
                             </MenuItem>
-                            }
+
                             {isAuthenticated &&
                             <MenuItem id={'profile'} key="profile"
                                       onClick={() => goToPath('/profile/' + loggedInUser?.displayName)}>
@@ -243,7 +246,7 @@ function MenuBar(props) {
                         </Button>
                         }
 
-                        {isAuthenticated &&
+
                         <Button
                             id="featured"
                             onClick={handleCloseNavMenu}
@@ -251,7 +254,7 @@ function MenuBar(props) {
                         >
                             Featured
                         </Button>
-                        }
+
 
 
                     </Box>

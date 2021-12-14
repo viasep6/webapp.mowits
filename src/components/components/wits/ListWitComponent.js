@@ -6,7 +6,7 @@ import * as actions from '../../../flux/actions/actions';
 import {CHANGE_AUTH_TOKEN, NEW_WITS_RETURNED, POST_WIT} from '../../../util/constants';
 import Typography from '@mui/material/Typography';
 import {getUnique} from '../../../util/utils';
-import {auth} from '../../../firebase/firebase';
+import {auth} from '../../../services/providers/Firebase';
 
 function ListWitComponent(props) {
 
@@ -82,12 +82,12 @@ function ListWitComponent(props) {
         setIsLoading(false);
     };
 
-    const loadNextWits = () => {
+    const loadNextWits = async () => {
         if (!isLastItem) {
             if (user) {
                 actions.getWitsByUser({userId: user.idtoken, startAfter: wits[wits.length - 1]?.created});
             } else if (movie) {
-                actions.getWitsByMovie(movie.id);
+                actions.getWitsByMovie( { movieId: movie.id, startAfter: wits[wits.length - 1]?.created });
             } else if (feed) {
                 actions.getWitsByFeed({startAfter: wits[wits.length - 1]?.created});
             }

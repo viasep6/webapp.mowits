@@ -16,7 +16,7 @@ import {
     Typography,
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import {auth} from '../../firebase/firebase';
+import {auth} from '../../services/providers/Firebase';
 
 const styles = (theme) => ({
     paper: {

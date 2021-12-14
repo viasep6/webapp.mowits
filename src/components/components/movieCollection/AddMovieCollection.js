@@ -3,20 +3,14 @@ import Button from '@mui/material/Button';
 import {CircularProgress, Grid, TextField, Tooltip} from '@mui/material';
 import {useEffect, useState} from "react";
 import Box from '@mui/material/Box';
-import {UPDATED_MOVIE_COLLECTIONS} from "../../../util/constants";
+import {UPDATED_USER_COLLECTIONS} from "../../../util/constants";
 import * as actions from '../../../flux/actions/actions';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 
 export default function AddMovieCollection(props) {
+    const movieStore = props.store
     const [inProgress, setInProgress] = useState(false)
-    const [collections, setCollections] = useState(() =>
-        props.existingCollections.length > 0
-            ? props.existingCollections
-            : async () => {
-                await actions.getMovieCollectionsByUserID(props.token)
-                return []
-            }
-    )
+    const [collections, setCollections] = useState([])
     const [error, setError] = React.useState(false);
     const [labelTxt, setLabelTxt] = React.useState('New collection')
     const [helperTxt, setHelperTxt] = useState('')
@@ -25,10 +19,11 @@ export default function AddMovieCollection(props) {
 
 
     useEffect(() => {
-        props.favoritesStore.addChangeListener(UPDATED_MOVIE_COLLECTIONS, updateCollections)
+        movieStore.addChangeListener(UPDATED_USER_COLLECTIONS, updateCollections)
+        init()
 
         return function cleanup() {
-            props.favoritesStore.removeChangeListener(UPDATED_MOVIE_COLLECTIONS, updateCollections)
+            movieStore.removeChangeListener(UPDATED_USER_COLLECTIONS, updateCollections)
         };
     });
 
@@ -47,7 +42,7 @@ export default function AddMovieCollection(props) {
         }
     }
 
-    const addCollection = async  () => {
+    const addCollection = () => {
         if (txtFieldValue === '') {
             updateError(true, 'A name must be entered!')
         }
@@ -56,13 +51,13 @@ export default function AddMovieCollection(props) {
         }
         else {
             setInProgress(true)
-            await actions.createMovieCollection(props.token, txtFieldValue)
+            actions.createMovieCollection(txtFieldValue)
         }
     }
 
     const keyPressed = async (key) => {
         if(key.keyCode === 13) {
-            await addCollection()
+            addCollection()
         }
     }
 
@@ -86,6 +81,12 @@ export default function AddMovieCollection(props) {
         setError(bool)
         setLabelTxt(bool ? 'Error' : 'Required')
         setHelperTxt(msg)
+    }
+
+    const init = () => {
+        if (!movieStore.requestCollection(UPDATED_USER_COLLECTIONS)) {
+            actions.getMovieCollectionsByUserID()
+        }
     }
 
     return (

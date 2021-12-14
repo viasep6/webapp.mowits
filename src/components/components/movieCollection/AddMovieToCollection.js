@@ -6,7 +6,7 @@ import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import {CircularProgress, Grid} from '@mui/material';
 import {useEffect, useState} from "react";
-import { UPDATED_MOVIE_COLLECTIONS} from '../../../util/constants';
+import { UPDATED_USER_COLLECTIONS} from '../../../util/constants';
 import * as actions from '../../../flux/actions/actions';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -33,6 +33,7 @@ const modalStyle = {
 };
 
 export default function AddMovieToCollection(props) {
+    const movieStore = props.store
     const [open, setOpen] = React.useState(false);
     const [loading, setLoading] = useState(true)
     const [labelTxt, setLabelTxt] = React.useState('')
@@ -46,10 +47,10 @@ export default function AddMovieToCollection(props) {
     const [progressMsg, setProgressMsg] = useState('Loading your collections...')
 
     useEffect(() => {
-        props.favoritesStore.addChangeListener(UPDATED_MOVIE_COLLECTIONS, updateOptions)
+        movieStore.addChangeListener(UPDATED_USER_COLLECTIONS, updateOptions)
 
         return function cleanup() {
-            props.favoritesStore.removeChangeListener(UPDATED_MOVIE_COLLECTIONS, updateOptions)
+            movieStore.removeChangeListener(UPDATED_USER_COLLECTIONS, updateOptions)
         };
     });
 
@@ -57,8 +58,9 @@ export default function AddMovieToCollection(props) {
         setLabelTxt(props.movieTitle)
         setLoading(true)
         setOpen(true);
-        await actions.getMovieCollectionsByUserID(props.accessToken)
-        setLoading(false)
+        if (!movieStore.requestCollection(UPDATED_USER_COLLECTIONS)) {
+            actions.getMovieCollectionsByUserID()
+        }
     }
 
     const handleClose = () => {
@@ -67,10 +69,11 @@ export default function AddMovieToCollection(props) {
         setCollectionSelected(false)
         setDataReady(false)
         setSaving(false)
+        setProgressMsg('Loading your collections...')
         setOpen(false);
     }
 
-    const addMovie = async () => {
+    const addMovie = () => {
         const currentMovies = currentSelected.movies
         if (inCollection(currentMovies)) {
             setIdPresent(true)
@@ -81,8 +84,8 @@ export default function AddMovieToCollection(props) {
             setSaving(true)
             const updatedMovies = currentMovies.map(movie => getStorageItemFromDisplayItem(movie))
             updatedMovies.push(getNewStorageItem(props.movieId))
-            await actions.updateMovieCollection(props.accessToken, currentSelected.name, updatedMovies)
-                .then(() => handleClose())
+            actions.updateMovieCollection(currentSelected.name, updatedMovies)
+            handleClose()
         }
     }
 
@@ -102,6 +105,7 @@ export default function AddMovieToCollection(props) {
         }
         else {
             setOptions(collections)
+            setLoading(false)
             setDataReady(true)
         }
     }
@@ -205,9 +209,7 @@ export default function AddMovieToCollection(props) {
                                     </AccordionSummary>
                                     <Box marginLeft={1}>
                                         <AddMovieCollection
-                                            token={props.accessToken}
-                                            favoritesStore={props.favoritesStore}
-                                            existingCollections={options}
+                                            store={movieStore}
                                             onDone={updateOptions}
                                         />
                                     </Box>

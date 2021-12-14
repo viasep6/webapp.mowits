@@ -16,20 +16,21 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
     CHANGE_AUTH_TOKEN,
-    GET_MOVIE_DETAILS,
+    MOVIE_DETAILS_SUCCESS,
     GET_SIMILAR_MOVIES,
     MOVIES_PROFILE_DEFAULT_URL
 } from '../../util/constants';
 import * as actions from '../../flux/actions/actions';
 import ListWitComponent from '../components/wits/ListWitComponent';
 import WriteWitComponent from '../components/wits/WriteWitComponent';
-import {auth} from '../../firebase/firebase';
+import {auth} from '../../services/providers/Firebase';
 import Box from '@mui/material/Box';
 import {ArrowDownwardOutlined, PlayCircleOutlined} from '@mui/icons-material';
 import Image from 'mui-image';
 import Badge from '@mui/material/Badge';
 import Button from '@mui/material/Button';
 import AddMovieToCollection from '../components/movieCollection/AddMovieToCollection';
+import {truncate} from '../../util/utils';
 
 function MoviePage(props) {
 
@@ -37,7 +38,6 @@ function MoviePage(props) {
     const AuthStore = props.stores.authStore;
     const MovieStore = props.stores.movieStore;
     const UserStore = props.stores.userStore;
-    const FavoritesStore = props.stores.favoritesStore;
 
     const movieId = props.match.params.id;
 
@@ -50,12 +50,12 @@ function MoviePage(props) {
     const roarImage = require('../../assets/img/like-icon.png').default;
 
     useEffect(() => {
-        MovieStore.addChangeListener(GET_MOVIE_DETAILS, handleMovieResponse);
+        MovieStore.addChangeListener(MOVIE_DETAILS_SUCCESS, handleMovieResponse);
         MovieStore.addChangeListener(GET_SIMILAR_MOVIES, handleSimilarMoviesResponse);
         AuthStore.authAddChangeListener(CHANGE_AUTH_TOKEN, handleAuthChanged);
 
         return function cleanup() {
-            MovieStore.removeChangeListener(GET_MOVIE_DETAILS, handleMovieResponse);
+            MovieStore.removeChangeListener(MOVIE_DETAILS_SUCCESS, handleMovieResponse);
             MovieStore.removeChangeListener(GET_SIMILAR_MOVIES, handleSimilarMoviesResponse);
             AuthStore.authRemoveChangeListener(CHANGE_AUTH_TOKEN, handleAuthChanged);
         };
@@ -113,6 +113,7 @@ function MoviePage(props) {
                     isSubscribed: !prevState.mowits.isSubscribed
                 }
             }
+
             return newState
         })
     }
@@ -243,7 +244,7 @@ function MoviePage(props) {
                             </Box>
                             <AddMovieToCollection
                                 disabled={!isUserLoggedIn}
-                                favoritesStore={FavoritesStore}
+                                store={MovieStore}
                                 accessToken={isUserLoggedIn ? AuthStore.state.authUser.accessToken : ''}
                                 movieId={movie.id}
                                 movieTitle={movie.title}
@@ -335,7 +336,8 @@ function MoviePage(props) {
                         <Card onClick={() => {
                             goToPath("/movie/" + similarMovie.id);
                             window.scrollTo({top: 0, left: 0, behavior: "smooth" });
-                        }}>
+                        }}
+                        sx={{cursor:'pointer', mb:2, mt:1}}>
                             <CardMedia
                                 component="img"
                                 image={similarMovie.poster_path}
@@ -343,7 +345,7 @@ function MoviePage(props) {
                                 sx={{borderRadius: 1}}
                             />
                             <CardContent>
-                                <Typography>{similarMovie.title}</Typography>
+                                <Typography>{truncate(similarMovie.title, 20)}</Typography>
                             </CardContent>
                         </Card>
                     </Grid>

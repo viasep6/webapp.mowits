@@ -63,8 +63,6 @@ function LoginPage(props) {
     };
     const handleLoginSuccess = (response) => {
         setState({loading: false});
-        console.log(props);
-        // props.history.push('/');
         props.history.goBack()
     };
 

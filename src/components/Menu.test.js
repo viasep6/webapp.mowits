@@ -5,9 +5,7 @@ import {BrowserRouter} from 'react-router-dom';
 import {AuthStore} from '../flux/stores/AuthStore';
 import {UserStore} from '../flux/stores/UserStore';
 import {WitStore} from '../flux/stores/WitStore';
-import {FavoritesStore} from '../flux/stores/FavoritesStore';
 import {MovieStore} from '../flux/stores/MovieStore';
-import {SearchStore} from '../flux/stores/SearchStore';
 import MenuBar from './Menu';
 
 // mock third party library
@@ -24,10 +22,8 @@ beforeEach(() => {
     const authStore = new AuthStore();
     const userStore = new UserStore(authStore);
     const witStore = new WitStore(authStore);
-    const favoritesStore = new FavoritesStore();
     const movieStore = new MovieStore(authStore);
-    const searchStore = new SearchStore();
-    stores = {authStore, userStore, witStore, favoritesStore, searchStore, movieStore};
+    stores = {authStore, userStore, witStore, movieStore};
 });
 
 const getById = queryByAttribute.bind(null, 'id');

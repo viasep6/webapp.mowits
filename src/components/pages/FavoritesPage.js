@@ -1,7 +1,7 @@
 import {withRouter} from 'react-router-dom';
 import React, {useEffect, useState} from 'react';
 import MovieCollection from "../components/movieCollection/MovieCollection";
-import {CHANGE_AUTH_TOKEN, UPDATED_MOVIE_COLLECTIONS} from '../../util/constants';
+import {UPDATED_USER_COLLECTIONS} from '../../util/constants';
 import * as actions from '../../flux/actions/actions';
 import {CircularProgress, Grid} from '@mui/material';
 import Box from '@mui/material/Box';
@@ -12,34 +12,27 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddMovieCollection from "../components/movieCollection/AddMovieCollection";
 
 function FavoritesPage(props) {
-    const [accessToken, setAccessToken] = useState(props.stores.authStore.state.authUser.accessToken)
+    const movieStore = props.stores.movieStore
 
-    const [movieCollections, setMovieCollections] = useState(async () => {
-        await actions.getMovieCollectionsByUserID(accessToken)
-        return []
-    })
+    const [movieCollections, setMovieCollections] = useState([])
 
     const [dataReady, setReady] = useState(false)
-    const [addDone, setAddDone] = useState(false)
+    const [addDone, setAddDone] = useState(true)
     const [enableDelete, setEnableDelete] = useState(false)
 
     useEffect(() => {
-        props.stores.authStore.authAddChangeListener(CHANGE_AUTH_TOKEN, updateToken)
-        props.stores.favoritesStore.addChangeListener(UPDATED_MOVIE_COLLECTIONS, updateCollections)
-
+        movieStore.addChangeListener(UPDATED_USER_COLLECTIONS, updateCollections)
+        init()
 
         return function cleanup() {
-
-            props.stores.authStore.authRemoveChangeListener(CHANGE_AUTH_TOKEN, updateToken);
-            props.stores.favoritesStore.removeChangeListener(UPDATED_MOVIE_COLLECTIONS, updateCollections)
+            movieStore.removeChangeListener(UPDATED_USER_COLLECTIONS, updateCollections)
         };
     });
-
-    const updateToken = (decodedToken) => setAccessToken(decodedToken.accessToken)
 
     const updateCollections = (collections) => {
         setReady(false)
         if (typeof collections === 'undefined' || collections.length === 0) {
+            setAddDone(false)
             setEnableDelete(false)
             setMovieCollections([{
                 name: 'You don´t have any collections yet...',
@@ -55,15 +48,21 @@ function FavoritesPage(props) {
     }
 
     const goToMovie = (movieId) => props.history.push('/movie/' + movieId )
-    const deleteItem = (collectionName, movies) => actions.updateMovieCollection(accessToken, collectionName, movies)
+    const deleteItem = (collectionName, movies) => actions.updateMovieCollection(collectionName, movies)
     const votesClicked = (movieId) => console.log('Votes not implemented!')
-    const deleteCollection = (collectionName) => actions.deleteMovieCollection(accessToken, collectionName)
+    const deleteCollection = (collectionName) => actions.deleteMovieCollection(collectionName)
 
     const collectionAdded = () => {
         setAddDone(true)
     }
 
     const toggleAddCollection = () => setAddDone(!addDone)
+
+    const init = () => {
+        if (!movieStore.requestCollection(UPDATED_USER_COLLECTIONS)) {
+            actions.getMovieCollectionsByUserID()
+        }
+    }
 
     return (
         <Grid
@@ -86,9 +85,7 @@ function FavoritesPage(props) {
                 <Box
                 marginBottom={2}>
                     <AddMovieCollection
-                        token={accessToken}
-                        favoritesStore={props.stores.favoritesStore}
-                        existingCollections={movieCollections}
+                        store={movieStore}
                         onDone={collectionAdded}
                     />
                 </Box>

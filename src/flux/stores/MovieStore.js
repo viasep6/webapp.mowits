@@ -1,241 +1,195 @@
-import axios from 'axios';
 import {EventEmitter} from 'events';
 import {
-    URL_POPULAR_MOVIES,
-    URL_MOVIE_DETAILS,
-    URL_MOVIE_SIMILAR,
-    URL_SUBSCRIBE_TO_MOVIE,
-    GET_MOVIE_DETAILS,
-    GET_SIMILAR_MOVIES,
-    SUBSCRIBE_TO_MOVIE,
+    MOVIE_DETAILS_SUCCESS,
+    SUCCESS,
+    ERROR,
+    GET_SEARCH_RESULTS,
     GET_MOVIE_POPULAR,
-    URL_UPCOMING_MOVIES,
     GET_MOVIE_UPCOMING,
     GET_MOVIE_TOP_RATED,
-    GET_MOVIE_NOW_PLAYING, URL_NOW_PLAYING_MOVIES, URL_TOP_RATED_MOVIES,
+    GET_MOVIE_NOW_PLAYING,
+    GET_SIMILAR_MOVIES, UPDATED_USER_COLLECTIONS,
 } from '../../util/constants';
 import dispatcher from '../dispatcher';
 
 
 export class MovieStore extends EventEmitter {
 
-    constructor(authStore) {
-        super();
-        this.authStore = authStore;
+    constructor(props) {
+        super(props);
+        this.state = {
+            collections: {
+                popular: [],
+                upcoming: [],
+                topRated: [],
+                nowPlaying: [],
+                userCollections: []
+            }
+        }
+
         dispatcher.register(action => {
             switch (action.type) {
-                case GET_MOVIE_DETAILS:
-                    this.fetchMovieDetails(action.payload);
-                    break;
-                case SUBSCRIBE_TO_MOVIE:
-                    this.subscribeToMovie(action.payload);
-                    break;
-                case GET_SIMILAR_MOVIES:
-                    this.fetchSimilarMovies(action.payload);
-                    break;
+                case MOVIE_DETAILS_SUCCESS:
+                    this.movieDetailsReceived(action.payload)
+                    break
+                case GET_SEARCH_RESULTS:
+                    this.searchResultReceived(action.payload)
+                    break
                 case GET_MOVIE_POPULAR:
-                    this.fetchPopularMovies();
-                    break;
+                    this.popularReceived(action.payload)
+                    break
+                case GET_MOVIE_UPCOMING:
+                    this.upcomingReceived(action.payload)
+                    break
+                case GET_MOVIE_TOP_RATED:
+                    this.topRatedReceived(action.payload)
+                    break
+                case GET_MOVIE_NOW_PLAYING:
+                    this.nowPlayingReceived(action.payload)
+                    break
+                case GET_SIMILAR_MOVIES:
+                    this.similarMoviesReceived(action.payload)
+                    break
+                case UPDATED_USER_COLLECTIONS:
+                    this.userCollectionsReceived(action.payload);
+                    break
                 default:
-                    break;
+                    break
             }
         });
     }
 
-    fetchMovieDetails(movieId) {
-        let userId = undefined;
-        if (this.authStore.state.authUser?.accessToken) {
-            userId = this.authStore.state.authUser.uid;
+    movieDetailsReceived(result) {
+        switch (result.state) {
+            case SUCCESS:
+                this.emit(MOVIE_DETAILS_SUCCESS, result.data);
+                break
+            case ERROR:
+                console.log('Movie Store Error:', result.data.errorMessage);
+                break
+            default:
+                break
         }
-        axios.get(URL_MOVIE_DETAILS, {
-            // axios.get('http://localhost:7071/movies/MovieDetails', {
-            params: {
-                movieid: movieId,
-                userId: userId
-            }
-        })
-            .then((response) => {
-                this.emit(GET_MOVIE_DETAILS, response.data);
-            })
-            .catch(error => {
-                if (error.response) {
-                    // The request was made and the server responded with a status code
-                    // that falls out of the range of 2xx
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
-                } else if (error.request) {
-                    // The request was made but no response was received
-                    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                    // http.ClientRequest in node.js
-                    console.log(error.request);
-                } else {
-                    // Something happened in setting up the request that triggered an Error
-                    console.log('Error', error.message);
-                }
-                console.log(error.config);
-                this.emit(GET_MOVIE_DETAILS, {errorMessage: error});
-            });
     }
 
-    fetchPopularMovies() {
-        axios.get(URL_POPULAR_MOVIES
-        // axios.get('http://localhost:7071/movies/Popular',
-        )
-        .then((response) => {
-            this.emit(GET_MOVIE_POPULAR, response.data);
-        })
-        .catch(error => {
-            if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-            } else if (error.request) {
-                // The request was made but no response was received
-                // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                // http.ClientRequest in node.js
-                console.log(error.request);
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                console.log('Error', error.message);
-            }
-            console.log(error.config);
-            this.emit(URL_POPULAR_MOVIES, {errorMessage: error});
-        });
+    popularReceived(result) {
+        switch (result.state) {
+            case SUCCESS:
+                this.state.collections.popular = result.data
+                this.emit(GET_MOVIE_POPULAR, this.state.collections.popular)
+                break
+            case ERROR:
+                this.emit(GET_MOVIE_POPULAR, result.data)
+                break
+            default:
+                break
+        }
     }
 
-    fetchUpcomingMovies() {
-        axios.get(URL_UPCOMING_MOVIES
-            // axios.get('http://localhost:7071/movies/Upcoming',
-        )
-            .then((response) => {
-                this.emit(GET_MOVIE_UPCOMING, response.data);
-            })
-            .catch(error => {
-                if (error.response) {
-                    // The request was made and the server responded with a status code
-                    // that falls out of the range of 2xx
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
-                } else if (error.request) {
-                    // The request was made but no response was received
-                    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                    // http.ClientRequest in node.js
-                    console.log(error.request);
-                } else {
-                    // Something happened in setting up the request that triggered an Error
-                    console.log('Error', error.message);
-                }
-                console.log(error.config);
-                this.emit(GET_MOVIE_UPCOMING, {errorMessage: error});
-            });
+    upcomingReceived(result) {
+        switch (result.state) {
+            case SUCCESS:
+                this.state.collections.upcoming = result.data
+                this.emit(GET_MOVIE_UPCOMING, this.state.collections.upcoming)
+                break
+            case ERROR:
+                this.emit(GET_MOVIE_UPCOMING, result.data)
+                break
+            default:
+                break
+        }
     }
 
-    fetchTopRatedMovies() {
-        axios.get(URL_TOP_RATED_MOVIES
-        // axios.get('http://localhost:7071/movies/TopRated',
-        )
-            .then((response) => {
-                this.emit(GET_MOVIE_TOP_RATED, response.data);
-            })
-            .catch(error => {
-                if (error.response) {
-                    // The request was made and the server responded with a status code
-                    // that falls out of the range of 2xx
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
-                } else if (error.request) {
-                    // The request was made but no response was received
-                    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                    // http.ClientRequest in node.js
-                    console.log(error.request);
-                } else {
-                    // Something happened in setting up the request that triggered an Error
-                    console.log('Error', error.message);
-                }
-                console.log(error.config);
-                this.emit(GET_MOVIE_TOP_RATED, {errorMessage: error});
-            });
+    topRatedReceived(result) {
+        switch (result.state) {
+            case SUCCESS:
+                this.state.collections.topRated = result.data
+                this.emit(GET_MOVIE_TOP_RATED, this.state.collections.topRated)
+                break
+            case ERROR:
+                this.emit(GET_MOVIE_TOP_RATED, result.data)
+                break
+            default:
+                break
+        }
     }
 
-    fetchNowPlayingMovies() {
-        axios.get(URL_NOW_PLAYING_MOVIES
-        // axios.get('http://localhost:7071/movies/NowPlaying',
-        )
-            .then((response) => {
-                this.emit(GET_MOVIE_NOW_PLAYING, response.data);
-            })
-            .catch(error => {
-                if (error.response) {
-                    // The request was made and the server responded with a status code
-                    // that falls out of the range of 2xx
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
-                } else if (error.request) {
-                    // The request was made but no response was received
-                    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                    // http.ClientRequest in node.js
-                    console.log(error.request);
-                } else {
-                    // Something happened in setting up the request that triggered an Error
-                    console.log('Error', error.message);
-                }
-                console.log(error.config);
-                this.emit(GET_MOVIE_NOW_PLAYING, {errorMessage: error});
-            });
+    nowPlayingReceived(result) {
+        switch (result.state) {
+            case SUCCESS:
+                this.state.collections.nowPlaying = result.data
+                this.emit(GET_MOVIE_NOW_PLAYING, this.state.collections.nowPlaying)
+                break
+            case ERROR:
+                this.emit(GET_MOVIE_NOW_PLAYING, result.data)
+                break
+            default:
+                break
+        }
     }
 
-
-
-    subscribeToMovie(data) {
-        axios.defaults.headers.common = {Authorization: `Bearer ${this.authStore.state.authUser.accessToken}`};
-        // axios.post('http://localhost:7071/movies/Follow', {
-        axios.post(URL_SUBSCRIBE_TO_MOVIE, {
-            movieId: data.movieId,
-            title: data.movieTitle,
-        }).then((response) => {
-            // not gonna use response
-        })
-            .catch((error) => {
-                console.log(error);
-            });
+    similarMoviesReceived(result) {
+        switch (result.state) {
+            case SUCCESS:
+                this.emit(GET_SIMILAR_MOVIES, result.data)
+                break
+            case ERROR:
+                this.emit(GET_SIMILAR_MOVIES, result.data)
+                break
+            default:
+                break
+        }
     }
 
-    fetchSimilarMovies(movieId) {
-        axios.get(URL_MOVIE_SIMILAR, {
-            // axios.get('http://localhost:7071/movies/Similar', {
-            params: {
-                movieid: movieId,
-            }
-        })
-            .then((response) => {
-                this.emit(GET_SIMILAR_MOVIES, response.data);
-            })
-            .catch(error => {
-                if (error.response) {
-                    // The request was made and the server responded with a status code
-                    // that falls out of the range of 2xx
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
-                } else if (error.request) {
-                    // The request was made but no response was received
-                    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                    // http.ClientRequest in node.js
-                    console.log(error.request);
-                } else {
-                    // Something happened in setting up the request that triggered an Error
-                    console.log('Error', error.message);
-                }
-                console.log(error.config);
-                this.emit(GET_SIMILAR_MOVIES, {errorMessage: error});
-            });
+    userCollectionsReceived(collections) {
+        this.state.collections.userCollections = collections
+        this.emit(UPDATED_USER_COLLECTIONS, this.state.collections.userCollections);
+    }
 
+    searchResultReceived(result) {
+        switch (result.state) {
+            case SUCCESS:
+                let searchOptions = result.data.map(movie => {
+                    let release = (movie.release_date !== undefined) ? ` (${movie.release_date.split('-')[0]})` : ' (N/A)';
+
+                    return {label: movie.title + release, id: movie.id}
+                })
+
+                this.emit(GET_SEARCH_RESULTS, searchOptions)
+                break
+            case ERROR:
+                console.log('Store search error', result.data.errorMessage);
+                break
+            default:
+                break
+        }
+    }
+
+    requestCollection(actionType) {
+        switch (actionType) {
+            case GET_MOVIE_POPULAR:
+                return this.checkCollectionContent(this.state.collections.popular, actionType)
+            case GET_MOVIE_UPCOMING:
+                return this.checkCollectionContent(this.state.collections.upcoming, actionType)
+            case GET_MOVIE_TOP_RATED:
+                return this.checkCollectionContent(this.state.collections.topRated, actionType)
+            case GET_MOVIE_NOW_PLAYING:
+                return this.checkCollectionContent(this.state.collections.nowPlaying, actionType)
+            case UPDATED_USER_COLLECTIONS:
+                return this.checkCollectionContent(this.state.collections.userCollections, actionType)
+            default:
+                break
+        }
+    }
+
+    checkCollectionContent = (collection, emitType) => {
+        if (collection.length === 0) {
+            return false
+        }
+        else {
+            this.emit(emitType, collection);
+            return true
+        }
     }
 
     addChangeListener = (event, callback) => {
