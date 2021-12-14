@@ -18,7 +18,7 @@ function FeedPage(props) {
                 direction="column"
                 justifyContent="center"
                 alignItems="center"
-                sx={{mt:4}}
+                sx={{mt:7, pt:2}}
             >
                 <WriteWitComponent witStore={WitStore} userStore={UserStore} />
                 <ListWitComponent witStore={WitStore} authStore={AuthStore} feed={true}/>

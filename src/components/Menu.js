@@ -180,11 +180,11 @@ function MenuBar(props) {
                                 <Typography textAlign="center">Favorites</Typography>
                             </MenuItem>
                             }
-                            {isAuthenticated &&
+
                             <MenuItem id={'featured'} key="featured" onClick={handleCloseNavMenu}>
                                 <Typography textAlign="center">Featured</Typography>
                             </MenuItem>
-                            }
+
                             {isAuthenticated &&
                             <MenuItem id={'profile'} key="profile"
                                       onClick={() => goToPath('/profile/' + loggedInUser?.displayName)}>
@@ -246,7 +246,7 @@ function MenuBar(props) {
                         </Button>
                         }
 
-                        {isAuthenticated &&
+
                         <Button
                             id="featured"
                             onClick={handleCloseNavMenu}
@@ -254,7 +254,7 @@ function MenuBar(props) {
                         >
                             Featured
                         </Button>
-                        }
+
 
 
                     </Box>
