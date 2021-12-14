@@ -10,12 +10,15 @@ import ErrorPage from './components/pages/ErrorPage';
 import ProtectedRoute from './util/ProtectedRoute';
 import HomePage from './components/pages/HomePage';
 import ProfilePage from './components/pages/ProfilePage';
-
+import FavoritesPage from "./components/pages/FavoritesPage";
 import {UserStore} from './flux/stores/UserStore';
 import {AuthStore} from './flux/stores/AuthStore';
 import {WitStore} from './flux/stores/WitStore';
-import {Container} from '@mui/material';
+import {MovieStore} from './flux/stores/MovieStore';
+import {Container, CssBaseline} from '@mui/material';
 import FeedPage from './components/pages/FeedPage';
+import FeaturedPage from './components/pages/FeaturedPage';
+
 
 const theme = createTheme({
     palette: {
@@ -36,30 +39,33 @@ const theme = createTheme({
 
         },
     },
-
 });
 
-
 const authStore = new AuthStore();
+const witStore = new WitStore()
+const movieStore = new MovieStore();
 const userStore = new UserStore(authStore);
-const witStore = new WitStore(authStore)
-const stores = {authStore, userStore, witStore};
+const stores = {authStore, userStore, witStore, movieStore};
 
 function App() {
+
     return (
         <ThemeProvider theme={theme}>
+            <CssBaseline/>
             <BrowserRouter>
                 <Menu stores={stores}/>
-                <Container fixed maxWidth={'lg'} sx={{pt:6, pb: 6}} disableGutters>
+                <Container fixed maxWidth={'lg'} sx={{mt:7, pb: 6}} disableGutters>
                     <Switch>
-                        <ProtectedRoute exact authStore={authStore} path="/favorites" component={() => <TestPage stores={stores}/>}/>
+                        <Route exact path="/" component={() => <HomePage stores={stores}/>}/>
+                        <Route exact path="/home" component={() => <HomePage stores={stores}/>}/>
+                        <ProtectedRoute exact authStore={authStore} path="/favorites" component={() => <FavoritesPage stores={stores}/>}/>
                         <ProtectedRoute exact authStore={authStore} path="/feed" component={() => <FeedPage stores={stores}/>}/>
                         <Route exact path="/login" component={() => <LoginPage stores={stores}/>}/>
                         <Route exact path="/signup" component={() => <SignupPage stores={stores}/>}/>
-                        <Route exact path="/test" component={() => <TestPage stores={stores}/>}/>
-                        <Route exact path="/" component={() => <HomePage stores={stores}/>}/>
+                        <Route exact path={"/featured"} component={() => <FeaturedPage stores={stores}/>}/>
                         <Route path="/profile/:displayName" component={() => <ProfilePage stores={stores}/>}/>
                         <Route path={'/movie/:id'} component={() => <MoviePage stores={stores}/>}/>
+                        <Route exact path="/test" component={() => <TestPage stores={stores}/>}/>
                         <Route component={() => <ErrorPage/>}/>
                     </Switch>
                 </Container>

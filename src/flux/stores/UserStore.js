@@ -1,9 +1,14 @@
 import {EventEmitter} from 'events';
 import {
-    CHANGE_AUTH_TOKEN, GET_USER_BY_USERNAME, LOGIN_FAILURE, LOGIN_SUCCESS, URL_GET_USER,
+    CHANGE_AUTH_TOKEN, ERROR,
+    GET_USER_BY_USERNAME, LOGGED_IN_USER,
+    LOGIN_FAILURE,
+    LOGIN_SUCCESS,
+    SUCCESS,
 } from '../../util/constants';
-import axios from 'axios';
 import dispatcher from '../dispatcher';
+import * as actions from '../../flux/actions/actions';
+
 
 export class UserStore extends EventEmitter {
 
@@ -19,16 +24,17 @@ export class UserStore extends EventEmitter {
         dispatcher.register(action => {
             switch (action.type) {
                 case GET_USER_BY_USERNAME:
-                    this.getUserByDisplayName(action.payload);
-                    break;
-
+                    this.userByDisplayNameReceived(action.payload);
+                    break
+                case LOGGED_IN_USER:
+                    this.loggedInUserReceived(action.payload)
+                    break
                 default:
                     break;
             }
         });
 
         authStore.authAddChangeListener(CHANGE_AUTH_TOKEN, this.authUserChanged);
-
     }
 
     authUserChanged = (user) => {
@@ -38,42 +44,48 @@ export class UserStore extends EventEmitter {
                 authUser: user,
             };
             if (user !== null) {
-                this.getLoggedInUser();
+                actions.getLoggedInUser()
             }
         }
     };
 
-    getLoggedInUser = () => {
-        axios.defaults.headers.common = {Authorization: `Bearer ${this.state.authUser.accessToken}`};
-        axios.get(URL_GET_USER)
-            .then((response) => {
+    loggedInUserReceived = (result) => {
+        switch (result.state) {
+            case SUCCESS:
                 this.state = {
                     ...this.state,
-                    loggedInUser: response.data.userCredentials,
+                    loggedInUser: result.data.userCredentials,
                 };
 
                 if (!this.state.loggedInUser.profileImage) {
                     this.state.loggedInUser.profileImage = this.defaultProfileImage;
                 }
 
-                this.emit(LOGIN_SUCCESS, response.data.userCredentials);
-            })
-            .catch((error) => {
-                this.emit(LOGIN_FAILURE, {errorMsg: 'Error retrieving the data.'});
-            });
-    };
+                this.emit(LOGIN_SUCCESS, result.data.userCredentials);
 
-    getUserByDisplayName = (displayName) => {
-        axios.get(URL_GET_USER + `?user=${displayName}`)
-            .then((response) => {
-                if (!response.data.profileImage) {
-                    response.data.profileImage = this.defaultProfileImage;
+                break
+            case ERROR:
+                this.emit(LOGIN_FAILURE, result.data);
+                break
+            default:
+                break
+        }
+    }
+
+    userByDisplayNameReceived = (result) => {
+        switch (result.state) {
+            case SUCCESS:
+                if (!result.data.profileImage) {
+                    result.data.profileImage = this.defaultProfileImage;
                 }
-                this.emit(GET_USER_BY_USERNAME, response.data);
-            })
-            .catch(error => {
+                this.emit(GET_USER_BY_USERNAME, result.data);
+                break
+            case ERROR:
                 this.emit(GET_USER_BY_USERNAME, null);
-            });
+                break
+            default:
+                break
+        }
 
     };
 
@@ -86,3 +98,4 @@ export class UserStore extends EventEmitter {
     };
 
 }
+

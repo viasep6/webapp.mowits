@@ -1,21 +1,21 @@
 import React, {useState} from 'react';
 import moment from 'moment';
-import {Avatar, Chip, Divider, Grid, Icon, Typography} from '@mui/material';
+import {Avatar, Chip, Divider, Grid, Icon, Tooltip, Typography} from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import {withRouter} from 'react-router-dom';
 import Badge from '@mui/material/Badge';
 import likeIcon from '../../../assets/img/like-icon.png';
 import * as action from '../../../flux/actions/actions';
+import {truncate} from '../../../util/utils';
 
 function WitComponent(props) {
 
     const authStore = props.authStore;
 
     let wit = props.wit;
-
     let witText = wit.text;
     let profileImage = wit.created_by.profileImage ? wit.created_by.profileImage : require(
-        '../../../assets/img/menu_logo.png');
+        '../../../assets/img/menu_logo.png').default;
     let witUser = wit.created_by.displayName;
     const [likeCount, setLikeCount] = useState(wit.roars.length);
     const date = wit.created;
@@ -27,7 +27,7 @@ function WitComponent(props) {
     const dateFormat = 'YYYY-MM-DD HH:mm';
     const dateTime = moment(date).format(dateFormat);
     const [witLikedByUser, setWitLikedByUser] =
-        useState(wit.roars.map(x => x.idtoken).includes(authStore.state.authUser.uid));
+        useState(authStore.state.authUser ? wit.roars.map(x => x.idtoken).includes(authStore.state.authUser.uid) : null);
 
     const getDisplayTime = (date) => {
         return moment(date).fromNow();
@@ -35,6 +35,10 @@ function WitComponent(props) {
 
     const handleUserProfileClick = () => {
         props.history.push('/profile/' + witUser);
+    };
+
+    const handleChipClick = (movieid) => {
+        props.history.push('/movie/' + movieid);
     };
 
     const handleLikeWitClick = () => {
@@ -98,13 +102,19 @@ function WitComponent(props) {
                                         <Typography sx={{...witStyle, mr: 1, fontSize: 10}}>{getDisplayTime(
                                             dateTime)}</Typography>
                                         {movieArray.map(e => {
-                                            return <Chip key={e.movieId} sx={witStyle} label={e.movieName} size="small"
-                                                         variant="outlined"/>;
+                                            return <Tooltip key={wit.id + "tooltip"} title={e.title} arrow placement="right">
+                                                <Chip key={e.movieId}
+                                                      sx={witStyle}
+                                                      label={truncate(e.title, 10)}
+                                                      size="small"
+                                                      variant="outlined"
+                                                      onClick={() => handleChipClick(e.movieId)}/>
+                                                </Tooltip>;
                                         })}
 
                                     </Grid>
                                     <Grid>
-                                        <MoreHorizIcon/>
+                                        <MoreHorizIcon visibility={'hidden'}/>
                                     </Grid>
 
 
@@ -133,7 +143,7 @@ function WitComponent(props) {
                                     alignItems="center"
                                     justifyContent="flex-start"
                                 >
-                                    <Grid item xs container>
+                                    <Grid item xs container visibility={'hidden'}>
                                         <Icon fontSize="small" sx={{...witStyle, mr: 2}}>chat_bubble_outline</Icon>
                                         <Icon fontSize="small" sx={{...witStyle, mr: 2}}>share</Icon>
                                     </Grid>

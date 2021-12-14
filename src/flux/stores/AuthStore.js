@@ -1,20 +1,17 @@
 import {EventEmitter} from 'events';
-import {auth, loginWithEmailAndPassword} from '../../firebase/firebase';
+import {auth} from '../../services/providers/Firebase';
 import dispatcher from '../dispatcher';
 import {
     CHANGE_AUTH_TOKEN,
     LOGIN,
-    LOGIN_FAILURE,
-    LOGOUT, SIGNUP, SIGNUP_FAILURE, SIGNUP_SUCCESS, URL_SIGNUP,
-
+    LOGIN_FAILURE, LOGIN_SUCCESS,
+    LOGOUT, SIGNUP, SIGNUP_FAILURE, SIGNUP_SUCCESS
 } from '../../util/constants';
-import axios from 'axios';
 
 /*
     AuthStore observes auth state and its changes.
     Login, logout, auth change.
  */
-
 export class AuthStore extends EventEmitter {
 
     constructor(props) {
@@ -32,7 +29,7 @@ export class AuthStore extends EventEmitter {
                     this.logout();
                     break;
                 case LOGIN:
-                    this.login(action.payload.username, action.payload.password);
+                    this.login(action.payload);
                     break;
                 default:
                     break;
@@ -40,7 +37,7 @@ export class AuthStore extends EventEmitter {
         });
 
         // firebase token is automatically persisted (https://firebase.google.com/docs/auth/web/manage-users#get_the_currently_signed_in_user)
-        auth.onAuthStateChanged(user => {
+        auth.onIdTokenChanged(user => {
             if (user) {
                 if (this.state.authUser !== user) {
                     this.state = {
@@ -56,51 +53,44 @@ export class AuthStore extends EventEmitter {
                         ...this.state,
                         authUser: user,
                     };
-                    this.emit(CHANGE_AUTH_TOKEN, user);
                 }
+                this.emit(CHANGE_AUTH_TOKEN, user);
             }
         });
     }
 
-    signup(user) {
-        axios.post(URL_SIGNUP, user)
-            .then((response) => {
-                if (response.data.success) {
-                    this.emit(SIGNUP_SUCCESS);
-                } else {
-                    this.emit(SIGNUP_FAILURE, {general: 'Error creating user.'});
-                }
-            })
-            .catch((error) => {
-                if (error.response !== undefined) {
-                    this.emit(SIGNUP_FAILURE, error.response.data);
-                } else {
-                    this.emit(SIGNUP_FAILURE, {general: 'Unknown error occurred'});
-                }
-            });
+    signup(result) {
+        switch (result.state) {
+            case SIGNUP_SUCCESS:
+                this.emit(SIGNUP_SUCCESS)
+                break
+            case SIGNUP_FAILURE:
+                this.emit(SIGNUP_FAILURE, result.data)
+                break
+            default:
+                break
+        }
     }
 
-    login(username, password) {
-        loginWithEmailAndPassword(username, password).then(r => {
-            let token = r.user.accessToken;
-            if (token !== null) {
-                this.state.authUser = r.user;
-            } else {
-                if (this.state.authUser !== null) {
-                    this.state.authUser = null;
+    login(result) {
+        switch (result.state) {
+            case LOGIN_SUCCESS:
+                let token = result.data.user.accessToken;
+                if (token !== null) {
+                    this.state.authUser = result.data.user;
+                } else {
+                    if (this.state.authUser !== null) {
+                        this.state.authUser = null;
+                    }
+                    this.emit(LOGIN_FAILURE, {general: 'Error validating login. try again later.'});
                 }
-                this.emit(LOGIN_FAILURE, {general: 'Error validating login. try again later.'});
-            }
-
-        }).catch((error) => {
-            if (error.message.includes('invalid-email') || error.message.includes('user-not-found')) {
-                this.emit(LOGIN_FAILURE, {email: 'invalid email'});
-            } else if (error.message.includes('wrong-password')) {
-                this.emit(LOGIN_FAILURE, {password: 'Wrong password'});
-            } else {
-                this.emit(LOGIN_FAILURE, {general: 'could not login'});
-            }
-        });
+                break
+            case LOGIN_FAILURE:
+                this.emit(LOGIN_FAILURE, result.data)
+                break
+            default:
+                break
+        }
     }
 
     logout() {

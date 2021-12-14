@@ -1,77 +1,38 @@
 import {EventEmitter} from 'events';
 import dispatcher from '../dispatcher';
-import {GET_WITS_BY_USER, POST_WIT, ROAR_WIT} from '../../util/constants';
-import axios from 'axios';
+import {
+    ERROR,
+    NEW_WITS_RETURNED,
+    SUCCESS
+} from '../../util/constants';
+
 
 export class WitStore extends EventEmitter {
 
-    constructor(authStore) {
-        super(authStore);
-        this.state = {};
-        this.authStore = authStore;
+    constructor(props) {
+        super(props);
         dispatcher.register(action => {
             switch (action.type) {
-                case POST_WIT:
-                    this.handlePostWit(action.payload);
-                    break;
-                case GET_WITS_BY_USER:
-                    this.handleWitsByUser(action.payload);
-                    break;
-                case ROAR_WIT:
-                    this.handleRoarWit(action.payload);
-                    break;
+                case NEW_WITS_RETURNED:
+                    this.newWitsReturned(action.payload)
+                    break
                 default:
                     break;
             }
         });
     }
 
-    handleWitsByUser(payload) {
-        if (payload === undefined)
-            return
-
-        const userid = payload.userId;
-        const startAfter = payload.startAfter ? payload.startAfter : new Date().toISOString(); // created (as date)
-        // axios.get(GET_WITS_BY_USER, {
-        axios.get('http://localhost:7072/wits/get_by_userid?userId=' + userid + '&startAfter=' + startAfter)
-            .then((response) => {
-                // returns
-                this.emit(GET_WITS_BY_USER, response.data);
-            })
-            .catch((error) => {
-                this.emit(GET_WITS_BY_USER, {errorMsg: error});
-            });
-
-    }
-
-    handleRoarWit(witId) {
-        axios.defaults.headers.common = {Authorization: `Bearer ${this.authStore.state.authUser.accessToken}`};
-        // axios.post(URL_POST_WIT, {
-        axios.get('http://localhost:7072/wits/create?roarWit=' + witId)
-            .then((response) => {
-                // no response
-            })
-            .catch((error) => {
-
-            });
-    }
-
-    handlePostWit(wit) {
-        axios.defaults.headers.common = {Authorization: `Bearer ${this.authStore.state.authUser.accessToken}`};
-        // axios.post(URL_POST_WIT, {
-        axios.post('http://localhost:7072/wits/Create', {
-            text: wit.text,
-            movieTags: wit.movieTags,
-            userTags: wit.userTags,
-            roars: [],
-        }).then((response) => {
-            // returns posted wit
-            this.emit(POST_WIT, response.data);
-        })
-            .catch((error) => {
-                console.log("error", error);
-                this.emit(POST_WIT, {errorMsg: error});
-            });
+    newWitsReturned(result) {
+        switch (result.state) {
+            case SUCCESS:
+                this.emit(NEW_WITS_RETURNED, result.data);
+                break
+            case ERROR:
+                this.emit(NEW_WITS_RETURNED, result.data);
+                break
+            default:
+                break
+        }
     }
 
     addChangeListener(event, callback) {

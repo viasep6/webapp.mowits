@@ -63,7 +63,7 @@ function LoginPage(props) {
     };
     const handleLoginSuccess = (response) => {
         setState({loading: false});
-        props.history.push('/');
+        props.history.goBack()
     };
 
     const handleChange = (event) => {
@@ -83,6 +83,8 @@ function LoginPage(props) {
 
         actions.login(state.email, state.password);
     };
+
+
 
     useEffect(() => {
         userStore.userAddChangeListener(LOGIN_SUCCESS, handleLoginSuccess);
