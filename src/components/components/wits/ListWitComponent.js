@@ -46,7 +46,7 @@ function ListWitComponent(props) {
             loadNextWits()
             return []
         })
-
+    // eslint-disable-next-line
     }, [user, movie])
 
     useEffect(() => {
