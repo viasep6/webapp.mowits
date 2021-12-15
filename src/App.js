@@ -64,7 +64,6 @@ function App() {
                         <Route exact path={"/featured"} component={() => <FeaturedPage stores={stores}/>}/>
                         <Route path="/profile/:displayName" component={() => <ProfilePage stores={stores}/>}/>
                         <Route path={'/movie/:id'} component={() => <MoviePage stores={stores}/>}/>
-                        <Route exact path="/test" component={() => <TestPage stores={stores}/>}/>
                         <Route component={() => <ErrorPage/>}/>
                     </Switch>
                 </Container>
