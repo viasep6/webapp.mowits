@@ -88,10 +88,6 @@ function SignupPage(props) {
         setState({...state, loading: true});
     };
 
-    useEffect(() => {
-        if (auth.currentUser)
-        console.log(auth.currentUser);
-    }, []);
 
     useEffect(() => {
 
