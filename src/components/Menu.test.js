@@ -27,64 +27,65 @@ beforeEach(() => {
 });
 
 const getById = queryByAttribute.bind(null, 'id');
+describe('Menu tests', () => {
+    test('Menu.test.containsElements.notLoggedIn', () => {
+        // arrange
+        const elementRequired = ['home', 'login', 'signup'];
+        // act
+        let renderer = render(
+            <BrowserRouter>
+                <Menu stores={stores}/>
+            </BrowserRouter>,
+        );
 
-test('Menu.test.containsElements.notLoggedIn', () => {
-    // arrange
-    const elementRequired = ['home', 'login', 'signup'];
-    // act
-    let renderer = render(
-        <BrowserRouter>
-            <Menu stores={stores}/>
-        </BrowserRouter>,
-    );
+        // assert
+        for (let el of elementRequired) {
+            const element = getById(renderer.container, el);
+            expect(element).toBeDefined();
+            el = el.charAt(0).toUpperCase() + el.substr(1);
+            expect(element).toHaveTextContent(el);
+        }
 
-    // assert
-    for (let el of elementRequired) {
-        const element = getById(renderer.container, el);
-        expect(element).toBeDefined();
-        el = el.charAt(0).toUpperCase() + el.substr(1);
-        expect(element).toHaveTextContent(el);
-    }
-
-    console.log('Render output:', prettyDOM(renderer.container.firstChild));
-});
-
-test('Menu.test.containsElements.loggedIn', () => {
-
-    // arrange
-    const elementRequired = ['home', 'favorites', 'feed'];
-    const elementsNotShown = ['login', 'signup'];
-
-    const MenuComponent = MenuBar;
-    let authStatusChanged;
-    stores.authStore.authAddChangeListener = (eventId, callback) => {
-        authStatusChanged = callback;
-    };
-    // act
-    let renderer = render(
-        <BrowserRouter>
-            <MenuComponent stores={stores}/>
-        </BrowserRouter>,
-    );
-
-    act(() => {
-        authStatusChanged('some user details');
+        console.log('Render output:', prettyDOM(renderer.container.firstChild));
     });
 
-    console.log('Render output:', prettyDOM(renderer.container.firstChild));
+    test('Menu.test.containsElements.loggedIn', () => {
 
-    // assert
-    for (let el of elementRequired) {
+        // arrange
+        const elementRequired = ['home', 'favorites', 'feed'];
+        const elementsNotShown = ['login', 'signup'];
 
-        const element = getById(renderer.container, el);
-        expect(element).toBeDefined();
-        el = el.charAt(0).toUpperCase() + el.substr(1);
-        console.log('testing element', el);
-        expect(element).toHaveTextContent(el);
-    }
-    for (let el of elementsNotShown) {
-        const element = getById(renderer.container, el);
-        expect(element).toBeNull();
-    }
+        const MenuComponent = MenuBar;
+        let authStatusChanged;
+        stores.authStore.authAddChangeListener = (eventId, callback) => {
+            authStatusChanged = callback;
+        };
+        // act
+        let renderer = render(
+            <BrowserRouter>
+                <MenuComponent stores={stores}/>
+            </BrowserRouter>,
+        );
 
-});
+        act(() => {
+            authStatusChanged('some user details');
+        });
+
+        console.log('Render output:', prettyDOM(renderer.container.firstChild));
+
+        // assert
+        for (let el of elementRequired) {
+
+            const element = getById(renderer.container, el);
+            expect(element).toBeDefined();
+            el = el.charAt(0).toUpperCase() + el.substr(1);
+            console.log('testing element', el);
+            expect(element).toHaveTextContent(el);
+        }
+        for (let el of elementsNotShown) {
+            const element = getById(renderer.container, el);
+            expect(element).toBeNull();
+        }
+
+    });
+})

@@ -20,8 +20,10 @@ function ListWitComponent(props) {
     const user = props.user;
     const movie = props.movie;
 
-    useEffect(() => {
 
+
+    useEffect(() => {
+        console.log("running use effect");
         document.addEventListener('scroll', handleScroll);
         witStore.addChangeListener(NEW_WITS_RETURNED, handleNewWits);
         witStore.addChangeListener(POST_WIT, handleNewWits);
@@ -37,10 +39,15 @@ function ListWitComponent(props) {
         // eslint-disable-next-line
     }, []);
 
-    useEffect( () => {
-        // movieId has been changed (new movie)
-        setWits([])
-    }, [movie])
+
+    useEffect(() => {
+        setIsLastItem(false);
+        setWits(prevState => {
+            loadNextWits()
+            return []
+        })
+
+    }, [user, movie])
 
     useEffect(() => {
         document.addEventListener('scroll', handleScroll);
@@ -58,6 +65,7 @@ function ListWitComponent(props) {
     };
 
     const handleNewWits = (data) => {
+        console.log("wits", data);
         if (data.length > 0) {
             setWits(prevState => {
                 if (prevState !== null) {
@@ -82,7 +90,8 @@ function ListWitComponent(props) {
         setIsLoading(false);
     };
 
-    const loadNextWits = async () => {
+    const loadNextWits = () => {
+        console.log("getting wits", user?.idtoken);
         if (!isLastItem) {
             if (user) {
                 actions.getWitsByUser({userId: user.idtoken, startAfter: wits[wits.length - 1]?.created});

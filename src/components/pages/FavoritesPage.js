@@ -40,7 +40,6 @@ function FavoritesPage(props) {
             }])
         }
         else {
-            setAddDone(true)
             setEnableDelete(true)
             setMovieCollections(collections)
         }
