@@ -72,7 +72,11 @@ export default function AddMovieCollection(props) {
     const collectionNameExist = () => {
         let exists = false
         if (collections.length > 0) {
-            collections.forEach(collection => exists = collection.name === txtFieldValue)
+            collections.forEach(collection =>  {
+                if (collection.name === txtFieldValue) {
+                    exists = true
+                }
+            })
         }
         return exists
     }
