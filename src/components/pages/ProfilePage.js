@@ -32,6 +32,7 @@ function ProfilePage(props) {
     const UserStore = props.stores.userStore;
     const WitStore = props.stores.witStore;
 
+
     const defaultProfileImage = require('../../assets/img/defaultprofile.jpg').default;
     const [profileUser, setProfileUser] = useState(
         {witCount: 0, favCount: 0, roarCount: 0, profileImage: defaultProfileImage});

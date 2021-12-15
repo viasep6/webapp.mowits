@@ -2,7 +2,6 @@ import React from 'react';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import Menu from './components/Menu';
-import TestPage from './components/pages/TestPage';
 import LoginPage from './components/pages/LoginPage';
 import SignupPage from './components/pages/SignupPage';
 import MoviePage from './components/pages/MoviePage';
