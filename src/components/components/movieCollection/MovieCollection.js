@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import MovieCollectionItem from "./MovieCollectionItem";
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -6,14 +6,12 @@ import DeleteModal from '../DeleteModal';
 import {getStorageItemFromDisplayItem} from '../../../util/movieCollectionConverter';
 
 
-
 export default function MovieCollection(props) {
-    const [currentCollections] = useState(props.movieCollection)
 
     const itemClicked = (movieId) => props.onMovieClicked(movieId)
     const deleteItem = (movieId) => {
         const updatedMovies = []
-        currentCollections.forEach(movie => {
+        props.movieCollection.forEach(movie => {
             if (parseInt(movie.id) !== parseInt(movieId)) {
                 updatedMovies.push(getStorageItemFromDisplayItem(movie))
             }
@@ -53,16 +51,16 @@ export default function MovieCollection(props) {
                 />
             </Grid>
             <Grid container direction={"row"} justifyContent={'space-between'} spacing={2} sx={{overflow: "auto"}} wrap={"nowrap"}>
-                { currentCollections.map(item => <MovieCollectionItem
-                        key={item.id}
-                        movie={item}
-                        deleteBtn={props.enableDelete}
-                        onDelete={deleteItem}
-                        disableVote={props.disableVote}
-                        onVote={voteClicked}
-                        onClick={itemClicked}
-                        collectionName={props.title}
-                        margin={1}/>) }
+                { props.movieCollection.map(item => <MovieCollectionItem
+                    key={item.id}
+                    movie={item}
+                    deleteBtn={props.enableDelete}
+                    onDelete={deleteItem}
+                    disableVote={props.disableVote}
+                    onVote={voteClicked}
+                    onClick={itemClicked}
+                    collectionName={props.title}
+                    margin={1}/>) }
             </Grid>
         </Grid>
 

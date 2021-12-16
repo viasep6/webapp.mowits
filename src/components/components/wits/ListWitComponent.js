@@ -20,10 +20,7 @@ function ListWitComponent(props) {
     const user = props.user;
     const movie = props.movie;
 
-
-
     useEffect(() => {
-        console.log("running use effect");
         document.addEventListener('scroll', handleScroll);
         witStore.addChangeListener(NEW_WITS_RETURNED, handleNewWits);
         witStore.addChangeListener(POST_WIT, handleNewWits);
@@ -39,33 +36,41 @@ function ListWitComponent(props) {
         // eslint-disable-next-line
     }, []);
 
+    useEffect(() => {
+        setIsLastItem(false)
+        setIsLoading(true)
+        setWits([])
+        if (user){
+            actions.getWitsByUser({userId: user.idtoken});
+        }
+        // eslint-disable-next-line
+    }, [user]);
 
     useEffect(() => {
-        setIsLastItem(false);
-        setWits(prevState => {
-            loadNextWits()
-            return []
-        })
-
-    }, [user, movie])
+        setIsLastItem(false)
+        setIsLoading(true)
+        setWits([])
+        if (movie){
+            actions.getWitsByMovie({movieId: movie.id});
+        }
+        // eslint-disable-next-line
+    }, [movie])
 
     useEffect(() => {
         document.addEventListener('scroll', handleScroll);
 
         return function cleanup() {
             document.removeEventListener('scroll', handleScroll);
-
         };
         // eslint-disable-next-line
     }, [wits]);
 
     const handleAuthChanged = (user) => {
-        setWits([])
+        setWits([]);
         setIsUserLoggedIn(user !== null);
     };
 
     const handleNewWits = (data) => {
-        console.log("wits", data);
         if (data.length > 0) {
             setWits(prevState => {
                 if (prevState !== null) {
@@ -76,14 +81,15 @@ function ListWitComponent(props) {
                     });
                     if (JSON.stringify(a) === JSON.stringify(prevState)) {
                         document.removeEventListener('scroll', handleScroll);
-                        return prevState
+                        return prevState;
                     }
 
                     return a;
                 } else {
-                    return prevState
+                    return prevState;
                 }
             });
+            setIsLastItem(false)
         } else {
             setIsLastItem(true);
         }
@@ -91,12 +97,11 @@ function ListWitComponent(props) {
     };
 
     const loadNextWits = () => {
-        console.log("getting wits", user?.idtoken);
         if (!isLastItem) {
             if (user) {
                 actions.getWitsByUser({userId: user.idtoken, startAfter: wits[wits.length - 1]?.created});
             } else if (movie) {
-                actions.getWitsByMovie( { movieId: movie.id, startAfter: wits[wits.length - 1]?.created });
+                actions.getWitsByMovie({movieId: movie.id, startAfter: wits[wits.length - 1]?.created});
             } else if (feed) {
                 actions.getWitsByFeed({startAfter: wits[wits.length - 1]?.created});
             }

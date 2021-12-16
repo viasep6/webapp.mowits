@@ -16,7 +16,7 @@ function UserService(apiProvider) {
         })
         .catch((error) => {
             if (error.response !== undefined) {
-                return getResponseObject(SIGNUP_FAILURE,  {general: error.response.data})
+                return getResponseObject(SIGNUP_FAILURE,  error.response.data)
             } else {
                 return getResponseObject(SIGNUP_FAILURE,  {general: 'Unknown error occurred'})
             }
