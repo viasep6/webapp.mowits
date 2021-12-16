@@ -59,6 +59,7 @@ function SignupPage(props) {
     };
 
     const handleSignupFailure = (error) => {
+        console.log(error);
         if (!state.success) {
             setState(prevState => {
                 let newState = Object.assign({}, prevState);
@@ -82,11 +83,18 @@ function SignupPage(props) {
     };
 
     const handleSubmit = (event) => {
-        event.preventDefault();
-        actions.signup(state.displayName, state.email, state.password);
-        setState({...state, loading: true});
-    };
+        if (state.password !== state.confirmPassword) {
+            event.preventDefault()
+            setState(prevState => {
+                return {...prevState, errors: {confirmPassword: 'Does not match'}}
+            });
+        } else {
+            event.preventDefault();
+            actions.signup(state.displayName, state.email, state.password);
+            setState({...state, loading: true});
+        }
 
+    };
 
     useEffect(() => {
 
@@ -105,14 +113,14 @@ function SignupPage(props) {
         <Container component="main" maxWidth="xs">
             <CssBaseline/>
             {state.success &&
-                <div className={classes.paper}>
-                    <Typography component="h1" variant="h5">
-                        User successfully created. Click <Link href="login">HERE</Link> to login.
-                    </Typography>
-                </div>
+            <div className={classes.paper}>
+                <Typography component="h1" variant="h5">
+                    User successfully created. Click <Link href="login">HERE</Link> to login.
+                </Typography>
+            </div>
             }
             {!state.success &&
-                <div hidden={state.success} className={classes.paper}>
+            <div hidden={state.success} className={classes.paper}>
                 <Avatar className={classes.avatar}>
                     <LockOutlinedIcon/>
                 </Avatar>
@@ -176,6 +184,8 @@ function SignupPage(props) {
                                 label="Confirm Password"
                                 type="password"
                                 id="confirmPassword"
+                                helperText={state.errors.confirmPassword}
+                                error={state.errors?.confirmPassword ? true : false}
                                 autoComplete="current-password"
                                 onChange={handleChange}
                             />
@@ -188,10 +198,13 @@ function SignupPage(props) {
                         color="primary"
                         className={classes.submit}
                         onClick={handleSubmit}
-                        disabled={state.loading ||
-                        !state.email ||
-                        !state.password ||
-                        !state.displayName
+                        disabled={
+                            state.loading ||
+                            !state.displayName ||
+                            !state.email ||
+                            !state.password ||
+                            !state.confirmPassword
+
                         }>
                         Sign Up
                         {state.loading && <CircularProgress size={30} className={classes.progess}/>}
