@@ -46,7 +46,7 @@ function WriteWitComponent(props) {
     const onPostWit = () => {
         actions.postWit({
             text: text,
-            movieTags: [{movieId: movie.id, title:movie.title}],
+            movieTags: movie ? [{movieId: movie.id, title:movie.title}] : [],
             userTags: [],
         });
         setText('');
